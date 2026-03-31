@@ -1,5 +1,5 @@
 import sys
-sys.path.append(__file__.split(__file__.split("\\")[-1])[0] + "program-data")
+sys.path.append(__file__.split(__file__.split("\\")[-1])[0] + "Menus")
 from Main import main
 from Menu import menu, obj, button, label, entry, optionBox, listBox, canvas, image
 from DmgCalcMenu import dmgCalcMenu

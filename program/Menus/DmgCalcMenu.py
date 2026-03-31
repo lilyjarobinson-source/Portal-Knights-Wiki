@@ -120,6 +120,7 @@ class dmgCalcMenu(runableMenu):
 
     def startAttacking(self):
         self.attacking = True
+        self.lastAttackTime = self.timer - self.drawLimit
 
     def attack(self):
         if self.attacking:
