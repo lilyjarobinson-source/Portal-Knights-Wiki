@@ -1,8 +1,18 @@
-import time, random
+import sys, time, random
+sys.path.append(__file__.split("Menus")[0] + "Classes\\Weapons")
+sys.path.append(__file__.split("Menus")[0] + "Classes\\DmgCalculation")
+from DamageCalculator import damageCalculator
+from WeaponController import weaponController
 from Menu import menu
 from RunableMenu import runableMenu
 
 class dmgCalcMenu(runableMenu):
+    weaponController = weaponController()
+    damageCalculator = damageCalculator()
+    weapons = []
+    loadedWeapon = None
+    loadedWeaponIndex = 0
+    
     listOfHits = []
     listOfHitTimestamps = []
     drawList = []
@@ -33,6 +43,7 @@ class dmgCalcMenu(runableMenu):
     def initialise(self, root):
         self.canvas = self.icons["displayCanvas"]
         self.startGraphing()
+        self.displayWeapons()
 
     def updateCanvas(self):
         self.canvas.clear()
@@ -122,11 +133,31 @@ class dmgCalcMenu(runableMenu):
         self.attacking = True
         self.lastAttackTime = self.timer - self.drawLimit
 
+        if self.loadedWeapon == None:
+            self.loadedWeaponIndex = self.icons["weaponListBox"].getItems().index("Fist")
+            self.loadedWeapon = self.weapons[self.loadedWeaponIndex]
+
     def attack(self):
         if self.attacking:
             if self.timer - self.lastAttackTime > self.attackInterval:
-                self.addHit(random.randint(100, 200))
-        
+                hitList = self.damageCalculator.getDamageFromHit(self.loadedWeapon)
+                dmg = 0
+                for i in hitList:
+                    dmg += i.dmg
+                
+                self.addHit(dmg)
+
+    def displayWeapons(self):
+        self.weapons = self.weaponController.loadWeapons()
+        for i in self.weapons:
+            self.icons["weaponListBox"].append(i.name)
+
+    def loadWeapon(self):
+        index = self.icons["weaponListBox"].getIndex()
+        if len(index) == 0:
+            return
+        self.loadedWeaponIndex = index[0]
+        self.loadedWeapon = self.weapons[index[0]]
 
 
 
