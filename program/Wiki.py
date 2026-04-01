@@ -7,9 +7,8 @@ main = main()
 dmgCalcMenu = dmgCalcMenu()
 
 dmgCalcMenu.assignIcons({
-    "weaponListBox" : listBox([1, 100], [201, 160], lambda *args : dmgCalcMenu.loadWeapon()),
-    "displayCanvas" : canvas([203, 60], [596, 400]),
-    "attackButton" : button([102, 80], [100, 19], "Start attacking", dmgCalcMenu.startAttacking)
+    "displayCanvas" : canvas([200, 60], [599, 400]),
+    "attackButton" : button([100, 80], [100, 19], "Start attacking", dmgCalcMenu.startAttacking)
 })
 
 main.assignMenus([dmgCalcMenu])

@@ -1,11 +1,9 @@
-import sys
-pathArray = __file__.split("Menus")[0] + "Classes\\Weapons"
 from Weapon import weapon
 from WeaponType import *
 
 class weaponController:
     def loadWeapons(self):
-        location = "Classes\\Weapons\\Weapons.txt"
+        location = "Weapons.txt"
         weapons = []
         with open(location, "r") as file:
             contents = file.read()
@@ -19,7 +17,8 @@ class weaponController:
                 w.wpnType = self.setWeaponType(item[3])
                 w.multipliers = self.getMultipliers(item[4:-1])
                 weapons.append(w)
-        return weapons
+        for i in weapons: 
+            print(i.toString())
 
     def setWeaponType(self, typeAsString):
         match typeAsString:
@@ -50,6 +49,9 @@ class weaponController:
         multipliers = {}
         for i in listOfMults:
             i = i.split("=")
-            multipliers.update({i[0]:float(i[1])})
+            multipliers.update({i[0]:int(i[1])})
         return multipliers
             
+
+w = weaponController()
+w.loadWeapons()
