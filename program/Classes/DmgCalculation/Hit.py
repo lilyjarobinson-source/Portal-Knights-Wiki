@@ -7,3 +7,6 @@ class hit:
     def __init__(self, weapon):
         self.weapon = weapon
         self.dmg = weapon.baseDmg * 0.3 * weapon.wpnType.dmgMult
+
+    def getDmg(self):
+        return int(self.dmg)
