@@ -61,7 +61,7 @@ class dmgCalcMenu(runableMenu):
         self.graph.garbageCollectPoints()
 
         self.screenDeltaTime = time.time() - self.screenBeforeTime
-        if (self.screenDeltaTime > 0.016):
+        if self.screenDeltaTime > 0.016:
             self.screenBeforeTime = time.time()
             self.graph.updateCanvas()
 
