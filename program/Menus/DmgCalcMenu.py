@@ -2,8 +2,10 @@ import sys, time, random
 sys.path.append(__file__.split("Menus")[0] + "Classes\\Weapons")
 sys.path.append(__file__.split("Menus")[0] + "Classes\\DmgCalculation")
 sys.path.append(__file__.split("Menus")[0] + "Classes\\Graphing")
+sys.path.append(__file__.split("Menus")[0] + "Classes\\Character")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
+from CharacterController import characterController
 from Graph import graph
 from ScrollingGraph import scrollingGraph
 from Menu import menu
@@ -13,9 +15,9 @@ class dmgCalcMenu(runableMenu):
     weaponController = weaponController()
     damageCalculator = damageCalculator()
     weapons = []
-    loadedWeapon = None
-    loadedWeaponIndex = 0
-
+    loadedWeaponIndex = -1
+    character = characterController.new()
+    
     graph = scrollingGraph()
     
 
@@ -43,6 +45,7 @@ class dmgCalcMenu(runableMenu):
         self.graph.setDrawLimit(self.drawLimit)
         self.startGraphing()
         self.displayWeapons()
+        print(self.character.statPoint["strength"])
 
     def startGraphing(self):
         self.beforeTime = time.time()
@@ -69,14 +72,14 @@ class dmgCalcMenu(runableMenu):
         self.attacking = True
         self.lastAttackTime = self.timer - self.drawLimit
 
-        if self.loadedWeapon == None:
+        if self.loadedWeaponIndex == -1:
             self.loadedWeaponIndex = self.icons["weaponListBox"].getItems().index("Fist")
-            self.loadedWeapon = self.weapons[self.loadedWeaponIndex]
+            self.character.weapon = self.weapons[self.loadedWeaponIndex]
 
     def attack(self):
         if self.attacking:
-            if self.timer - self.lastAttackTime > self.loadedWeapon.wpnType.attackInterval:
-                hitList = self.damageCalculator.getDamageFromHit(self.loadedWeapon)
+            if self.timer - self.lastAttackTime > self.character.weapon.wpnType.attackInterval:
+                hitList = self.damageCalculator.getDamageFromHit(self.character)
                 dmg = 0
                 for i in hitList:
                     dmg += i.getDmg()
@@ -94,7 +97,7 @@ class dmgCalcMenu(runableMenu):
         if len(index) == 0:
             return
         self.loadedWeaponIndex = index[0]
-        self.loadedWeapon = self.weapons[index[0]]
+        self.character.weapon = self.weapons[index[0]]
 
 
 

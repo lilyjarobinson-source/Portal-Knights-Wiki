@@ -4,9 +4,9 @@ class hit:
     isCriticalStrike = False
     isAdditionalStrike = False
 
-    def __init__(self, weapon):
-        self.weapon = weapon
-        self.dmg = weapon.baseDmg * 0.3 * weapon.wpnType.dmgMult
+    def __init__(self, character):
+        self.weapon = character.weapon
+        self.dmg = (self.weapon.baseDmg + character.statPoint["strength"]) * 0.3 * self.weapon.wpnType.dmgMult
 
     def getDmg(self):
         return int(self.dmg)

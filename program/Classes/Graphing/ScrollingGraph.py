@@ -57,7 +57,6 @@ class scrollingGraph(graph):
         for i in self.drawList:
             if self.pointYList[i] > highestPoint:
                 highestPoint = self.pointYList[i]
-        print(highestPoint)
         self.yAxisScale = int(highestPoint * 1.2)
             
 

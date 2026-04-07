@@ -16,7 +16,13 @@ class character:
         "agility" : 0,
         "dexterity" : 0,
         "wisdom" : 0,
-        "intelligence" : 0
+        "intelligence" : 0,
+        "health" : 0,
+        "melee damage" : 0,
+        "move speed" : 0,
+        "ranged damage" : 0,
+        "mana" : 0,
+        "magic damage" : 0
     }
     
     statPointDistribution = {
@@ -29,6 +35,12 @@ class character:
     }
 
         
-def characterController:
-    def generateStatPoints(self, character):
-        character.statPoint["strength"] = 10 + character.level * 7
+class characterController:
+    def new():
+        c = character()
+        c.level = 30
+        characterController.generateStatPoints(c)
+        return c
+
+    def generateStatPoints(character):
+        character.statPoint["strength"] = 10 + ((character.level-1) * 7)
