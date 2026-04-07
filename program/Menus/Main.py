@@ -2,15 +2,13 @@ from tkinter import *
 hexDigits = "0123456789abcdef"
 
 class main:
-    def __init__(self):
-        self.menus = []
-        self.currentMenuIndex = 0
-        self.currentMenu = None
-        self.root = None
-        self.theme = {}
-
-    def initialise(self, kwargs):
-        self.root = Tk()
+    menus = []
+    currentMenuIndex = 0
+    currentMenu = None
+    root = None
+    theme = {}
+    
+    def __init__(self, **kwargs):
         if "geometry" in kwargs:
             self.root.geometry(kwargs["geometry"])
         else:
@@ -20,14 +18,17 @@ class main:
         else:
             self.root.title("Main")
 
+    def initialise(self):
+        self.root = Tk()
+
     def assignMenus(self, menus):
         self.menus = menus
 
     def setMapMenuIndex(self, index):
         self.mapMenuIndex = index
 
-    def activate(self, **kwargs):
-        self.initialise(kwargs)
+    def activate(self):
+        self.initialise()
         self.loadTheme()
         self.currentMenu = self.menus[self.currentMenuIndex]
         self.currentMenu.activate(self.root, self.theme)
