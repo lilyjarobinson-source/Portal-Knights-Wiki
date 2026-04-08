@@ -10,9 +10,8 @@ from CharacterController import characterController
 from Graph import graph
 from ScrollingGraph import scrollingGraph
 from Menu import menu
-from RunableMenu import runableMenu
 
-class dmgCalcMenu(runableMenu):
+class dmgCalcMenu(menu):
     weaponController = weaponController()
     damageCalculator = damageCalculator()
     weapons = []
