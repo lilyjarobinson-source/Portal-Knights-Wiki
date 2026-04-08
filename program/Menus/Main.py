@@ -7,25 +7,20 @@ class main:
     currentMenu = None
     root = None
     theme = {}
+    title = ""
+    geometry = ""
     
-    def __init__(self, **kwargs):
-        if "geometry" in kwargs:
-            self.root.geometry(kwargs["geometry"])
-        else:
-            self.root.geometry("200x200")
-        if "title" in kwargs:
-            self.root.title(kwargs["title"])
-        else:
-            self.root.title("Main")
+    def __init__(self, title, geometry):
+        self.title = title
+        self.geometry = geometry
 
     def initialise(self):
         self.root = Tk()
+        self.root.title(self.title)
+        self.root.geometry(self.geometry)
 
     def assignMenus(self, menus):
         self.menus = menus
-
-    def setMapMenuIndex(self, index):
-        self.mapMenuIndex = index
 
     def activate(self):
         self.initialise()
