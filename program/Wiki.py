@@ -1,5 +1,7 @@
 import sys
-sys.path.append(__file__.split(__file__.split("\\")[-1])[0] + "Menus")
+classPath = __file__.split(__file__.split("\\")[-1])[0]
+sys.path.append(classPath + "Menus")
+sys.path.append(classPath + "Menus\\framework")
 from Main import main
 from PopupMenu import popupMenu
 from Menu import menu, obj, button, label, entry, optionBox, listBox, canvas, image
