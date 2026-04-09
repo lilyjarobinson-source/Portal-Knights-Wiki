@@ -1,48 +1,48 @@
 from tkinter import *
-hexDigits = "0123456789abcdef"
-
 class main:
-    def __init__(self):
-        self.menus = []
-        self.currentMenuIndex = 0
-        self.currentMenu = None
-        self.root = None
-        self.theme = {}
+    hexDigits = "0123456789abcdef"
+    popupMenus = []
+    currentpopupMenuIndex = -1
+    menus = []
+    currentMenuIndex = 0
+    currentMenu = None
+    root = None
+    theme = {}
+    title = ""
+    geometry = ""
+    
+    def __init__(self, title, geometry):
+        self.title = title
+        self.geometry = geometry
 
-    def initialise(self, kwargs):
+    def initialise(self):
         self.root = Tk()
-        if "geometry" in kwargs:
-            self.root.geometry(kwargs["geometry"])
-        else:
-            self.root.geometry("200x200")
-        if "title" in kwargs:
-            self.root.title(kwargs["title"])
-        else:
-            self.root.title("Main")
+        self.root.title(self.title)
+        self.root.geometry(self.geometry)
+        self.root.bind('<FocusIn>', lambda event : self.raisePopupOnFocus())
 
     def assignMenus(self, menus):
         self.menus = menus
+        
+    def assignPopupMenus(self, popupMenus):
+        self.popupMenus = popupMenus
 
-    def setMapMenuIndex(self, index):
-        self.mapMenuIndex = index
-
-    def activate(self, **kwargs):
-        self.initialise(kwargs)
-        self.loadTheme()
+    def activate(self):
+        self.initialise()
         self.currentMenu = self.menus[self.currentMenuIndex]
-        self.currentMenu.activate(self.root, self.theme)
+        self.reloadMenu()
 
     def reloadMenu(self):
         self.loadTheme()
         self.currentMenu.deactivate()
-        self.currentMenu.activate(self.root, self.theme)
+        self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
 
     def changeMenu(self, targetIndex):
         self.loadTheme()
         self.menus[self.currentMenuIndex].deactivate()
         self.currentMenuIndex = targetIndex
         self.currentMenu = self.menus[targetIndex]
-        self.currentMenu.activate(self.root, self.theme)
+        self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
 
     def loadTheme(self):
         try:
@@ -97,9 +97,32 @@ class main:
     def changeBgColour(self, colour):
         notHex = False
         for i in colour:
-            if i.lower() not in hexDigits:
+            if i.lower() not in self.hexDigits:
                 notHex = True
                 break
         if not notHex:
             colour = "#" + colour
         self.root.config(bg=colour)
+
+    def popUpMenu(self, index):
+        self.currentpopupMenuIndex = index
+        if self.isPopupMenuClosedFunction():
+            self.popupMenus[index].activate("")
+        else:
+            self.popupMenus[index].root.wm_attributes("-topmost", True)
+
+    def popDownMenu(self):
+        print(not self.isPopupMenuClosedFunction())
+        if not self.isPopupMenuClosedFunction():
+            self.popupMenus[self.currentpopupMenuIndex].deactivate()
+            self.currentpopupMenuIndex = -1
+
+    def raisePopupOnFocus(self):
+        if not self.isPopupMenuClosedFunction:
+            self.popupMenus[self.currentpopupMenuIndex].root.wm_attributes("-topmost", True)
+
+    def isPopupMenuClosedFunction(self):
+        if self.currentpopupMenuIndex >= 0:
+            return not self.popupMenus[self.currentpopupMenuIndex].active
+        return True
+    

@@ -1,17 +1,17 @@
 import sys, time, random
-sys.path.append(__file__.split("Menus")[0] + "Classes\\Weapons")
-sys.path.append(__file__.split("Menus")[0] + "Classes\\DmgCalculation")
-sys.path.append(__file__.split("Menus")[0] + "Classes\\Graphing")
-sys.path.append(__file__.split("Menus")[0] + "Classes\\Character")
+classPath = __file__.split("Menus")[0]
+sys.path.append(classPath + "Classes\\Weapons")
+sys.path.append(classPath + "Classes\\DmgCalculation")
+sys.path.append(classPath + "Classes\\Graphing")
+sys.path.append(classPath + "Classes\\Character")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
 from CharacterController import characterController
 from Graph import graph
 from ScrollingGraph import scrollingGraph
 from Menu import menu
-from RunableMenu import runableMenu
 
-class dmgCalcMenu(runableMenu):
+class dmgCalcMenu(menu):
     weaponController = weaponController()
     damageCalculator = damageCalculator()
     weapons = []
@@ -45,7 +45,6 @@ class dmgCalcMenu(runableMenu):
         self.graph.setDrawLimit(self.drawLimit)
         self.startGraphing()
         self.displayWeapons()
-        print(self.character.statPoint["strength"])
 
     def startGraphing(self):
         self.beforeTime = time.time()
