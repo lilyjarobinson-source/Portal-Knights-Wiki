@@ -4,6 +4,7 @@ sys.path.append(classPath + "Classes\\Weapons")
 sys.path.append(classPath + "Classes\\DmgCalculation")
 sys.path.append(classPath + "Classes\\Graphing")
 sys.path.append(classPath + "Classes\\Character")
+sys.path.append(classPath + "Menus\\framework")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
 from CharacterController import characterController

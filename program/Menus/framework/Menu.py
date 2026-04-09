@@ -266,7 +266,7 @@ class listBox(obj):
     def initialise(self, root):
         self.obj = Listbox(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0, fg=self.textColour)
         self.clear()
-        self.obj.bind("<<ListboxSelect>>", self.checkForPopUpMenu)
+        self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkForPopUpMenu())
         self.place()
 
     def checkForPopUpMenu(self):
