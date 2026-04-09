@@ -2,7 +2,7 @@ from tkinter import *
 class main:
     hexDigits = "0123456789abcdef"
     popupMenus = []
-    currentpopupMenuIndex = -1
+    currentPopupMenuIndex = -1
     menus = []
     currentMenuIndex = 0
     currentMenu = None
@@ -105,7 +105,7 @@ class main:
         self.root.config(bg=colour)
 
     def popUpMenu(self, index):
-        self.currentpopupMenuIndex = index
+        self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
             self.popupMenus[index].activate("")
         else:
@@ -114,15 +114,19 @@ class main:
     def popDownMenu(self):
         print(not self.isPopupMenuClosedFunction())
         if not self.isPopupMenuClosedFunction():
-            self.popupMenus[self.currentpopupMenuIndex].deactivate()
-            self.currentpopupMenuIndex = -1
+            self.popupMenus[self.currentPopupMenuIndex].deactivate()
+            self.currentPopupMenuIndex = -1
 
     def raisePopupOnFocus(self):
         if not self.isPopupMenuClosedFunction:
-            self.popupMenus[self.currentpopupMenuIndex].root.wm_attributes("-topmost", True)
+            self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
 
     def isPopupMenuClosedFunction(self):
-        if self.currentpopupMenuIndex >= 0:
-            return not self.popupMenus[self.currentpopupMenuIndex].active
+        if self.currentPopupMenuIndex >= 0 and self.popupMenus[self.currentPopupMenuIndex].active:
+            if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():
+                self.popupMenus[self.currentPopupMenuIndex].active = True
+                return False
+        self.popupMenus[self.currentPopupMenuIndex].active = False
         return True
+        
     
