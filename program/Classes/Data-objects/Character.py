@@ -1,4 +1,6 @@
 class character:
+    characterId = ""
+    name = ""
     armour = {
         "head" : None,
         "torso" : None,
@@ -9,14 +11,17 @@ class character:
     }
     weapon = None
     level = 1
-    CharacterClass = None
-    statPoint = {
+    characterClass = ""
+    unspentAttributePoints = 0
+    attributePoint = {
         "constitution" : 0,
         "strength" : 0,
         "agility" : 0,
         "dexterity" : 0,
         "wisdom" : 0,
         "intelligence" : 0,
+    }
+    statPoint = {
         "health" : 0,
         "melee damage" : 0,
         "move speed" : 0,
@@ -25,7 +30,7 @@ class character:
         "magic damage" : 0
     }
     
-    statPointDistribution = {
+    attributePointDistribution = {
         "constitution" : 0,
         "strength" : 0,
         "agility" : 0,
@@ -34,13 +39,3 @@ class character:
         "intelligence" : 0
     }
 
-        
-class characterController:
-    def new():
-        c = character()
-        c.level = 30
-        characterController.generateStatPoints(c)
-        return c
-
-    def generateStatPoints(character):
-        character.statPoint["strength"] = 10 + ((character.level-1) * 7)

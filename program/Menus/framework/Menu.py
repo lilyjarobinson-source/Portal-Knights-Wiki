@@ -25,7 +25,13 @@ class menu:
             self.run()
 
     def assignIcons(self, icons):
-        self.icons = icons
+        self.icons = {}
+        for i in icons.keys():
+            self.icons.update({i : icons[i]})
+
+    def addIcons(self, icons):
+        for i in icons.keys():
+            self.icons.update({i : icons[i]})
 
     def activateIcon(self, iconName):
         self.icons[iconName].activate(root)
@@ -136,7 +142,8 @@ class button(obj):
 
     def checkForPopUpMenu(self):
         if self.isPopupMenuClosedFunction():
-            self.fun()
+            if self.fun != None:
+                self.fun()
 
     def set(self, text):
         self.text = text
@@ -190,9 +197,9 @@ class entry(obj):
         super().__init__(pos, dimensions)
 
     def initialise(self, root):
-        self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         if self.contents == None:
             self.contents = StringVar()
+        self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         self.place()
 
     def get(self):
@@ -208,11 +215,12 @@ class entry(obj):
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
-        self.obj.bind("<KeyRelease>", self.checkForPopUpMenu)
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
         if self.isPopupMenuClosedFunction():
-            self.fun()
+            if self.fun != None:
+                self.fun()
 
 class optionBox(obj):
     name = "optionBox"
@@ -252,7 +260,8 @@ class optionBox(obj):
 
     def checkForPopUpMenu(self):
         if self.isPopupMenuClosedFunction():
-            self.fun()
+            if self.fun != None:
+                self.fun()
 
 class listBox(obj):
     name = "listBox"
@@ -271,7 +280,8 @@ class listBox(obj):
 
     def checkForPopUpMenu(self):
         if self.isPopupMenuClosedFunction():
-            self.fun()
+            if self.fun != None:
+                self.fun()
 
     def getIndex(self):
         return self.obj.curselection()
@@ -301,7 +311,7 @@ class listBox(obj):
         self.items = []
         self.obj.delete(0, END)
 
-    def getItemFromIndex(self, index):
+    def getItemAtIndex(self, index):
         return self.items[index]
 
 class canvas(obj):

@@ -1,9 +1,8 @@
-import sys, time, random
+import sys, time
 classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Classes\\Weapons")
+sys.path.append(classPath + "Classes\\Data-objects")
 sys.path.append(classPath + "Classes\\DmgCalculation")
 sys.path.append(classPath + "Classes\\Graphing")
-sys.path.append(classPath + "Classes\\Character")
 sys.path.append(classPath + "Menus\\framework")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
@@ -44,7 +43,8 @@ class dmgCalcMenu(menu):
         self.graph.setXaxisLabel("Time")
         self.graph.setYaxisLabel("Damage")
         self.graph.setDrawLimit(self.drawLimit)
-        self.startGraphing()
+        #self.startGraphing()
+        self.weaponController.loadWeapons()
         self.displayWeapons()
 
     def startGraphing(self):
@@ -52,21 +52,26 @@ class dmgCalcMenu(menu):
         self.screenBeforeTime = self.beforeTime
         self.startTime = self.beforeTime
         self.timer = 0
+        self.attacking = True
+
+    def stopAttacking(self):
+        self.attacking = False
 
     def update(self):
-        self.deltaTime = time.time() - self.beforeTime
-        self.beforeTime = time.time()
+        if self.attacking:
+            self.deltaTime = time.time() - self.beforeTime
+            self.beforeTime = time.time()
 
-        self.timer += self.deltaTime
+            self.timer += self.deltaTime
 
-        self.graph.setTimer(self.timer)
-        self.attack()
-        self.graph.garbageCollectPoints()
+            self.graph.setTimer(self.timer)
+            self.attack()
+            self.graph.garbageCollectPoints()
 
-        self.screenDeltaTime = time.time() - self.screenBeforeTime
-        if self.screenDeltaTime > 0.016:
-            self.screenBeforeTime = time.time()
-            self.graph.updateCanvas()
+            self.screenDeltaTime = time.time() - self.screenBeforeTime
+            if self.screenDeltaTime > 0.016:
+                self.screenBeforeTime = time.time()
+                self.graph.updateCanvas()
 
     def startAttacking(self):
         self.attacking = True
@@ -88,7 +93,7 @@ class dmgCalcMenu(menu):
                 self.lastAttackTime = self.timer
 
     def displayWeapons(self):
-        self.weapons = self.weaponController.loadWeapons()
+        self.weapons = self.weaponController.getWeapons()
         for i in self.weapons:
             self.icons["weaponListBox"].append(i.name)
 

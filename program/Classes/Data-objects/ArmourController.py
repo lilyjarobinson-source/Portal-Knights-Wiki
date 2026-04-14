@@ -2,7 +2,7 @@ from Armour import armour
 
 class armourController:
     def loadArmourPieces():
-        location = "ArmourPieces.txt"#"Classes\\Armour\\ArmourPieces.txt"
+        location = "Classes\\Data-objects\\ArmourPieces.txt"
         armourPieces = []
         with open(location, "r") as file:
             contents = file.read()
@@ -28,5 +28,3 @@ class armourController:
             i = i.split("=")
             multipliers.update({i[0]:float(i[1])})
         return multipliers
-
-armourController.loadArmourPieces()

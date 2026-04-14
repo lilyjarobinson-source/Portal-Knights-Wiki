@@ -2,9 +2,10 @@ from Weapon import weapon
 from WeaponType import *
 
 class weaponController:
+    weapons = []
     def loadWeapons(self):
-        location = "Classes\\Weapons\\Weapons.txt"
-        weapons = []
+        location = "Classes\\Data-objects\\Weapons.txt"
+        self.weapons = []
         with open(location, "r") as file:
             contents = file.read()
             contents = contents.split("\n")
@@ -16,8 +17,15 @@ class weaponController:
                 w.baseDmg = int(item[2])
                 w.wpnType = self.setWeaponType(item[3])
                 w.multipliers = self.getMultipliers(item[4:-1])
-                weapons.append(w)
-        return weapons
+                self.weapons.append(w)
+
+    def getWeapon(self, name):
+        for i in self.weapons:
+            if i.name.lower() == name.lower():
+                return i
+
+    def getWeapons(self):
+        return self.weapons
 
     def setWeaponType(self, typeAsString):
         match typeAsString:
@@ -52,5 +60,3 @@ class weaponController:
         return multipliers
             
 
-w = weaponController()
-w.loadWeapons()

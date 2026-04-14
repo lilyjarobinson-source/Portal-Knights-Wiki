@@ -1,0 +1,2 @@
+1,name,Fist,30,warrior,87,None,None,None,None,None,None,0,0,0,0,0,0,
+797319,Lily,Fist,1,warrior,0,None,None,None,None,None,None,0,0,0,0,0,0,
