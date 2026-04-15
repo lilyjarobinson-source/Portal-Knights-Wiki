@@ -23,6 +23,9 @@ class main:
 
     def assignMenus(self, menus):
         self.menus = menus
+
+    def addMenus(self, menus):
+        self.menus += menus
         
     def assignPopupMenus(self, popupMenus):
         self.popupMenus = popupMenus

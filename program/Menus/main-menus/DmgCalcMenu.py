@@ -12,11 +12,12 @@ from ScrollingGraph import scrollingGraph
 from Menu import menu
 
 class dmgCalcMenu(menu):
+    characterController = characterController()
     weaponController = weaponController()
     damageCalculator = damageCalculator()
     weapons = []
     loadedWeaponIndex = -1
-    character = characterController.new()
+    loadedCharacter = characterController.new()
     
     graph = scrollingGraph()
     
@@ -52,7 +53,7 @@ class dmgCalcMenu(menu):
         self.screenBeforeTime = self.beforeTime
         self.startTime = self.beforeTime
         self.timer = 0
-        self.attacking = True
+        self.startAttacking()
 
     def stopAttacking(self):
         self.attacking = False
@@ -79,12 +80,12 @@ class dmgCalcMenu(menu):
 
         if self.loadedWeaponIndex == -1:
             self.loadedWeaponIndex = self.icons["weaponListBox"].getItems().index("Fist")
-            self.character.weapon = self.weapons[self.loadedWeaponIndex]
+            self.loadedCharacter.weapon = self.weapons[self.loadedWeaponIndex]
 
     def attack(self):
         if self.attacking:
-            if self.timer - self.lastAttackTime > self.character.weapon.wpnType.attackInterval:
-                hitList = self.damageCalculator.getDamageFromHit(self.character)
+            if self.timer - self.lastAttackTime > self.loadedCharacter.weapon.wpnType.attackInterval:
+                hitList = self.damageCalculator.getDamageFromHit(self.loadedCharacter)
                 dmg = 0
                 for i in hitList:
                     dmg += i.getDmg()
@@ -102,7 +103,7 @@ class dmgCalcMenu(menu):
         if len(index) == 0:
             return
         self.loadedWeaponIndex = index[0]
-        self.character.weapon = self.weapons[index[0]]
+        self.loadedCharacter.weapon = self.weapons[index[0]]
 
 
 

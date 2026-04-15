@@ -3,60 +3,46 @@ from WeaponController import weaponController
 from ArmourController import armourController
 from Character import character
 class characterController:
-    def new():
+    def new(self):
         c = character()
-        c.level = 1
-        characterController.generateCharacterId(c)
+        self.generateCharacterId(c)
         w = weaponController()
         w.loadWeapons()
         c.weapon = w.getWeapon("Fist")
         return c
 
-    def generateStatPoints(character):
-        for i in list(character.attributePoint.keys()):
-            character.attributePoint[i] = 10 + character.attributePointDistribution[i]
-        match (character.characterClass.lower()):
-            case "warrior":
-                character.attributePoint["constitution"] += ((character.level-1) * 2)
-                character.attributePoint["strength"] += ((character.level-1) * 2)
-            case "mage":
-                character.attributePoint["wisdom"] += ((character.level-1) * 2)
-                character.attributePoint["intelligence"] += ((character.level-1) * 2)
-            case "ranger":
-                character.attributePoint["agility"] += ((character.level-1) * 2)
-                character.attributePoint["dexterity"] += ((character.level-1) * 2)
-            case "rogue":
-                character.attributePoint["dexterity"] += ((character.level-1) * 2)
-                character.attributePoint["wisdom"] += ((character.level-1) * 2)
-            case "druid":
-                character.attributePoint["strength"] += ((character.level-1) * 2)
-                character.attributePoint["wisdom"] += ((character.level-1) * 2)
-        statKeyList = list(character.statPoint.keys())
-        attrKeyList = list(character.attributePoint.keys())
-        for i in range(len(attrKeyList)):
-            character.statPoint[statKeyList[i]] = 10 + 2 * (character.attributePoint[attrKeyList[i]]-10)
-        
-
-    def generateCharacterId(character):
-        characters = characterController.getAllCharacters()
-        newId = characterController.generateNewId()
+    def generateCharacterId(self, c):
+        print("generating character id")
+        contents = self.loadCharFileContents()
+        newId = self.generateNewId()
         idIsTaken = True
         while idIsTaken:
             idIsTaken = False
-            for i in characters:
-                if i.characterId == newId:
+            for i in contents:
+                if i.split(",")[0] == newId:
                     idIsTaken = True
-                    newId = characterController.generateNewId()
+                    newId = self.generateNewId()
                     break
-        character.characterId = newId
+        c.characterId = newId
+        print("finished generating character id")
 
-    def generateNewId():
+    def generateNewId(self):
         newId = ""
         for i in range(6):
             newId += str(random.randint(0, 9))
         return newId
 
-    def getAllCharacters():
+    def getAllCharacters(self):
+        print("getting all characters")
+        characters = []
+        for i in self.loadCharFileContents():
+            characters.append(character())
+            self.getCharacterDataFromSaveLine(i, characters[-1])
+        print("finished getting all characters")
+        return characters
+
+    def loadCharFileContents(self):
+        print("loading characters file as string array")
         classPath = __file__.split("program")[0]
         try:
             file = open(classPath + "userdata\\characters.txt", "r")
@@ -67,15 +53,12 @@ class characterController:
             file.write("")
             file.close()
             return []
-        contents = contents.split("\n")[:-1]
-        characters = []
-        for i in contents:
-            characters.append(characterController.getCharacterDataFromSaveLine(i))
-        return characters
+        print("finished loading characters file as string array")
+        return contents.split("\n")[:-1]
 
-    def getCharacterDataFromSaveLine(line):
+    def getCharacterDataFromSaveLine(self, line, c):
+        print("getting character data from line")
         line = line.split(",")[:-1]
-        c = character()
         c.characterId = line[0]
         c.name = line[1]
         
@@ -89,50 +72,110 @@ class characterController:
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
             c.armour[keyList[i]] = line[6 + i]
-        
-        attrKeyList = list(character.attributePoint.keys())
+        attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
+            c.attributePoints[attrKeyList[i]] = int(line[12 + i])
             c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
-        characterController.generateStatPoints(c)
+        self.generateAttributePoints(c)
+        print("finished getting character data from line")
         return c
 
-    def saveCharacterData(character):
-        characters = characterController.getAllCharacters()
+    def saveCharacterData(self, characterToSave):
+        print("saving character data")
+        classPath = __file__.split("program")[0]
+        contents = self.loadCharFileContents()
         charFound = False
-        for i in range(len(characters)):
-            if character.characterId == characters[i].characterId:
-                characters[i] = character
+        for i in range(len(contents)):
+            if contents[i].split(",")[0] == characterToSave.characterId:
+                contents[i] = self.convertCharacterToSaveFormat(characterToSave)
                 charFound = True
                 break
-        if not charFound:
-            characters.append(character)
-        characterController.saveCharacters(characters)
 
-    def saveCharacters(characters):
-        classPath = __file__.split("program")[0]
+        if not charFound:
+            contents.append(self.convertCharacterToSaveFormat(characterToSave))
+
         content = ""
-        for i in characters:
-            content += characterController.convertCharacterToSaveFormat(i) + "\n"
+        for i in contents:
+            content += i + "\n"
+        #'''
         file = open(classPath + "userdata\\characters.txt", "w")
         file.write(content)
         file.close()
+        #'''
+        print("finished saving character data")
 
+    def saveCharacters(self, characters):
+        print("saving characters")
+        classPath = __file__.split("program")[0]
+        content = ""
+        for i in characters:
+            content += self.convertCharacterToSaveFormat(i) + "\n"
+        #'''
+        file = open(classPath + "userdata\\characters.txt", "w")
+        file.write(content)
+        file.close()
+        #'''
+        print("finished saving characters")
         
-    def convertCharacterToSaveFormat(character):
-        content = character.characterId + ","
-        content += character.name + ","
-        content += character.weapon.name + ","
-        content += str(character.level) + ","
-        content += character.characterClass + ","
-        content += str(character.unspentAttributePoints) + ","
-        for i in list(character.armour.keys()):
-            # change to character.armour[i].name
-            content += str(character.armour[i]) + ","
-        for i in list(character.attributePointDistribution.keys()):
-            content += str(character.attributePointDistribution[i]) + ","
-        return content
-        
+    def convertCharacterToSaveFormat(self, characterToConvert):
+        print("converting characters to line")
+        result = characterToConvert.characterId + ","
+        result += characterToConvert.name + ","
+        result += characterToConvert.weapon.name + ","
+        result += str(characterToConvert.level) + ","
+        result += characterToConvert.characterClass + ","
+        result += str(characterToConvert.unspentAttributePoints) + ","
+        for i in list(characterToConvert.armour.keys()):
+            # change to characterToConvert.armour[i].name
+            result += str(characterToConvert.armour[i]) + ","
+        for i in list(characterToConvert.attributePointDistribution.keys()):
+            result += str(characterToConvert.attributePointDistribution[i]) + ","
+        print("finished converting characters to line")
+        return result
 
+    def generateAttributePoints(self, c):
+        print(f"generating attribute points for {c.name} as {c.characterClass}")
+        for i in list(c.attributePoints.keys()):
+            c.attributePoints[i] = 10
+        match (c.characterClass):
+            case "Warrior":
+                c.attributePoints["constitution"] += (c.level-1) * 2
+                c.attributePoints["strength"] += (c.level-1) * 2
+            case "Mage":
+                c.attributePoints["wisdom"] += (c.level-1) * 2
+                c.attributePoints["intelligence"] += (c.level-1) * 2
+            case "Ranger":
+                c.attributePoints["agility"] += (c.level-1) * 2
+                c.attributePoints["dexterity"] += (c.level-1) * 2
+            case "Rogue":
+                c.attributePoints["dexterity"] += (c.level-1) * 2
+                c.attributePoints["wisdom"] += (c.level-1) * 2
+            case "Druid":
+                c.attributePoints["strength"] += (c.level-1) * 2
+                c.attributePoints["wisdom"] += (c.level-1) * 2
+        print(f"finished generating attribute points for {c.name}")
+
+    def generateStatPoints(self, c):
+        print(f"generating stat points for {c.name}")
+        statKeyList = list(c.statPoints.keys())
+        attrKeyList = list(c.attributePoints.keys())
+        for i in range(len(attrKeyList)):
+            if statKeyList[i] in ["health", "mana"]:
+                c.statPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]]
+            else:
+                c.statPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]]
+        print(f"finished generating stat points for {c.name}")
+
+    def getMaximumStatPoints(self, c):
+        print(f"generating maximum attribute points for {c.name}")
+        return (c.level-1) * 3
+
+    def getTotalAttributePoints(self, c):
+        print(f"generating total attribute points for {c.name}")
+        for i in list(c.attributePoints.keys()):
+            c.attributePoints[i] += c.attributePointDistribution[i]
+        print(f"finished generating total attribute points for {c.name}")
+        
 
 
 
