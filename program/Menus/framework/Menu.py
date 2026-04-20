@@ -22,7 +22,7 @@ class menu:
             i.activate(root, theme, self.isPopupMenuClosedFunction)
         self.initialise(root)
         if self.runable:
-            self.run()
+            self.startRunning()
 
     def assignIcons(self, icons):
         self.icons = {}
@@ -55,10 +55,26 @@ class menu:
         pass
 
     def run(self):
+        self.update()
+        self.root.update()
+
+    def startRunning(self):
         self.running = True
+        self.runInitialisation()
+        print("Started running")
         while self.running:
-            self.update()
-            self.root.update()
+            self.run()
+
+    def stopRunning(self):
+        self.running = False
+        self.runDeinitialisation()
+        print("Stopped running")
+
+    def runInitialisation(self):
+        pass
+
+    def runDeinitialisation(self):
+        pass
 
     def update(self):
         pass

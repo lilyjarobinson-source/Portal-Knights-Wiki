@@ -4,8 +4,9 @@ class main:
     popupMenus = []
     currentPopupMenuIndex = -1
     menus = []
-    currentMenuIndex = 0
+    currentMenuIndex = -1
     currentMenu = None
+    menuWasRunning = False
     root = None
     theme = {}
     title = ""
@@ -32,6 +33,7 @@ class main:
 
     def activate(self):
         self.initialise()
+        self.currentMenuIndex = 0
         self.currentMenu = self.menus[self.currentMenuIndex]
         self.reloadMenu()
 
@@ -42,7 +44,7 @@ class main:
 
     def changeMenu(self, targetIndex):
         self.loadTheme()
-        self.menus[self.currentMenuIndex].deactivate()
+        self.currentMenu.deactivate()
         self.currentMenuIndex = targetIndex
         self.currentMenu = self.menus[targetIndex]
         self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
@@ -107,15 +109,17 @@ class main:
             colour = "#" + colour
         self.root.config(bg=colour)
 
-    def popUpMenu(self, index):
+    def popUpMenu(self, index, menuIndex):
         self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
-            self.popupMenus[index].activate("")
+            self.popupMenus[index].activate("", menuIndex)
+            if self.currentMenu.running:
+                self.menuWasRunning = True
+                self.currentMenu.stopRunning()
         else:
             self.popupMenus[index].root.wm_attributes("-topmost", True)
 
     def popDownMenu(self):
-        print(not self.isPopupMenuClosedFunction())
         if not self.isPopupMenuClosedFunction():
             self.popupMenus[self.currentPopupMenuIndex].deactivate()
             self.currentPopupMenuIndex = -1
@@ -126,10 +130,19 @@ class main:
 
     def isPopupMenuClosedFunction(self):
         if self.currentPopupMenuIndex >= 0 and self.popupMenus[self.currentPopupMenuIndex].active:
-            if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():
-                self.popupMenus[self.currentPopupMenuIndex].active = True
-                return False
-        self.popupMenus[self.currentPopupMenuIndex].active = False
-        return True
+            try:
+                if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():
+                    self.popupMenus[self.currentPopupMenuIndex].active = True
+            except:
+                self.popupMenus[self.currentPopupMenuIndex].setInactive()
+        else:
+            self.popupMenus[self.currentPopupMenuIndex].setInactive()
+        if not self.popupMenus[self.currentPopupMenuIndex].active:
+            self.currentPopupMenuIndex = -1
+            if self.menuWasRunning:
+                self.menuWasRunning = False
+                self.currentMenu.startRunning()
+        print(self.menuWasRunning)
+        return not self.popupMenus[self.currentPopupMenuIndex].active
         
     

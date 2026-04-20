@@ -1,2 +1,2 @@
 472143,Lily,Fist,30,Warrior,0,None,None,None,None,None,None,0,77,10,0,0,0,
-853328,t,Fist,20,Ranger,0,None,None,None,None,None,None,0,0,0,87,0,0,
+853328,t,Fist,20,Ranger,0,None,None,None,None,None,None,0,0,0,57,0,0,

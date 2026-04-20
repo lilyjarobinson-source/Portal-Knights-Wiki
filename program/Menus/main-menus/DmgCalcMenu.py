@@ -6,6 +6,7 @@ sys.path.append(classPath + "Classes\\Graphing")
 sys.path.append(classPath + "Menus\\framework")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
+from Character import character
 from CharacterController import characterController
 from Graph import graph
 from ScrollingGraph import scrollingGraph
@@ -17,7 +18,7 @@ class dmgCalcMenu(menu):
     damageCalculator = damageCalculator()
     weapons = []
     loadedWeaponIndex = -1
-    loadedCharacter = characterController.new()
+    loadedCharacter = None
     
     graph = scrollingGraph()
     
@@ -45,8 +46,17 @@ class dmgCalcMenu(menu):
         self.graph.setYaxisLabel("Damage")
         self.graph.setDrawLimit(self.drawLimit)
         #self.startGraphing()
+        self.loadCharacter()
         self.weaponController.loadWeapons()
         self.displayWeapons()
+
+    def loadCharacter(self):
+        file = open(__file__.split("Menus")[0] + "Recourses\\loadedCharacter.txt", "r")
+        contents = file.read()
+        file.close()
+
+        self.loadedCharacter = self.characterController.getCharacterDataFromSaveLine(contents, character())
+        self.characterController.generateStatPoints(self.loadedCharacter)
 
     def startGraphing(self):
         self.beforeTime = time.time()

@@ -13,30 +13,30 @@ class characterMenuTemplate(menu):
     classPath = __file__.split("Menus")[0]
 
     def loadCharacters(self):
-        print("loading characters")
+        #print("loading characters")
         self.characters = self.characterController.getAllCharacters()
-        print("finished loading characters")
+        #print("finished loading characters")
 
     def saveCharacter(self):
-        print("saving character")
+        #print("saving character")
         self.characterController.saveCharacterData(self.loadedCharacter)
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "w")
         file.write(self.characterController.convertCharacterToSaveFormat(self.loadedCharacter))
         file.close()
-        print("finished saving character")
+        #print("finished saving character")
 
     def saveCharacters(self):
-        print("saving characters")
+        #print("saving characters")
         self.characterController.saveCharacters(self.characters)
-        print("finished saving characters")
+        #print("finished saving characters")
 
     def loadCharacter(self):
-        print("loading character")
+        #print("loading character")
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "r")
         contents = file.read()
         file.close()
 
         self.loadedCharacter = self.characterController.getCharacterDataFromSaveLine(contents, character())
-        print("finished loading character")
+        #print("finished loading character")
         
         

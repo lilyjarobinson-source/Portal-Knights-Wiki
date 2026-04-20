@@ -15,6 +15,7 @@ from CharacterOptionsMenu import characterOptionsMenu
 from CharacterAttributeMenu import characterAttributeMenu
 from CharacterNewMenu import characterNewMenu
 from CharacterTalentMenu import characterTalentMenu
+from CharacterArmourMenu import characterArmourMenu
 #'''
 main = main("wiki", "800x500")
 characterEditorPopup = popupMenu("Character editor", "401x250")
@@ -24,6 +25,7 @@ characterOptionsMenu = characterOptionsMenu()
 characterAttributeMenu = characterAttributeMenu()
 characterNewMenu = characterNewMenu()
 characterTalentMenu = characterTalentMenu()
+characterArmourMenu = characterArmourMenu()
 
 classes = ["Warrior", "Ranger", "Mage", "Rogue", "Druid"]
 
@@ -31,12 +33,12 @@ dmgCalcMenu.assignIcons({
     "displayCanvas" : canvas([200, 60], [599, 400]),
     "weaponListBox" : listBox([1, 100], [201, 160], lambda *args : dmgCalcMenu.loadWeapon()),
     "attackButton" : button([100, 80], [100, 19], "Start attacking", dmgCalcMenu.startGraphing),
-    "menuButton" : button([100, 100], [100, 19], "menu", lambda : main.popUpMenu(0)),
+    "menuButton" : button([100, 100], [100, 19], "menu", lambda : main.popUpMenu(0, 0)),
 })
 charMenuNavigationButtons = {
     "levelButton" : button([1, 1], [99, 30], "level", lambda : characterEditorPopup.changeMenu(1)),
     "optionsButton" : button([301, 1], [99, 30], "options", lambda : characterEditorPopup.changeMenu(0)),
-    "armourButton" : button([101, 1], [99, 30], "armour", lambda : characterEditorPopup.changeMenu(0)),
+    "armourButton" : button([101, 1], [99, 30], "armour", lambda : characterEditorPopup.changeMenu(4)),
     "weaponButton" : button([201, 1], [99, 30], "weapon", lambda : characterEditorPopup.changeMenu(0)),
 }
 
@@ -68,6 +70,17 @@ characterAttributeMenu.assignIcons({
 characterTalentMenu.assignIcons({
     "canvas" : canvas([1, 55], [399, 194]),
 })
+
+characterArmourMenu.assignIcons({
+})
+
+armourSlots = ["Head", "Torso", "Arms", "Legs", "Cape", "Ring"]
+for i in range(6):
+    characterArmourMenu.addIcons({
+        f"{armourSlots[i].lower()}Label" : label([1, 55 + i * 20], [100, 19], armourSlots[i]),
+        f"{armourSlots[i].lower()}OptionBox" : optionBox([102, 55 + i * 20], [200, 19], ["None"], "None"),
+    })
+
 
 for i in [characterAttributeMenu, characterTalentMenu]:
     i.addIcons({
@@ -107,14 +120,13 @@ characterNewMenu.assignIcons({
 
 
 
-characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu])
+characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu])
 
-for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu]:
+for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu]:
     i.addIcons(charMenuNavigationButtons)
 
 main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
-#main.popUpMenu(0)
 #characterEditorPopup.changeMenu(3)
 main.activate()
 #main.root.mainloop()

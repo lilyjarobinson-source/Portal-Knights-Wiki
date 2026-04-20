@@ -26,6 +26,8 @@ class characterOptionsMenu(characterMenuTemplate):
             self.icons["charactersListbox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
 
     def refreshList(self):
+        for i in self.icons.keys():
+            print(i, self.icons[i].active)
         self.loadCharacters()
         self.displayCharacters()
 
