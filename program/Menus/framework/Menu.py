@@ -59,16 +59,18 @@ class menu:
         self.root.update()
 
     def startRunning(self):
-        self.running = True
-        self.runInitialisation()
-        print("Started running")
-        while self.running:
-            self.run()
+        if self.runable:
+            self.running = True
+            self.runInitialisation()
+            print("Started running")
+            while self.running:
+                self.run()
 
     def stopRunning(self):
-        self.running = False
-        self.runDeinitialisation()
-        print("Stopped running")
+        if self.runable:
+            self.running = False
+            self.runDeinitialisation()
+            print("Stopped running")
 
     def runInitialisation(self):
         pass
@@ -245,10 +247,10 @@ class optionBox(obj):
     defaultOption = None
     selectedOption = None
     fun = None
-    def __init__(self, pos, dimensions, options, selectedOption):
+    def __init__(self, pos, dimensions, options, defaultOption):
         super().__init__(pos, dimensions)
         self.options = options
-        self.defaultOption = selectedOption
+        self.defaultOption = defaultOption
     
     def initialise(self, root):
         if self.selectedOption == None:

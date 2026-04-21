@@ -13,8 +13,13 @@ class popupMenu(main):
         else:
             self.currentMenuIndex = menuIndex
             self.currentMenu = self.menus[self.currentMenuIndex]
-            self.loadTheme()
-            self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+            self.reloadMenu()
+        '''
+        for i in self.currentMenu.icons.keys():
+            try:
+                print(i, self.currentMenu.icons[i].get())
+            except:pass
+        #'''
 
     def initialise(self, position):
         self.root = Tk()

@@ -33,7 +33,7 @@ dmgCalcMenu.assignIcons({
     "displayCanvas" : canvas([200, 60], [599, 400]),
     "weaponListBox" : listBox([1, 100], [201, 160], lambda *args : dmgCalcMenu.loadWeapon()),
     "attackButton" : button([100, 80], [100, 19], "Start attacking", dmgCalcMenu.startGraphing),
-    "menuButton" : button([100, 100], [100, 19], "menu", lambda : main.popUpMenu(0, 0)),
+    "menuButton" : button([100, 100], [100, 19], "menu", lambda : main.popUpMenu(0, 1)),
 })
 charMenuNavigationButtons = {
     "levelButton" : button([1, 1], [99, 30], "level", lambda : characterEditorPopup.changeMenu(1)),
@@ -129,5 +129,6 @@ main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
+main.popUpMenu(0, 3)
 #main.root.mainloop()
 #'''

@@ -112,10 +112,10 @@ class main:
     def popUpMenu(self, index, menuIndex):
         self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
-            self.popupMenus[index].activate("", menuIndex)
             if self.currentMenu.running:
                 self.menuWasRunning = True
                 self.currentMenu.stopRunning()
+            self.popupMenus[index].activate("", menuIndex)
         else:
             self.popupMenus[index].root.wm_attributes("-topmost", True)
 
