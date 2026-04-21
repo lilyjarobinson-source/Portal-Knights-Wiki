@@ -1,12 +1,19 @@
 from tkinter import *
 from Main import main
 class popupMenu(main):
-    title = ""
-    geometry = ""
-    active = False
+    def __init__(self, title, geometry):
+        self.title = title
+        self.geometry = geometry
+        self.active = False
+        self.menus = []
+        self.currentMenuIndex = -1
+        self.currentMenu = None
+        self.root = None
+        self.theme = {}
         
-    def activate(self, position, menuIndex):
-        self.initialise(position)
+    def activate(self, root, position, menuIndex):
+        self.initialise(root, position)
+        print(f"popup with root : {self.root}")
         self.active = True
         if self.currentMenuIndex != -1:
             self.changeMenu(menuIndex)
@@ -21,8 +28,8 @@ class popupMenu(main):
             except:pass
         #'''
 
-    def initialise(self, position):
-        self.root = Tk()
+    def initialise(self, root, position):
+        self.root = Toplevel(root)
         self.root.geometry(self.geometry)
 
     def deactivate(self):

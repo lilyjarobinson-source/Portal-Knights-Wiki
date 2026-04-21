@@ -15,14 +15,14 @@ class menu:
         self.runable = runable
     
     def activate(self, root, theme, isPopupMenuClosedFunction):
+        print(f"activating menu with root : {root}")
         self.root = root
         self.theme = theme
         self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
-        for i in list(self.icons.values()):
-            i.activate(root, theme, self.isPopupMenuClosedFunction)
+        for i in list(self.icons.keys()):
+            #print(f"activating {i}")
+            self.icons[i].activate(root, theme, self.isPopupMenuClosedFunction)
         self.initialise(root)
-        if self.runable:
-            self.startRunning()
 
     def assignIcons(self, icons):
         self.icons = {}
@@ -62,7 +62,7 @@ class menu:
         if self.runable:
             self.running = True
             self.runInitialisation()
-            print("Started running")
+            #print("Started running")
             while self.running:
                 self.run()
 
@@ -70,7 +70,7 @@ class menu:
         if self.runable:
             self.running = False
             self.runDeinitialisation()
-            print("Stopped running")
+            #print("Stopped running")
 
     def runInitialisation(self):
         pass
@@ -83,7 +83,6 @@ class menu:
     
 
 class obj:
-    isPopupMenuClosedFunction = None
     def __init__(self, pos, dimensions):
         self.pos = pos
         self.obj = None
@@ -91,6 +90,7 @@ class obj:
         self.active = False
         self.colour = ""
         self.border = ""
+        self.isPopupMenuClosedFunction = None
 
     def activate(self, root, theme, isPopupMenuClosedFunction):
         if not self.active:
@@ -209,23 +209,30 @@ class entry(obj):
     name = "entry"
     colour = "#000000"
     textColour = "#000000"
-    contents = None
-    fun = None
     def __init__(self, pos, dimensions):
+        self.fun = None
+        self.contents = None
         super().__init__(pos, dimensions)
 
     def initialise(self, root):
+        #print("initialising")
+        #print(f"contents is  : {self.contents}")
         if self.contents == None:
-            self.contents = StringVar()
+            self.contents = StringVar(value="d")
+        #print(f"contents is  : {self.contents.get()}")
         self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
+        #print(f"obj contents : {self.obj.get()}")
         self.place()
 
     def get(self):
         return self.contents.get()
 
     def set(self, contents):
+        #print(f"setting contents to : {contents}")
         self.contents.set(contents)
         self.obj.config(textvariable=self.contents)
+        #print(f"contents is  : {self.contents.get()}")
+        #print(f"obj contents : {self.obj.get()}")
 
     def clear(self):
         self.contents.set("")
@@ -244,13 +251,12 @@ class optionBox(obj):
     name = "optionBox"
     colour = "SystemButtonFace"
     textColour = "#000000"
-    defaultOption = None
-    selectedOption = None
-    fun = None
     def __init__(self, pos, dimensions, options, defaultOption):
         super().__init__(pos, dimensions)
-        self.options = options
         self.defaultOption = defaultOption
+        self.selectedOption = None
+        self.fun = None
+        self.options = options
     
     def initialise(self, root):
         if self.selectedOption == None:

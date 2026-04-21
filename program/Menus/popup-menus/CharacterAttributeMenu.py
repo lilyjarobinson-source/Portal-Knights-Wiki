@@ -1,12 +1,9 @@
-import sys
-classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Menus\\framework")
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterAttributeMenu(characterMenuTemplate):
     def initialise(self, root):
         self.loadCharacter()
+        #'''
         for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
 
@@ -18,18 +15,20 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons[f"wisdomAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("wisdom"))
 
         self.icons["levelEntry"].bindFunctionToKeypress(lambda *args : self.setLevel())
-
+        #'''
 
         self.displayLevel()
         self.displayAttributePoints()
         self.displayStatPoints()
         self.displayClass()
+        '''
         print()
         for i in self.icons.keys():
             try:
-                print(i, self.icons[i].get())
                 print(f"object - {i}", self.icons[i].obj.get())
+                print(i, self.icons[i].get())
             except:pass
+        #'''
         
     def assignAttributePoints(self, key):
         amount = self.icons[f"{key}AssignedPointsEntry"].get()

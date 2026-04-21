@@ -1,20 +1,18 @@
 from tkinter import *
 class main:
     hexDigits = "0123456789abcdef"
-    popupMenus = []
-    currentPopupMenuIndex = -1
-    menus = []
-    currentMenuIndex = -1
-    currentMenu = None
-    menuWasRunning = False
-    root = None
-    theme = {}
-    title = ""
-    geometry = ""
     
     def __init__(self, title, geometry):
         self.title = title
         self.geometry = geometry
+        self.popupMenus = []
+        self.currentPopupMenuIndex = -1
+        self.menus = []
+        self.currentMenuIndex = -1
+        self.currentMenu = None
+        self.menuWasRunning = False
+        self.root = None
+        self.theme = {}
 
     def initialise(self):
         self.root = Tk()
@@ -33,6 +31,7 @@ class main:
 
     def activate(self):
         self.initialise()
+        print(f"main with root : {self.root}")
         self.currentMenuIndex = 0
         self.currentMenu = self.menus[self.currentMenuIndex]
         self.reloadMenu()
@@ -110,12 +109,16 @@ class main:
         self.root.config(bg=colour)
 
     def popUpMenu(self, index, menuIndex):
+        #print("popping up menu")
         self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
+            '''
             if self.currentMenu.running:
                 self.menuWasRunning = True
                 self.currentMenu.stopRunning()
-            self.popupMenus[index].activate("", menuIndex)
+            #'''
+            self.popupMenus[index].activate(self.root, "", menuIndex)
+            #self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
         else:
             self.popupMenus[index].root.wm_attributes("-topmost", True)
 
@@ -142,7 +145,7 @@ class main:
             if self.menuWasRunning:
                 self.menuWasRunning = False
                 self.currentMenu.startRunning()
-        print(self.menuWasRunning)
         return not self.popupMenus[self.currentPopupMenuIndex].active
+
         
     

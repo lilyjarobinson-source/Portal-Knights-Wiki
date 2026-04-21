@@ -95,17 +95,17 @@ attributes = ["Constitution", "Strength", "Agility", "Dexterity", "Intelligence"
 for i in range(6):
     characterAttributeMenu.addIcons({
         f"{attributes[i].lower()}Button" : button([3, 128 + i * 20], [89, 19], attributes[i], None),
-        f"{attributes[i].lower()}BaseLabel" : label([93, 128 + i * 20], [40, 19], "", None),
+        f"{attributes[i].lower()}BaseLabel" : label([93, 128 + i * 20], [40, 19], ""),
         f"{attributes[i].lower()}AssignedPointsEntry" : entry([134, 128 + i * 20], [40, 19]),
-        f"{attributes[i].lower()}TotalLabel" : label([175, 128 + i * 20], [40, 19], "", None),
+        f"{attributes[i].lower()}TotalLabel" : label([175, 128 + i * 20], [40, 19], ""),
     })
     
 stats = ["Health", "Melee damage", "Movement speed", "Ranged damage", "Magic damage", "Mana"]
 for i in range(6):
     characterAttributeMenu.addIcons({
         f"{stats[i].lower()}Label" : label([216, 128 + i * 20], [100, 19], stats[i], None),
-        f"{stats[i].lower()}BaseLabel" : label([317, 128 + i * 20], [40, 19], "", None),
-        f"{stats[i].lower()}TotalLabel" : label([358, 128 + i * 20], [40, 19], "", None),
+        f"{stats[i].lower()}BaseLabel" : label([317, 128 + i * 20], [40, 19], ""),
+        f"{stats[i].lower()}TotalLabel" : label([358, 128 + i * 20], [40, 19], ""),
     })
  
 characterNewMenu.assignIcons({
@@ -120,15 +120,16 @@ characterNewMenu.assignIcons({
 
 
 
-characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu])
+
 
 for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu]:
     i.addIcons(charMenuNavigationButtons)
+
+characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu])
 
 main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
-main.popUpMenu(0, 3)
-#main.root.mainloop()
+#main.popUpMenu(0, 1)
 #'''
