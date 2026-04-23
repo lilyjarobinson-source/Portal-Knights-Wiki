@@ -36,8 +36,7 @@ class characterController:
         #print("getting all characters")
         characters = []
         for i in self.loadCharFileContents():
-            characters.append(character())
-            self.getCharacterDataFromSaveLine(i, characters[-1])
+            characters.append(self.getCharacterDataFromSaveLine(i))
         #print("finished getting all characters")
         return characters
 
@@ -57,21 +56,25 @@ class characterController:
         return contents.split("\n")[:-1]
 
     def getCharacterDataFromSaveLine(self, line):
+        
+        w = weaponController()
+        a = armourController()
+        w.loadWeapons()
+        a.loadArmourPieces()
+        
         #print("getting character data from line")
         line = line.split(",")[:-1]
         c = character()
         c.characterId = line[0]
         c.name = line[1]
         
-        w = weaponController()
-        w.loadWeapons()
         c.weapon = w.getWeapon(line[2])
         
         c.level = int(line[3])
         c.characterClass = line[4]
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
-            c.armour[keyList[i]] = line[5 + i]
+            c.armour[keyList[i]] = a.getArmourPiece(line[5 + i])
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
             c.attributePointDistribution[attrKeyList[i]] = int(line[11 + i])
@@ -125,7 +128,10 @@ class characterController:
         result += characterToConvert.characterClass + ","
         for i in list(characterToConvert.armour.keys()):
             # change to characterToConvert.armour[i].name
-            result += str(characterToConvert.armour[i]) + ","
+            if characterToConvert.armour[i] != None:
+                result += str(characterToConvert.armour[i].name) + ","
+            else:
+                result += str(characterToConvert.armour[i]) + ","
         for i in list(characterToConvert.attributePointDistribution.keys()):
             result += str(characterToConvert.attributePointDistribution[i]) + ","
         #print("finished converting characters to line")
@@ -153,26 +159,34 @@ class characterController:
                 c.attributePoints["wisdom"] += (c.level-1) * 2
         #print(f"finished generating attribute points for {c.name}")
 
-    def generateStatPoints(self, c):
+    def generateBaseStatPoints(self, c):
         #print(f"generating stat points for {c.name}")
-        statKeyList = list(c.statPoints.keys())
+        statKeyList = list(c.baseStatPoints.keys())
         attrKeyList = list(c.attributePoints.keys())
         for i in range(len(attrKeyList)):
             if statKeyList[i] in ["health", "mana"]:
-                c.statPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]]
+                c.baseStatPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]]
             else:
-                c.statPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]]
+                c.baseStatPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
         #print(f"finished generating stat points for {c.name}")
 
-    def getMaximumStatPoints(self, c):
+    def getArmourBonusPoints(self, c):
+        for i in c.baseStatPoints:
+            c.statPoints[i] = c.baseStatPoints[i]
+        for i in c.bonusAttributePoints:
+            c.bonusAttributePoints[i] = 0
+        for i in c.armour.values():
+            if i != None:
+                if "Melee Bonus" in i.multipliers:
+                    c.statPoints["melee damage"] += int(i.multipliers["Melee Bonus"])
+                for x in c.bonusAttributePoints:
+                    if x in i.multipliers:
+                        c.bonusAttributePoints[x] += int(i.multipliers[x])
+                        print(c.bonusAttributePoints[x])
+
+    def getMaximumAttributePoints(self, c):
         #print(f"generating maximum attribute points for {c.name}")
         return (c.level-1) * 3
-
-    def getTotalAttributePoints(self, c):
-        #print(f"generating total attribute points for {c.name}")
-        for i in list(c.attributePoints.keys()):
-            c.attributePoints[i] += c.attributePointDistribution[i]
-        #print(f"finished generating total attribute points for {c.name}")
         
 
 

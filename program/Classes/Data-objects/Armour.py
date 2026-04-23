@@ -5,7 +5,7 @@ class armour:
     classRestriction = ""
     slot = ""
     multipliers = {}
-    perk = ""
+    buff = ""
 
     def toString(self):
-        return f"{self.name} {self.requiredLevel} {self.baseDefence} {self.classRestriction} {self.slot} {self.multipliers} {self.perk}"
+        return f"{self.name} {self.requiredLevel} {self.baseDefence} {self.classRestriction} {self.slot} {self.multipliers} {self.buff}"

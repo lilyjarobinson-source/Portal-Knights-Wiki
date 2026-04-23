@@ -1,1 +1,1 @@
-472143,Lily,Fist,30,Warrior,None,None,None,None,None,None,0,87,0,0,0,0,
+472143,Lily,Fist,30,Warrior,None,None,Outlaw gloves,Gladiator legbraces,None,Zeehida's ring of divine shield,0,87,0,0,0,0,

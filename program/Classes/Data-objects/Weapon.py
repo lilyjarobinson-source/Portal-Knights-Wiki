@@ -1,7 +1,7 @@
 class weapon:
     def __init__(self):
         self.name = ""
-        self.requiredClass = ""
+        self.classRestriction = ""
         self.requiredLevel = 0
         self.baseDmg = 0
         self.wpnType = None

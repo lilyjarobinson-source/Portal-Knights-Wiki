@@ -1,0 +1,1 @@
+Outlaw gloves,24,81,None,Arms,None,Melee Bonus=90,

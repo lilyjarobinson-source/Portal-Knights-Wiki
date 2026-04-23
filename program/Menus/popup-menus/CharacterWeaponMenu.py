@@ -26,7 +26,7 @@ class characterWeaponMenu(characterMenuTemplate):
     def displayWeapons(self):
         self.icons["weaponListBox"].clear()
         for i in self.weaponController.weapons:
-            if i.requiredClass in ["None", self.loadedCharacter.characterClass]:
+            if i.classRestriction in ["None", self.loadedCharacter.characterClass]:
                 self.icons["weaponListBox"].append(i.name)
 
     def loadCharacterWeapon(self):

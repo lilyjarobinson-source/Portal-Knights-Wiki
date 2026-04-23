@@ -34,7 +34,7 @@ class weaponController:
 
     def loadWeaponsFileContent(self, name):
         classPath = __file__.split("program")[0]
-        file = open(classPath + "program\\Recourses\\Weapons\\" + name + ".txt", "r")
+        file = open(f"{classPath}program\\Recourses\\Weapons\\{name}.txt", "r")
         contents = file.read()
         file.close()
         return contents.split("\n")[:-1]
@@ -43,7 +43,7 @@ class weaponController:
         line = line.split(",")
         w = weapon()
         w.name = line[0]
-        w.requiredClass = line[1]
+        w.classRestriction = line[1]
         w.requiredLevel = int(line[2])
         w.baseDmg = int(line[3])
         w.wpnType = line[4]
@@ -57,8 +57,8 @@ class weaponController:
                 return i
 
     def getWeaponDmgMultAndHitRate(self, w):
-        w.dmgMult = self.weaponTypeDictionary[w.requiredClass][w.wpnType][0]
-        w.hitInterval = self.weaponTypeDictionary[w.requiredClass][w.wpnType][1]
+        w.dmgMult = self.weaponTypeDictionary[w.classRestriction][w.wpnType][0]
+        w.hitInterval = self.weaponTypeDictionary[w.classRestriction][w.wpnType][1]
 
     def getMultipliers(self, listOfMults):
         multipliers = {}

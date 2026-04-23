@@ -74,13 +74,21 @@ characterTalentMenu.assignIcons({
 })
 
 characterArmourMenu.assignIcons({
+    "armourLabel" : label([1, 40], [99, 19], "Armour"),
+    "defenceLabel" : label([101, 40], [60, 19], "Defence"),
+    "defenceDisplayLabel" : label([162, 40], [38, 19], ""),
+    #"armourLabel" : label([1, 40], [60, 19], "Armour"),
+    
+    "armourListBox" : listBox([201, 60], [199, 189], characterArmourMenu.assignArmourToSlot),
+    
+
 })
 
 armourSlots = ["Head", "Torso", "Arms", "Legs", "Cape", "Ring"]
 for i in range(6):
     characterArmourMenu.addIcons({
-        f"{armourSlots[i].lower()}Label" : label([1, 55 + i * 20], [100, 19], armourSlots[i]),
-        f"{armourSlots[i].lower()}OptionBox" : optionBox([102, 55 + i * 20], [200, 19], ["None"], "None"),
+        f"{armourSlots[i].lower()}Label" : label([1, 60 + i * 20], [50, 19], armourSlots[i]),
+        f"{armourSlots[i].lower()}Entry" : entry([52, 60 + i * 20], [148, 19]),
     })
 
 
@@ -133,9 +141,6 @@ characterWeaponMenu.assignIcons({
     "buffLabel" : label([1, 100],  [199, 19], ""),
     "statListBox" : listBox([1, 120], [199, 39], None),
 
-    "classLabel" : label([201, 40], [99, 19], "Class"),
-    "classOptionBox" : optionBox([301, 40], [99, 19], classes, ""),
-
     "filterResetButton" : button([1, 200], [99, 19], "Reset filters", characterWeaponMenu.resetFilters),
     "filterApplyButton" : button([101, 200], [99, 19], "Apply filter", characterWeaponMenu.getFilters),
     "filterOptionMenu" : optionBox([1, 160], [99, 19], filters, "Name"),
@@ -148,8 +153,11 @@ characterWeaponMenu.assignIcons({
     #"filterDamageLabel" : label([83, 180], [35, 19], "->"),
 })
 
-
-
+for i in [characterArmourMenu, characterWeaponMenu]:
+    i.addIcons({
+        "classLabel" : label([201, 40], [99, 19], "Class"),
+        "classOptionBox" : optionBox([301, 40], [99, 19], classes, ""),
+    })
 
 
 for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu]:
@@ -161,6 +169,6 @@ main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 #main.activate()
-main.popUpMenu(0, 5)
+main.popUpMenu(0, 4)
 #main.root.mainloop()
 #'''

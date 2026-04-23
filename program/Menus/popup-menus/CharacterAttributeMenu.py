@@ -48,7 +48,7 @@ class characterAttributeMenu(characterMenuTemplate):
 
             else:
                 self.loadedCharacter.attributePointDistribution.update({key : amount})
-                remainingPoints = self.characterController.getMaximumStatPoints(self.loadedCharacter) - self.getTotalAssignedPoints()
+                remainingPoints = self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints()
                 if remainingPoints < 0:
                     self.loadedCharacter.attributePointDistribution.update({key : amount + remainingPoints})
                     self.icons[f"{key}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[key])
@@ -94,27 +94,31 @@ class characterAttributeMenu(characterMenuTemplate):
     def displayAvailibleAttributePoints(self):
         pass
 
+    def generatePoints(self):
+        self.characterController.generateAttributePoints(self.loadedCharacter)
+        self.characterController.getArmourBonusPoints(self.loadedCharacter)
+        self.characterController.generateBaseStatPoints(self.loadedCharacter)
+
     def displayAttributePoints(self):
         #print("displaying attribute points")
-        self.characterController.generateAttributePoints(self.loadedCharacter)
+        self.generatePoints()
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.attributePoints[i])
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
-            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.attributePoints[i] + self.loadedCharacter.attributePointDistribution[i])
+            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.attributePoints[i] + self.loadedCharacter.attributePointDistribution[i] + self.loadedCharacter.bonusAttributePoints[i])
         
     def displayStatPoints(self):
         #print("displaying stat points")
-        self.characterController.generateStatPoints(self.loadedCharacter)
+        self.generatePoints()
         for i in ["health", "melee damage", "movement speed", "ranged damage", "magic damage", "mana"]:
-            self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.statPoints[i])
+            self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.baseStatPoints[i])
             self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.statPoints[i])
     
     def resetAttributePoints(self):
         #print("reseting attribute points")
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.loadedCharacter.attributePointDistribution.update({i : 0})
-        self.displayAttributePoints()
-        self.displayStatPoints()
+        self.generatePoints()
 
     def displayClass(self):
         #print("displaying class")
