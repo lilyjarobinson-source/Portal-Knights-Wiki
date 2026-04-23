@@ -1,0 +1,71 @@
+import sys
+classPath = __file__.split("Menus")[0]
+sys.path.append(classPath + "Classes\\Data-objects")
+sys.path.append(classPath + "Menus\\framework")
+from Character import character
+from WeaponController import weaponController
+from CharacterMenuTemplate import characterMenuTemplate
+
+class characterWeaponMenu(characterMenuTemplate):
+    def __init__(self):
+        self.weaponController = weaponController()
+        self.loadedWeapon = None
+        
+    def initialise(self, root):
+        self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
+        
+        self.loadCharacter()
+        self.weaponController.loadWeapons()
+
+        self.displayWeapons()
+        self.loadCharacterWeapon()
+        
+        self.displayClass()
+        self.displayWeapon()
+
+    def displayWeapons(self):
+        self.icons["weaponListBox"].clear()
+        for i in self.weaponController.weapons:
+            if i.requiredClass in ["None", self.loadedCharacter.characterClass]:
+                self.icons["weaponListBox"].append(i.name)
+
+    def loadCharacterWeapon(self):
+        self.loadedWeapon = self.loadedCharacter.weapon
+
+    def setCharacterWeapon(self):
+        value = self.icons["weaponListBox"].getValue()
+        if None == 0:
+            return None
+        self.loadedWeapon = self.weaponController.getWeapon(value)
+        self.loadedCharacter.weapon = self.loadedWeapon
+        self.displayWeapon()
+
+    def displayClass(self):
+        self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
+
+    def setClass(self):
+        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.saveCharacter()
+        self.displayWeapons()
+
+    def displayWeapon(self):
+        self.icons["nameLabel"].set(self.loadedWeapon.name)
+        self.icons["damageDisplayLabel"].set(self.loadedWeapon.baseDmg)
+        self.icons["statListBox"].clear()
+        for i in self.loadedWeapon.multipliers:
+            self.icons["statListBox"].append(f"{i} : {self.loadedWeapon.multipliers[i]}")
+
+    def assignWeapon(self, slot):
+        pass
+
+    def getFilters(self):
+        pass
+
+    def resetFilters(self):
+        pass
+
+    def removeFilter(self):
+        pass
+    
+
+    

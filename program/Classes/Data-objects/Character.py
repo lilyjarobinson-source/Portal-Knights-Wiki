@@ -11,9 +11,8 @@ class character:
             "ring" : None
         }
         self.weapon = None
-        self.level = 0
+        self.level = 1
         self.characterClass = ""
-        self.unspentAttributePoints = 0
         self.attributePoints = {
             "constitution" : 0,
             "strength" : 0,

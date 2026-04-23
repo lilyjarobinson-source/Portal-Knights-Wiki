@@ -31,7 +31,6 @@ class main:
 
     def activate(self):
         self.initialise()
-        print(f"main with root : {self.root}")
         self.currentMenuIndex = 0
         self.currentMenu = self.menus[self.currentMenuIndex]
         self.reloadMenu()
@@ -109,7 +108,6 @@ class main:
         self.root.config(bg=colour)
 
     def popUpMenu(self, index, menuIndex):
-        #print("popping up menu")
         self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
             '''
@@ -118,7 +116,7 @@ class main:
                 self.currentMenu.stopRunning()
             #'''
             self.popupMenus[index].activate(self.root, "", menuIndex)
-            #self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
+            self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
         else:
             self.popupMenus[index].root.wm_attributes("-topmost", True)
 

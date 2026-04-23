@@ -15,12 +15,10 @@ class menu:
         self.runable = runable
     
     def activate(self, root, theme, isPopupMenuClosedFunction):
-        print(f"activating menu with root : {root}")
         self.root = root
         self.theme = theme
         self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
         for i in list(self.icons.keys()):
-            #print(f"activating {i}")
             self.icons[i].activate(root, theme, self.isPopupMenuClosedFunction)
         self.initialise(root)
 
@@ -34,7 +32,7 @@ class menu:
             self.icons.update({i : icons[i]})
 
     def activateIcon(self, iconName):
-        self.icons[iconName].activate(root)
+        self.icons[iconName].activate(self.root)
         
     def deactivateIcon(self, iconName):
         self.icons[iconName].deactivate()
@@ -62,15 +60,13 @@ class menu:
         if self.runable:
             self.running = True
             self.runInitialisation()
-            #print("Started running")
             while self.running:
                 self.run()
 
     def stopRunning(self):
         if self.runable:
             self.running = False
-            self.runDeinitialisation()
-            #print("Stopped running")
+            self.runDeinitialisa
 
     def runInitialisation(self):
         pass
@@ -88,9 +84,8 @@ class obj:
         self.obj = None
         self.dimensions = dimensions
         self.active = False
-        self.colour = ""
-        self.border = ""
         self.isPopupMenuClosedFunction = None
+        self.hasBoundFunction = False
 
     def activate(self, root, theme, isPopupMenuClosedFunction):
         if not self.active:
@@ -102,6 +97,14 @@ class obj:
     def deactivate(self):
         if self.active:
             self.active = False
+            #'''
+            if self.hasBoundFunction:
+                match self.name:
+                    case "entry":
+                        self.obj.unbind("<KeyRelease>")
+                    case "optionBox":
+                        self.selectedOption.trace_remove("write", self.selectedOption.trace_info()[0][1])
+            #'''
             self.obj.destroy()
 
     def initialise(self, root):
@@ -187,8 +190,7 @@ class label(obj):
             case "e":
                 self.textJustify = "right"
             case _:
-                self.textJustify = "center"
-                
+                self.textJustify = "center"   
 
     def initialise(self, root):
         self.obj = Label(root, text=self.text, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour, anchor=self.textAlign, justify=self.textJustify)
@@ -215,24 +217,17 @@ class entry(obj):
         super().__init__(pos, dimensions)
 
     def initialise(self, root):
-        #print("initialising")
-        #print(f"contents is  : {self.contents}")
         if self.contents == None:
-            self.contents = StringVar(value="d")
-        #print(f"contents is  : {self.contents.get()}")
+            self.contents = StringVar()
         self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
-        #print(f"obj contents : {self.obj.get()}")
         self.place()
 
     def get(self):
         return self.contents.get()
 
     def set(self, contents):
-        #print(f"setting contents to : {contents}")
         self.contents.set(contents)
         self.obj.config(textvariable=self.contents)
-        #print(f"contents is  : {self.contents.get()}")
-        #print(f"obj contents : {self.obj.get()}")
 
     def clear(self):
         self.contents.set("")
@@ -281,6 +276,7 @@ class optionBox(obj):
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
         self.selectedOption.trace_add("write", fun)
+        self.hasBoundFunction = True
 
     def checkForPopUpMenu(self):
         if self.isPopupMenuClosedFunction():

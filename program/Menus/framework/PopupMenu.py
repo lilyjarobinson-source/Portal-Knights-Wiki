@@ -13,7 +13,6 @@ class popupMenu(main):
         
     def activate(self, root, position, menuIndex):
         self.initialise(root, position)
-        print(f"popup with root : {self.root}")
         self.active = True
         if self.currentMenuIndex != -1:
             self.changeMenu(menuIndex)
@@ -21,15 +20,10 @@ class popupMenu(main):
             self.currentMenuIndex = menuIndex
             self.currentMenu = self.menus[self.currentMenuIndex]
             self.reloadMenu()
-        '''
-        for i in self.currentMenu.icons.keys():
-            try:
-                print(i, self.currentMenu.icons[i].get())
-            except:pass
-        #'''
 
     def initialise(self, root, position):
         self.root = Toplevel(root)
+        self.root.title(self.title)
         self.root.geometry(self.geometry)
 
     def deactivate(self):

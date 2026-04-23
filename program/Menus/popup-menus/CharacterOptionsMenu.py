@@ -14,8 +14,6 @@ class characterOptionsMenu(characterMenuTemplate):
             return None
         index = index[0]
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "w")
-        print(self.characters[index].name)
-        print(self.characterController.convertCharacterToSaveFormat(self.characters[index]))
         file.write(self.characterController.convertCharacterToSaveFormat(self.characters[index]))
         file.close()
         main.changeMenu(1)
@@ -26,8 +24,6 @@ class characterOptionsMenu(characterMenuTemplate):
             self.icons["charactersListbox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
 
     def refreshList(self):
-        for i in self.icons.keys():
-            print(i, self.icons[i].active)
         self.loadCharacters()
         self.displayCharacters()
 

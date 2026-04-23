@@ -15,18 +15,21 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons[f"wisdomAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("wisdom"))
 
         self.icons["levelEntry"].bindFunctionToKeypress(lambda *args : self.setLevel())
+        self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
+        
         #'''
-
+        #'''
         self.displayLevel()
         self.displayAttributePoints()
         self.displayStatPoints()
         self.displayClass()
+        #'''
         '''
-        print()
+        #print()
         for i in self.icons.keys():
             try:
-                print(f"object - {i}", self.icons[i].obj.get())
-                print(i, self.icons[i].get())
+                #print(f"object - {i}", self.icons[i].obj.get())
+                #print(i, self.icons[i].get())
             except:pass
         #'''
         
@@ -92,31 +95,34 @@ class characterAttributeMenu(characterMenuTemplate):
         pass
 
     def displayAttributePoints(self):
-        print("displaying attribute points")
+        #print("displaying attribute points")
         self.characterController.generateAttributePoints(self.loadedCharacter)
-        for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
+        for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.attributePoints[i])
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
             self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.attributePoints[i] + self.loadedCharacter.attributePointDistribution[i])
         
     def displayStatPoints(self):
-        print("displaying stat points")
+        #print("displaying stat points")
         self.characterController.generateStatPoints(self.loadedCharacter)
         for i in ["health", "melee damage", "movement speed", "ranged damage", "magic damage", "mana"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.statPoints[i])
             self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.statPoints[i])
     
     def resetAttributePoints(self):
-        print("reseting attribute points")
-        for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
+        #print("reseting attribute points")
+        for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.loadedCharacter.attributePointDistribution.update({i : 0})
         self.displayAttributePoints()
         self.displayStatPoints()
 
     def displayClass(self):
-        print("displaying class")
+        #print("displaying class")
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        pass
+        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.displayAttributePoints()
+        self.displayStatPoints()
+        self.saveCharacter()
         

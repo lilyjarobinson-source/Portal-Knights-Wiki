@@ -16,6 +16,7 @@ from CharacterAttributeMenu import characterAttributeMenu
 from CharacterNewMenu import characterNewMenu
 from CharacterTalentMenu import characterTalentMenu
 from CharacterArmourMenu import characterArmourMenu
+from CharacterWeaponMenu import characterWeaponMenu
 #'''
 main = main("wiki", "800x500")
 characterEditorPopup = popupMenu("Character editor", "401x250")
@@ -26,6 +27,7 @@ characterAttributeMenu = characterAttributeMenu()
 characterNewMenu = characterNewMenu()
 characterTalentMenu = characterTalentMenu()
 characterArmourMenu = characterArmourMenu()
+characterWeaponMenu = characterWeaponMenu()
 
 classes = ["Warrior", "Ranger", "Mage", "Rogue", "Druid"]
 
@@ -39,7 +41,7 @@ charMenuNavigationButtons = {
     "levelButton" : button([1, 1], [99, 30], "level", lambda : characterEditorPopup.changeMenu(1)),
     "optionsButton" : button([301, 1], [99, 30], "options", lambda : characterEditorPopup.changeMenu(0)),
     "armourButton" : button([101, 1], [99, 30], "armour", lambda : characterEditorPopup.changeMenu(4)),
-    "weaponButton" : button([201, 1], [99, 30], "weapon", lambda : characterEditorPopup.changeMenu(0)),
+    "weaponButton" : button([201, 1], [99, 30], "weapon", lambda : characterEditorPopup.changeMenu(5)),
 }
 
 characterOptionsMenu.assignIcons({
@@ -91,7 +93,7 @@ for i in [characterAttributeMenu, characterTalentMenu]:
         "levelEntry" : entry([360, 35], [40, 19]),
     })
 
-attributes = ["Constitution", "Strength", "Agility", "Dexterity", "Intelligence", "Wisdom"]
+attributes = ["Constitution", "Strength", "Agility", "Dexterity", "Wisdom", "Intelligence"]
 for i in range(6):
     characterAttributeMenu.addIcons({
         f"{attributes[i].lower()}Button" : button([3, 128 + i * 20], [89, 19], attributes[i], None),
@@ -100,10 +102,10 @@ for i in range(6):
         f"{attributes[i].lower()}TotalLabel" : label([175, 128 + i * 20], [40, 19], ""),
     })
     
-stats = ["Health", "Melee damage", "Movement speed", "Ranged damage", "Magic damage", "Mana"]
+stats = ["Health", "Melee damage", "Movement speed", "Ranged damage", "Mana", "Magic damage"]
 for i in range(6):
     characterAttributeMenu.addIcons({
-        f"{stats[i].lower()}Label" : label([216, 128 + i * 20], [100, 19], stats[i], None),
+        f"{stats[i].lower()}Label" : label([216, 128 + i * 20], [100, 19], stats[i]),
         f"{stats[i].lower()}BaseLabel" : label([317, 128 + i * 20], [40, 19], ""),
         f"{stats[i].lower()}TotalLabel" : label([358, 128 + i * 20], [40, 19], ""),
     })
@@ -118,18 +120,47 @@ characterNewMenu.assignIcons({
     "createCharacterButton" : button([1, 120], [124, 39], "Create", lambda : characterNewMenu.createCharacter(characterEditorPopup))
 })
 
+filters = ["Name", "Damage", "Stat", "Buff"]
+characterWeaponMenu.assignIcons({
+    "weaponLabel" : label([1, 40], [49, 19], "Weapon"),
+    "weaponListBox" : listBox([201, 60], [199, 189], lambda *args : characterWeaponMenu.setCharacterWeapon()),
+
+    "nameLabel" : label([1, 60], [199, 19], ""),
+    "damageLabel" : label([1, 80], [60, 19], "Damage"),
+    "damageDisplayLabel" : label([62, 80], [38, 19], ""),
+    "defenceLabel" : label([101, 80], [60, 19], "Defence"),
+    "defenceDisplayLabel" : label([162, 80], [38, 19], ""),
+    "buffLabel" : label([1, 100],  [199, 19], ""),
+    "statListBox" : listBox([1, 120], [199, 39], None),
+
+    "classLabel" : label([201, 40], [99, 19], "Class"),
+    "classOptionBox" : optionBox([301, 40], [99, 19], classes, ""),
+
+    "filterResetButton" : button([1, 200], [99, 19], "Reset filters", characterWeaponMenu.resetFilters),
+    "filterApplyButton" : button([101, 200], [99, 19], "Apply filter", characterWeaponMenu.getFilters),
+    "filterOptionMenu" : optionBox([1, 160], [99, 19], filters, "Name"),
+    "filterEntryBox" : entry([1, 180], [199, 19]),
+    "filterTypeOptionMenu" : optionBox([101, 160], [99, 19], ["itemAssetName"], "Includes"),
+    "filtersDisplayListbox" : listBox([1, 220], [199, 29], characterWeaponMenu.removeFilter),
+
+    #"filterDamageFromEntry" : entry([1, 180], [81, 19]),
+    #"filterDamageToEntry" : entry([119, 180], [81, 19]),
+    #"filterDamageLabel" : label([83, 180], [35, 19], "->"),
+})
 
 
 
 
-for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu]:
+
+for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu]:
     i.addIcons(charMenuNavigationButtons)
 
-characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu])
+characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu])
 
 main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
-main.activate()
-#main.popUpMenu(0, 1)
+#main.activate()
+main.popUpMenu(0, 5)
+#main.root.mainloop()
 #'''

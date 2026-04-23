@@ -56,9 +56,10 @@ class characterController:
         #print("finished loading characters file as string array")
         return contents.split("\n")[:-1]
 
-    def getCharacterDataFromSaveLine(self, line, c):
+    def getCharacterDataFromSaveLine(self, line):
         #print("getting character data from line")
         line = line.split(",")[:-1]
+        c = character()
         c.characterId = line[0]
         c.name = line[1]
         
@@ -68,14 +69,12 @@ class characterController:
         
         c.level = int(line[3])
         c.characterClass = line[4]
-        c.unspentAttributePoints = int(line[5])
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
-            c.armour[keyList[i]] = line[6 + i]
+            c.armour[keyList[i]] = line[5 + i]
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
-            c.attributePoints[attrKeyList[i]] = int(line[12 + i])
-            c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
+            c.attributePointDistribution[attrKeyList[i]] = int(line[11 + i])
         self.generateAttributePoints(c)
         #print("finished getting character data from line")
         return c
@@ -124,7 +123,6 @@ class characterController:
         result += characterToConvert.weapon.name + ","
         result += str(characterToConvert.level) + ","
         result += characterToConvert.characterClass + ","
-        result += str(characterToConvert.unspentAttributePoints) + ","
         for i in list(characterToConvert.armour.keys()):
             # change to characterToConvert.armour[i].name
             result += str(characterToConvert.armour[i]) + ","

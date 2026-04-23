@@ -46,9 +46,9 @@ class dmgCalcMenu(menu):
         self.graph.setYaxisLabel("Damage")
         self.graph.setDrawLimit(self.drawLimit)
         #self.startGraphing()
-        self.loadCharacter()
-        self.weaponController.loadWeapons()
-        self.displayWeapons()
+        #self.loadCharacter()
+        #self.weaponController.loadWeapons()
+        #self.displayWeapons()
 
     def loadCharacter(self):
         file = open(__file__.split("Menus")[0] + "Recourses\\loadedCharacter.txt", "r")
