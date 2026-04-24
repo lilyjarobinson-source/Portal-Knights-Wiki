@@ -7,23 +7,38 @@ class menu:
     icons = {}
     theme = {}
     runable = False
+    running = False
+    root = None
+    isPopupMenuClosedFunction = None
+
+    def __init__(self, runable=False):
+        self.runable = runable
     
-    def activate(self, root, theme):
+    def activate(self, root, theme, isPopupMenuClosedFunction):
+        self.root = root
         self.theme = theme
-        for i in list(self.icons.values()):
-            i.activate(root, theme)
+        self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
+        for i in list(self.icons.keys()):
+            self.icons[i].activate(root, theme, self.isPopupMenuClosedFunction)
         self.initialise(root)
 
     def assignIcons(self, icons):
-        self.icons = icons
+        self.icons = {}
+        for i in icons.keys():
+            self.icons.update({i : icons[i]})
+
+    def addIcons(self, icons):
+        for i in icons.keys():
+            self.icons.update({i : icons[i]})
 
     def activateIcon(self, iconName):
-        self.icons[iconName].activate(root)
+        self.icons[iconName].activate(self.root)
         
     def deactivateIcon(self, iconName):
         self.icons[iconName].deactivate()
 
     def deactivate(self):
+        self.running = False
         for i in list(self.icons.values()):
             i.deactivate()
         self.unitialise()
@@ -36,6 +51,31 @@ class menu:
 
     def reload(self):
         pass
+
+    def run(self):
+        self.update()
+        self.root.update()
+
+    def startRunning(self):
+        if self.runable:
+            self.running = True
+            self.runInitialisation()
+            while self.running:
+                self.run()
+
+    def stopRunning(self):
+        if self.runable:
+            self.running = False
+            self.runDeinitialisa
+
+    def runInitialisation(self):
+        pass
+
+    def runDeinitialisation(self):
+        pass
+
+    def update(self):
+        pass
     
 
 class obj:
@@ -44,18 +84,27 @@ class obj:
         self.obj = None
         self.dimensions = dimensions
         self.active = False
-        self.colour = ""
-        self.border = ""
+        self.isPopupMenuClosedFunction = None
+        self.hasBoundFunction = False
 
-    def activate(self, root, theme):
+    def activate(self, root, theme, isPopupMenuClosedFunction):
         if not self.active:
             self.setColour(theme)
             self.initialise(root)
             self.active = True
+            self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
         
     def deactivate(self):
         if self.active:
             self.active = False
+            #'''
+            if self.hasBoundFunction:
+                match self.name:
+                    case "entry":
+                        self.obj.unbind("<KeyRelease>")
+                    case "optionBox":
+                        self.selectedOption.trace_remove("write", self.selectedOption.trace_info()[0][1])
+            #'''
             self.obj.destroy()
 
     def initialise(self, root):
@@ -109,8 +158,13 @@ class button(obj):
         self.fun = command
 
     def initialise(self, root):
-        self.obj = Button(root, text=self.text, command=self.fun, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
+        self.obj = Button(root, text=self.text, command=self.checkForPopUpMenu, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         self.place()
+
+    def checkForPopUpMenu(self):
+        if self.isPopupMenuClosedFunction():
+            if self.fun != None:
+                self.fun()
 
     def set(self, text):
         self.text = text
@@ -136,8 +190,7 @@ class label(obj):
             case "e":
                 self.textJustify = "right"
             case _:
-                self.textJustify = "center"
-                
+                self.textJustify = "center"   
 
     def initialise(self, root):
         self.obj = Label(root, text=self.text, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour, anchor=self.textAlign, justify=self.textJustify)
@@ -158,14 +211,15 @@ class entry(obj):
     name = "entry"
     colour = "#000000"
     textColour = "#000000"
-    contents = None
     def __init__(self, pos, dimensions):
+        self.fun = None
+        self.contents = None
         super().__init__(pos, dimensions)
 
     def initialise(self, root):
-        self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         if self.contents == None:
             self.contents = StringVar()
+        self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         self.place()
 
     def get(self):
@@ -180,18 +234,24 @@ class entry(obj):
         self.obj.config(textvariable=self.contents)
 
     def bindFunctionToKeypress(self, fun):
-        self.obj.bind("<KeyRelease>", fun)
+        self.fun = fun
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
+
+    def checkForPopUpMenu(self):
+        if self.isPopupMenuClosedFunction():
+            if self.fun != None:
+                self.fun()
 
 class optionBox(obj):
     name = "optionBox"
     colour = "SystemButtonFace"
     textColour = "#000000"
-    defaultOption = None
-    selectedOption = None
-    def __init__(self, pos, dimensions, options, selectedOption):
+    def __init__(self, pos, dimensions, options, defaultOption):
         super().__init__(pos, dimensions)
+        self.defaultOption = defaultOption
+        self.selectedOption = None
+        self.fun = None
         self.options = options
-        self.defaultOption = selectedOption
     
     def initialise(self, root):
         if self.selectedOption == None:
@@ -214,7 +274,14 @@ class optionBox(obj):
         self.activate(root, theme)
 
     def bindFunctionToKeypress(self, fun):
+        self.fun = fun
         self.selectedOption.trace_add("write", fun)
+        self.hasBoundFunction = True
+
+    def checkForPopUpMenu(self):
+        if self.isPopupMenuClosedFunction():
+            if self.fun != None:
+                self.fun()
 
 class listBox(obj):
     name = "listBox"
@@ -223,13 +290,18 @@ class listBox(obj):
     def __init__(self, pos, dimensions, command):
         super().__init__(pos, dimensions)
         self.items = []
-        self.command = command
+        self.fun = command
 
     def initialise(self, root):
         self.obj = Listbox(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0, fg=self.textColour)
         self.clear()
-        self.obj.bind("<<ListboxSelect>>", self.command)
+        self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkForPopUpMenu())
         self.place()
+
+    def checkForPopUpMenu(self):
+        if self.isPopupMenuClosedFunction():
+            if self.fun != None:
+                self.fun()
 
     def getIndex(self):
         return self.obj.curselection()
@@ -259,7 +331,7 @@ class listBox(obj):
         self.items = []
         self.obj.delete(0, END)
 
-    def getItemFromIndex(self, index):
+    def getItemAtIndex(self, index):
         return self.items[index]
 
 class canvas(obj):

@@ -1,0 +1,1 @@
+Gladiator legbraces,24,253,None,Legs,,msR=4,msA=1,

@@ -1,21 +1,25 @@
-import sys, time, random
-sys.path.append(__file__.split("Menus")[0] + "Classes\\Weapons")
-sys.path.append(__file__.split("Menus")[0] + "Classes\\DmgCalculation")
-sys.path.append(__file__.split("Menus")[0] + "Classes\\Graphing")
+import sys, time
+classPath = __file__.split("Menus")[0]
+sys.path.append(classPath + "Classes\\Data-objects")
+sys.path.append(classPath + "Classes\\DmgCalculation")
+sys.path.append(classPath + "Classes\\Graphing")
+sys.path.append(classPath + "Menus\\framework")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
+from CharacterController import characterController
 from Graph import graph
 from ScrollingGraph import scrollingGraph
 from Menu import menu
-from RunableMenu import runableMenu
+from CharacterMenuTemplate import characterMenuTemplate
 
-class dmgCalcMenu(runableMenu):
+class dmgCalcMenu(menu):
+    characterController = characterController()
     weaponController = weaponController()
     damageCalculator = damageCalculator()
     weapons = []
-    loadedWeapon = None
-    loadedWeaponIndex = 0
-
+    loadedWeaponIndex = -1
+    loadedCharacter = characterController.new()
+    
     graph = scrollingGraph()
     
 
@@ -41,7 +45,8 @@ class dmgCalcMenu(runableMenu):
         self.graph.setXaxisLabel("Time")
         self.graph.setYaxisLabel("Damage")
         self.graph.setDrawLimit(self.drawLimit)
-        self.startGraphing()
+        #self.startGraphing()
+        self.weaponController.loadWeapons()
         self.displayWeapons()
 
     def startGraphing(self):
@@ -49,34 +54,39 @@ class dmgCalcMenu(runableMenu):
         self.screenBeforeTime = self.beforeTime
         self.startTime = self.beforeTime
         self.timer = 0
+        self.startAttacking()
+
+    def stopAttacking(self):
+        self.attacking = False
 
     def update(self):
-        self.deltaTime = time.time() - self.beforeTime
-        self.beforeTime = time.time()
+        if self.attacking:
+            self.deltaTime = time.time() - self.beforeTime
+            self.beforeTime = time.time()
 
-        self.timer += self.deltaTime
+            self.timer += self.deltaTime
 
-        self.graph.setTimer(self.timer)
-        self.attack()
-        self.graph.garbageCollectPoints()
+            self.graph.setTimer(self.timer)
+            self.attack()
+            self.graph.garbageCollectPoints()
 
-        self.screenDeltaTime = time.time() - self.screenBeforeTime
-        if self.screenDeltaTime > 0.016:
-            self.screenBeforeTime = time.time()
-            self.graph.updateCanvas()
+            self.screenDeltaTime = time.time() - self.screenBeforeTime
+            if self.screenDeltaTime > 0.016:
+                self.screenBeforeTime = time.time()
+                self.graph.updateCanvas()
 
     def startAttacking(self):
         self.attacking = True
         self.lastAttackTime = self.timer - self.drawLimit
 
-        if self.loadedWeapon == None:
+        if self.loadedWeaponIndex == -1:
             self.loadedWeaponIndex = self.icons["weaponListBox"].getItems().index("Fist")
-            self.loadedWeapon = self.weapons[self.loadedWeaponIndex]
+            self.loadedCharacter.weapon = self.weapons[self.loadedWeaponIndex]
 
     def attack(self):
         if self.attacking:
-            if self.timer - self.lastAttackTime > self.loadedWeapon.wpnType.attackInterval:
-                hitList = self.damageCalculator.getDamageFromHit(self.loadedWeapon)
+            if self.timer - self.lastAttackTime > self.loadedCharacter.weapon.wpnType.attackInterval:
+                hitList = self.damageCalculator.getDamageFromHit(self.loadedCharacter)
                 dmg = 0
                 for i in hitList:
                     dmg += i.getDmg()
@@ -85,7 +95,7 @@ class dmgCalcMenu(runableMenu):
                 self.lastAttackTime = self.timer
 
     def displayWeapons(self):
-        self.weapons = self.weaponController.loadWeapons()
+        self.weapons = self.weaponController.getWeapons()
         for i in self.weapons:
             self.icons["weaponListBox"].append(i.name)
 
@@ -94,7 +104,7 @@ class dmgCalcMenu(runableMenu):
         if len(index) == 0:
             return
         self.loadedWeaponIndex = index[0]
-        self.loadedWeapon = self.weapons[index[0]]
+        self.loadedCharacter.weapon = self.weapons[index[0]]
 
 
 

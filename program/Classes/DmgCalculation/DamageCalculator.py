@@ -1,9 +1,11 @@
 import random
 from Hit import hit
 class damageCalculator:
+    loadedCharacter = None
     # change this to use character
-    def getDamageFromHit(self, weapon):
-        hitList = [self.calculateDamage(hit(weapon))]
+    def getDamageFromHit(self, character):
+        self.loadedCharacter = character
+        hitList = [self.calculateDamage(hit(character))]
         for i in range(1, len(hitList)):
             hitList[i] = self.calculateDamage(hitList[i])
 

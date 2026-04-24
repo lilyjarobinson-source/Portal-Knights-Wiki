@@ -1,0 +1,5 @@
+Fist,None,1,0,Weapon,
+Kitsu's iron scimitar,None,3,46,Saber,crR=27,crD=0.06,
+Kitsu's gold scimitar,None,13,106,Saber,crR=41,crD=0.08,
+Kitsu's emerald scimitar,None,23,172,Saber,crR=56,crD=0.09,
+Nihonto of the seven storms,None,24,160,Saber,
