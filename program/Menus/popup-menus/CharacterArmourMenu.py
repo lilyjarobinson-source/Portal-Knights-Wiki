@@ -57,6 +57,8 @@ class characterArmourMenu(characterMenuTemplate):
             armourPiece = self.armourController.getArmourPiece(value)
             
         self.loadedCharacter.armour[self.searchingSlot] = armourPiece
+        if armourPiece != None:
+            self.displayArmourStats(armourPiece)
         self.saveCharacter()
 
     def searchAndAssign(self, slot):
@@ -80,4 +82,16 @@ class characterArmourMenu(characterMenuTemplate):
         for i in self.displayArmourPieces:
             self.icons[f"armourListBox"].append(i.name)
 
+    def displayArmourStats(self, a):
+        self.icons["nameLabel"].set(a.name)
+        if a.buff == "":
+            self.icons["buffLabel"].deactivate()
+            self.icons["multiplierListBox"].place([1, 200], [199, 49])
+        else:
+            self.icons["buffLabel"].activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+            self.icons["buffLabel"].set(a.buff)
+            self.icons["multiplierListBox"].place([1, 220], [199, 29])
+        self.icons["multiplierListBox"].clear()
+        for i in a.multipliers:
+            self.icons["multiplierListBox"].append(f"{i} : {a.multipliers[i]}")
     

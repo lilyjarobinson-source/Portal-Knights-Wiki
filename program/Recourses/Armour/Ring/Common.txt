@@ -1,1 +1,1 @@
-Zeehida's ring of divine shield,30,130,None,Ring,None,light res=15,dexterity=15,strength=15,intelligence=15,
+Zeehida's ring of divine shield,30,130,None,Ring,,light res=15,dexterity=15,strength=15,intelligence=15,

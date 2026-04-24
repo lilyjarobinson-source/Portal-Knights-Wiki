@@ -39,6 +39,7 @@ class characterWeaponMenu(characterMenuTemplate):
         self.loadedWeapon = self.weaponController.getWeapon(value)
         self.loadedCharacter.weapon = self.loadedWeapon
         self.displayWeapon()
+        self.saveCharacter()
 
     def displayClass(self):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
@@ -50,13 +51,17 @@ class characterWeaponMenu(characterMenuTemplate):
 
     def displayWeapon(self):
         self.icons["nameLabel"].set(self.loadedWeapon.name)
+        self.icons["weaponTypeLabel"].set(self.loadedWeapon.wpnType)
         self.icons["damageDisplayLabel"].set(self.loadedWeapon.baseDmg)
         self.icons["statListBox"].clear()
         for i in self.loadedWeapon.multipliers:
             self.icons["statListBox"].append(f"{i} : {self.loadedWeapon.multipliers[i]}")
-
-    def assignWeapon(self, slot):
-        pass
+        if self.loadedWeapon.buff == "":
+            self.icons["buffLabel"].deactivate()
+            self.icons["statListBox"].place([1, 100], [199, 59])
+        else:
+            self.icons["buffLabel"].activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+            self.icons["statListBox"].place([1, 120], [199, 39])
 
     def getFilters(self):
         pass

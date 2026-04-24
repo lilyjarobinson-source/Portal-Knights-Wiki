@@ -81,14 +81,16 @@ characterArmourMenu.assignIcons({
     
     "armourListBox" : listBox([201, 60], [199, 189], characterArmourMenu.assignArmourToSlot),
     
-
+    "nameLabel" : label([1, 180], [199, 19], ""),
+    "buffLabel" : label([1, 200], [199, 19], ""),
+    "multiplierListBox" : listBox([1, 220], [199, 29], None),
 })
 
 armourSlots = ["Head", "Torso", "Arms", "Legs", "Cape", "Ring"]
 for i in range(6):
     characterArmourMenu.addIcons({
-        f"{armourSlots[i].lower()}Label" : label([1, 60 + i * 20], [50, 19], armourSlots[i]),
-        f"{armourSlots[i].lower()}Entry" : entry([52, 60 + i * 20], [148, 19]),
+        f"{armourSlots[i].lower()}Label" : label([1, 60 + i * 20], [40, 19], armourSlots[i]),
+        f"{armourSlots[i].lower()}Entry" : entry([42, 60 + i * 20], [158, 19]),
     })
 
 
@@ -130,10 +132,11 @@ characterNewMenu.assignIcons({
 
 filters = ["Name", "Damage", "Stat", "Buff"]
 characterWeaponMenu.assignIcons({
-    "weaponLabel" : label([1, 40], [49, 19], "Weapon"),
     "weaponListBox" : listBox([201, 60], [199, 189], lambda *args : characterWeaponMenu.setCharacterWeapon()),
 
-    "nameLabel" : label([1, 60], [199, 19], ""),
+    "nameLabel" : label([1, 40], [199, 19], ""),
+    "weaponTypeLabel" : label([1, 60], [99, 19], ""),
+    "dmgTypeLabel" : label([101, 60], [99, 19], ""),
     "damageLabel" : label([1, 80], [60, 19], "Damage"),
     "damageDisplayLabel" : label([62, 80], [38, 19], ""),
     "defenceLabel" : label([101, 80], [60, 19], "Defence"),
