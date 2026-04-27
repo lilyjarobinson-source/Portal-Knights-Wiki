@@ -28,9 +28,9 @@ class popupMenu(main):
 
     def deactivate(self):
         if self.active:
+            self.setInactive()
             self.currentMenu.deactivate()
             self.root.destroy()
-            self.active = False
 
     def isPopupMenuClosedFunction(self):
         return True

@@ -13,7 +13,8 @@ class menu:
 
     def __init__(self, runable=False):
         self.runable = runable
-    
+
+    # Ran to set up the menu
     def activate(self, root, theme, isPopupMenuClosedFunction):
         self.root = root
         self.theme = theme
@@ -31,26 +32,25 @@ class menu:
         for i in icons.keys():
             self.icons.update({i : icons[i]})
 
-    def activateIcon(self, iconName):
-        self.icons[iconName].activate(self.root)
-        
-    def deactivateIcon(self, iconName):
-        self.icons[iconName].deactivate()
-
+    # Ran to teardown the menu
     def deactivate(self):
         self.running = False
         for i in list(self.icons.values()):
             i.deactivate()
         self.unitialise()
 
+    # custom code for startup goes here
     def initialise(self, root):
         pass
-    
+
+    # custom code for teardown goes here
     def unitialise(self):
         pass
 
+    # code for reloading data goes here
     def reload(self):
         pass
+
 
     def run(self):
         self.update()
@@ -66,14 +66,17 @@ class menu:
     def stopRunning(self):
         if self.runable:
             self.running = False
-            self.runDeinitialisa
+            self.runDeinitialisation()
 
+    # custom code for starting running goes here
     def runInitialisation(self):
         pass
-
+    
+    # custom code for ending running goes here
     def runDeinitialisation(self):
         pass
-
+    
+    # code for updating the menu goes here
     def update(self):
         pass
     
@@ -99,6 +102,8 @@ class obj:
             self.active = False
             #'''
             if self.hasBoundFunction:
+                self.fun = None
+                self.hasBoundFunction = False
                 match self.name:
                     case "entry":
                         self.obj.unbind("<KeyRelease>")

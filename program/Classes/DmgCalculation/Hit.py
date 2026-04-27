@@ -6,7 +6,9 @@ class hit:
 
     def __init__(self, character):
         self.weapon = character.weapon
-        self.dmg = (self.weapon.baseDmg + character.statPoints["melee damage"]) * 0.3 * self.weapon.wpnType.dmgMult
+        print(character.attributePoints)
+        print(character.statPoints)
+        self.dmg = (self.weapon.baseDmg + character.statPoints["melee damage"]) * 0.3 * self.weapon.dmgMult
 
     def getDmg(self):
         return int(self.dmg)

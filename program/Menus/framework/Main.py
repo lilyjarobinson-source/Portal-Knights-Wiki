@@ -13,12 +13,14 @@ class main:
         self.menuWasRunning = False
         self.root = None
         self.theme = {}
+        self.poppedUpMenu = False
+        self.popupMenuHasJustClosed = False
 
     def initialise(self):
         self.root = Tk()
         self.root.title(self.title)
         self.root.geometry(self.geometry)
-        self.root.bind('<FocusIn>', lambda event : self.raisePopupOnFocus())
+        self.root.bind('<Button-1>', lambda event : self.raisePopupOnFocus())
 
     def assignMenus(self, menus):
         self.menus = menus
@@ -110,39 +112,45 @@ class main:
     def popUpMenu(self, index, menuIndex):
         self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
-            '''
+            #'''
             if self.currentMenu.running:
                 self.menuWasRunning = True
                 self.currentMenu.stopRunning()
             #'''
             self.popupMenus[index].activate(self.root, "", menuIndex)
+            self.poppedUpMenu = True
             self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
-        else:
-            self.popupMenus[index].root.wm_attributes("-topmost", True)
 
     def popDownMenu(self):
-        if not self.isPopupMenuClosedFunction():
+        if self.poppedUpMenu:
+            self.popupMenuHasJustClosed = True
+            self.poppedUpMenu = False
             self.popupMenus[self.currentPopupMenuIndex].deactivate()
             self.currentPopupMenuIndex = -1
 
     def raisePopupOnFocus(self):
-        if not self.isPopupMenuClosedFunction:
-            self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
+        self.isPopupMenuClosedFunction()
+        if self.popupMenuHasJustClosed:
+            self.popupMenuHasJustClosed = False
+            self.onPopupClosure()
+
+    def onPopupClosure(self):
+        self.currentMenu.reload(self.root)
+        if self.menuWasRunning:
+            self.menuWasRunning = False
+            self.currentMenu.startRunning()
 
     def isPopupMenuClosedFunction(self):
-        if self.currentPopupMenuIndex >= 0 and self.popupMenus[self.currentPopupMenuIndex].active:
+        if self.poppedUpMenu:
             try:
                 if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():
                     self.popupMenus[self.currentPopupMenuIndex].active = True
+                else:
+                    self.popDownMenu()
             except:
-                self.popupMenus[self.currentPopupMenuIndex].setInactive()
+                self.popDownMenu()
         else:
-            self.popupMenus[self.currentPopupMenuIndex].setInactive()
-        if not self.popupMenus[self.currentPopupMenuIndex].active:
-            self.currentPopupMenuIndex = -1
-            if self.menuWasRunning:
-                self.menuWasRunning = False
-                self.currentMenu.startRunning()
+            self.popDownMenu()
         return not self.popupMenus[self.currentPopupMenuIndex].active
 
         

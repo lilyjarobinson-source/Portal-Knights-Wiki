@@ -1,3 +1,5 @@
+import sys
+sys.path.append(__file__.split("Menus")[0] + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterAttributeMenu(characterMenuTemplate):
@@ -23,6 +25,7 @@ class characterAttributeMenu(characterMenuTemplate):
         self.displayAttributePoints()
         self.displayStatPoints()
         self.displayClass()
+        self.displayAvailibleAttributePoints()
         #'''
         '''
         #print()
@@ -54,6 +57,7 @@ class characterAttributeMenu(characterMenuTemplate):
                     self.icons[f"{key}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[key])
             self.displayAttributePoints()
             self.displayStatPoints()
+            self.displayAvailibleAttributePoints()
             self.saveCharacter()
                     
 
@@ -87,17 +91,19 @@ class characterAttributeMenu(characterMenuTemplate):
                     self.loadedCharacter.level = amount + remainingPoints
                     self.icons["levelEntry"].set(self.loadedCharacter.level)
             self.displayLevel()
+            self.displayAvailibleAttributePoints()
             self.displayAttributePoints()
             self.displayStatPoints()
             self.saveCharacter()
 
     def displayAvailibleAttributePoints(self):
-        pass
+        self.icons["remainingAttributePointsDisplayLabel"].set(self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints())
 
     def generatePoints(self):
         self.characterController.generateAttributePoints(self.loadedCharacter)
-        self.characterController.getArmourBonusPoints(self.loadedCharacter)
         self.characterController.generateBaseStatPoints(self.loadedCharacter)
+        self.characterController.getArmourBonusPoints(self.loadedCharacter)
+
 
     def displayAttributePoints(self):
         #print("displaying attribute points")
@@ -119,6 +125,7 @@ class characterAttributeMenu(characterMenuTemplate):
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.loadedCharacter.attributePointDistribution.update({i : 0})
         self.generatePoints()
+        self.displayAvailibleAttributePoints()
 
     def displayClass(self):
         #print("displaying class")

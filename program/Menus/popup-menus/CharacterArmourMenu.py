@@ -1,7 +1,7 @@
 import sys
 classPath = __file__.split("Menus")[0]
 sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Menus\\framework")
+sys.path.append(classPath + "Menus")
 from ArmourController import armourController
 from CharacterMenuTemplate import characterMenuTemplate
 

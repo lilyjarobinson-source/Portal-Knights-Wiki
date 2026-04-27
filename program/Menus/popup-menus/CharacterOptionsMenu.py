@@ -1,7 +1,6 @@
 import sys
 classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Menus\\framework")
+sys.path.append(classPath + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterOptionsMenu(characterMenuTemplate):
@@ -9,7 +8,7 @@ class characterOptionsMenu(characterMenuTemplate):
         self.refreshList()
 
     def selectCharacter(self, main):
-        index = self.icons["charactersListbox"].getIndex()
+        index = self.icons["charactersListBox"].getIndex()
         if len(index) == 0:
             return None
         index = index[0]
@@ -19,19 +18,19 @@ class characterOptionsMenu(characterMenuTemplate):
         main.changeMenu(1)
 
     def displayCharacters(self):
-        self.icons["charactersListbox"].clear()
+        self.icons["charactersListBox"].clear()
         for i in self.characters:
-            self.icons["charactersListbox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
+            self.icons["charactersListBox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
 
     def refreshList(self):
         self.loadCharacters()
         self.displayCharacters()
 
     def deleteCharacter(self):
-        index = self.icons["charactersListbox"].getIndex()
+        index = self.icons["charactersListBox"].getIndex()
         if len(index) == 0:
             return None
-        self.icons["charactersListbox"].delete(index[0])
+        self.icons["charactersListBox"].delete(index[0])
         self.characters.pop(index[0])
         self.saveCharacters()
     

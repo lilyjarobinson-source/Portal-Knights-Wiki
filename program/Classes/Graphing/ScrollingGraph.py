@@ -22,48 +22,48 @@ class scrollingGraph(graph):
     def drawPoints(self):
         self.getPointsToDraw()
         self.generateYaxisScale()
-        for i in range(len(self.drawList)):
-            self.canvas.dot(
-                self.originX+self.width-((self.width/self.drawLimit) * (self.timer - self.pointXList[self.drawList[i]])),
-                self.originY-(self.height * self.pointYList[self.drawList[i]]/self.yAxisScale),
-            )
-            self.canvas.write(
-                self.originX+self.width-((self.width/self.drawLimit) * (self.timer - self.pointXList[self.drawList[i]])),
-                self.originY-(self.height * self.pointYList[self.drawList[i]]/self.yAxisScale),
-                self.pointYList[self.drawList[i]],
-                "sw"
-            )
+        for x in self.pointCollectionList:
+            for i in range(len(x.drawList)):
+                self.canvas.dot(
+                    self.originX+self.width-((self.width/self.drawLimit) * (self.timer - x.pointXList[x.drawList[i]])),
+                    self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
+                )
+                self.canvas.write(
+                    self.originX+self.width-((self.width/self.drawLimit) * (self.timer - x.pointXList[x.drawList[i]])),
+                    self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
+                    x.pointYList[x.drawList[i]],
+                    "sw"
+                )
 
             
     
     def getPointsToDraw(self):
-        self.drawList = []
-        for i in range(len(self.pointXList)-1, 0, -1):
-            if self.timer - self.pointXList[i] < self.drawLimit:
-                self.drawList.append(i)
-            else:
-                break
+        for x in self.pointCollectionList:
+            x.drawList = []
+            for i in range(len(x.pointXList)-1, 0, -1):
+                if self.timer - x.pointXList[i] < self.drawLimit:
+                    x.drawList.append(i)
+                else:
+                    break
         
 
     def setTimer(self, timer):
         self.timer = timer
-    
-    def addPoint(self, x, y):
-        self.pointXList.append(x)
-        self.pointYList.append(y)
 
     def generateYaxisScale(self):
         highestPoint = 0
-        for i in self.drawList:
-            if self.pointYList[i] > highestPoint:
-                highestPoint = self.pointYList[i]
+        for x in self.pointCollectionList:
+            for i in x.drawList:
+                if x.pointYList[i] > highestPoint:
+                    highestPoint = x.pointYList[i]
         self.yAxisScale = int(highestPoint * 1.2)
             
 
     def garbageCollectPoints(self):
-        for i in range(len(self.pointXList)):
-            if self.timer - self.pointXList[0] > self.drawLimit + 1.5:
-                self.pointXList.pop(0)
-                self.pointYList.pop(0)
-            else:
-                break
+        for x in self.pointCollectionList:
+            for i in range(len(x.pointXList)):
+                if self.timer - x.pointXList[0] > self.drawLimit + 1.5:
+                    x.pointXList.pop(0)
+                    x.pointYList.pop(0)
+                else:
+                    break
