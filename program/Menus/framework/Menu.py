@@ -6,7 +6,6 @@ hexDigits = "0123456789abcdef"
 class menu:
     icons = {}
     theme = {}
-    active = False
     runable = False
     running = False
     root = None
@@ -21,12 +20,8 @@ class menu:
         self.theme = theme
         self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
         for i in self.icons.values():
-            i.activate(root, theme, self.isPopupMenuClosedFunction, self.isActive)
+            i.activate(root, theme, self.isPopupMenuClosedFunction)
         self.initialise(root)
-        self.active = True
-
-    def isActive(self):
-        return self.active
 
     def assignIcons(self, icons):
         self.icons = {}
@@ -39,7 +34,6 @@ class menu:
 
     # Ran to teardown the menu
     def deactivate(self):
-        self.active = False
         self.running = False
         for i in self.icons.values():
             i.deactivate()
@@ -95,15 +89,13 @@ class obj:
         self.active = False
         self.isPopupMenuClosedFunction = None
         self.isMenuActiveFunction = None
-        self.hasBoundFunction = False
 
-    def activate(self, root, theme, isPopupMenuClosedFunction, isMenuActiveFunction):
+    def activate(self, root, theme, isPopupMenuClosedFunction):
         if not self.active:
             self.setColour(theme)
             self.initialise(root)
             self.active = True
             self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
-            self.isMenuActiveFunction = isMenuActiveFunction
         
     def deactivate(self):
         if self.active:
@@ -240,10 +232,8 @@ class entry(obj):
         self.obj.config(textvariable=self.contents)
 
     def bindFunctionToKeypress(self, fun):
-        if not self.hasBoundFunction:
-            self.fun = fun
-            self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
-            self.hasBoundFunction = True
+        self.fun = fun
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
         if not self.initialising and self.isPopupMenuClosedFunction():
@@ -285,10 +275,8 @@ class optionBox(obj):
         self.activate(root, theme)
 
     def bindFunctionToKeypress(self, fun):
-        if not self.hasBoundFunction:
-            self.fun = fun
-            self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
-            self.hasBoundFunction = True
+        self.fun = fun
+        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
         if not self.initialising and self.isPopupMenuClosedFunction():

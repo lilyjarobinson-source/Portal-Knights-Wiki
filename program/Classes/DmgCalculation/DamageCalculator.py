@@ -36,7 +36,6 @@ class damageCalculator:
         for i in hitToCalculate.character.armourMultipliers:
             multipliers[i] += hitToCalculate.character.armourMultipliers[i]
 
-        #print(multipliers)
 
         if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
             if random.randint(1, 100) <= multipliers["Crit rate"]:
@@ -51,6 +50,3 @@ class damageCalculator:
                     self.hitList.append(newHit)
 
         return hitToCalculate
-
-    def getCharacterMultiplier(self):
-        pass

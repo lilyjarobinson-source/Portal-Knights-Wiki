@@ -1,3 +1,3 @@
-472143,Lily,Titanium masterwork fists of war,30,Warrior,Outlaw hood,Elite eliminator jerkin,Outlaw gloves,Gladiator legbraces,None,Ring of fire,0,87,0,0,0,0,
-853328,t,Axe of the lone archfiend,30,Warrior,None,None,Outlaw gloves,None,None,None,0,87,0,0,0,0,
+472143,Lily,Titanium masterwork fists of war,30,Warrior,Outlaw hood,Elite eliminator jerkin,Outlaw gloves,Gladiator legbraces,None,Ring of divine protection,0,87,0,0,0,0,
+853328,t,Axe of the lone archfiend,30,Warrior,Helm of retribution,Adept ghost bandit gambeson,Outlaw gloves,Gladiator legbraces,None,Ring of fire,0,87,0,0,0,0,
 100192,Mage,Fist,15,Mage,None,None,None,None,None,None,0,0,0,0,0,42,

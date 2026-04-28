@@ -100,9 +100,7 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons["remainingAttributePointsDisplayLabel"].set(self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints())
 
     def generatePoints(self):
-        self.characterController.generateAttributePoints(self.loadedCharacter)
-        self.characterController.generateBaseStatPoints(self.loadedCharacter)
-        self.characterController.getArmourBonusPoints(self.loadedCharacter)
+        self.characterController.generateStatPoints(self.loadedCharacter)
 
 
     def displayAttributePoints(self):
