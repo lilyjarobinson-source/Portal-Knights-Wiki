@@ -1,0 +1,1 @@
+Helm of retribution,29,201,Warrior,Head,Health=120,Crit damage=0.05,

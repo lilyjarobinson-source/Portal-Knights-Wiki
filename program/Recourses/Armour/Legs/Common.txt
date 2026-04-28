@@ -1,1 +1,1 @@
-Gladiator legbraces,24,253,None,Legs,,msR=4,msA=1,
+Gladiator legbraces,24,253,None,Legs,,Multistrike rate=4,Multistrike amount=1,

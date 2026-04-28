@@ -2,7 +2,15 @@ import sys, random
 from WeaponController import weaponController
 from ArmourController import armourController
 from Character import character
-class characterController:    
+class characterController:
+    multipliers = [
+        "Crit rate",
+        "Crit damage",
+        "Multistrike rate",
+        "Multistrike amount",
+        "Weaken enemy chance",
+        "Backstab damage"
+    ]
     def new(self):
         c = character()
         self.generateCharacterId(c)
@@ -182,6 +190,11 @@ class characterController:
                 for x in c.bonusAttributePoints:
                     if x in i.multipliers:
                         c.bonusAttributePoints[x] += int(i.multipliers[x])
+                #print(i.multipliers)
+                for x in i.multipliers:
+                    if x in characterController.multipliers:
+                        c.armourMultipliers.update({x : i.multipliers[x]})
+                        
 
     def getMaximumAttributePoints(self, c):
         #print(f"generating maximum attribute points for {c.name}")

@@ -1,1 +1,1 @@
-472143,Lily,Axe of the lone archfiend,30,Warrior,None,None,Outlaw gloves,Gladiator legbraces,None,Zeehida's ring of divine shield,0,87,0,0,0,0,
+472143,Lily,Titanium masterwork fists of war,30,Warrior,None,None,Outlaw gloves,Gladiator legbraces,None,Ring of fire,0,87,0,0,0,0,
