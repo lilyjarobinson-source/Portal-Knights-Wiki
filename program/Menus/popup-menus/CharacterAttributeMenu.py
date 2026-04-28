@@ -106,7 +106,6 @@ class characterAttributeMenu(characterMenuTemplate):
 
 
     def displayAttributePoints(self):
-        #print("displaying attribute points")
         self.generatePoints()
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.attributePoints[i])

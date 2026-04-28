@@ -110,8 +110,10 @@ class main:
         self.root.config(bg=colour)
 
     def popUpMenu(self, index, menuIndex):
-        self.currentPopupMenuIndex = index
         if self.isPopupMenuClosedFunction():
+            if self.poppedUpMenu:
+                self.popDownMenu()
+            self.currentPopupMenuIndex = index
             #'''
             if self.currentMenu.running:
                 self.menuWasRunning = True
