@@ -3,22 +3,21 @@ classPath = __file__.split("Menus")[0]
 sys.path.append(classPath + "Classes\\Data-objects")
 sys.path.append(classPath + "Classes\\DmgCalculation")
 sys.path.append(classPath + "Classes\\Graphing")
-sys.path.append(classPath + "Menus\\framework")
+sys.path.append(classPath + "Menus")
 from DamageCalculator import damageCalculator
 from WeaponController import weaponController
-from Character import character
 from CharacterController import characterController
-from Graph import graph
+from PointCollection import pointCollection
 from ScrollingGraph import scrollingGraph
-from Menu import menu
+from CharacterMenuTemplate import characterMenuTemplate
 
-class dmgCalcMenu(menu):
+class dmgCalcMenu(characterMenuTemplate):
     characterController = characterController()
     weaponController = weaponController()
     damageCalculator = damageCalculator()
-    weapons = []
-    loadedWeaponIndex = -1
-    loadedCharacter = None
+    displayWeapons = []
+    graphingCharacters = []
+    loadedCharacterIndex = -1
     
     graph = scrollingGraph()
     
@@ -36,27 +35,92 @@ class dmgCalcMenu(menu):
 
     attacking = False
 
-    lastAttackTime = 0
-
     def initialise(self, root):
+        self.refreshList()
+        self.initialiseGraph()
+        self.graph.drawAxis()
+
+    def refreshList(self):
+        self.loadCharacters()
+        self.displayCharacterChoices()
+
+    def reload(self, root):
+        self.refreshList()
+        for i in range(len(self.graphingCharacters)):
+            for x in self.characters:
+                if self.graphingCharacters[i].characterId == x.characterId:
+                    self.graphingCharacters[i] = x
+                    break
+        self.displayLoadedCharacters()
+        if self.loadedCharacterIndex != -1:
+            self.loadedCharacter = self.graphingCharacters[self.loadedCharacterIndex]
+            self.displayCharacterName()
+            self.displayCharacterWeapon()
+            self.displayCharacterClass()
+
+    def setLoadedCharacterAndPopUpMenu(self, popUpFunction):
+        if self.loadedCharacterIndex != -1:
+            self.saveCharacter()
+            popUpFunction()
+
+    def displayCharacterChoices(self):
+        self.icons["charactersListBox"].clear()
+        for i in self.characters:
+            self.icons["charactersListBox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
+
+    def loadCharacterToBeGraphed(self):
+        index = self.icons["charactersListBox"].getIndex()
+        if len(index) == 0:
+            return None
+        index = index[0]
+        self.graphingCharacters.append(self.characters[index])
+        self.displayLoadedCharacters()
+        self.characterController.generateAttributePoints(self.characters[index])
+        self.characterController.generateBaseStatPoints(self.characters[index])
+        self.characterController.getArmourBonusPoints(self.characters[index])
+        self.graph.pointCollectionList.append(pointCollection(self.characters[index].characterId))
+
+    def displayLoadedCharacters(self):
+        self.icons["loadedCharactersListBox"].clear()
+        for i in self.graphingCharacters:
+            self.icons["loadedCharactersListBox"].append(f"{i.name} - {i.characterClass} - lvl:{i.level}")
+
+    def loadCharacterForViewing(self):
+        index = self.icons["loadedCharactersListBox"].getIndex()
+        if len(index) == 0:
+            return None
+        self.loadedCharacterIndex = index[0]
+        self.loadedCharacter = self.graphingCharacters[self.loadedCharacterIndex]
+        self.displayCharacterName()
+        self.displayCharacterWeapon()
+        self.displayCharacterClass()
+
+    def displayCharacterName(self):
+        self.icons["characterNameDisplayLabel"].set(self.loadedCharacter.name)
+
+    def displayCharacterWeapon(self):
+        self.icons["weaponLabel"].set(self.loadedCharacter.weapon.name)
+
+    def displayCharacterClass(self):
+        self.icons["classLabel"].set(self.loadedCharacter.characterClass)
+
+    def removeCharacter(self):
+        if self.loadedCharacterIndex == -1:
+            return None
+        for i in self.graph.pointCollectionList:
+            if i.characterId == self.loadedCharacter.characterId:
+                self.graph.pointCollectionList.remove(i)
+                break
+        self.graphingCharacters.pop(self.loadedCharacterIndex)
+        self.displayLoadedCharacters()
+
+    def initialiseGraph(self):
         self.graph.initialise(self.icons["displayCanvas"])
         self.graph.setOrigin(50, 370)
         self.graph.setDimensions(510, 350)
         self.graph.setXaxisLabel("Time")
         self.graph.setYaxisLabel("Damage")
         self.graph.setDrawLimit(self.drawLimit)
-        #self.startGraphing()
-        #self.loadCharacter()
-        #self.weaponController.loadWeapons()
-        #self.displayWeapons()
-
-    def loadCharacter(self):
-        file = open(__file__.split("Menus")[0] + "Recourses\\loadedCharacter.txt", "r")
-        contents = file.read()
-        file.close()
-
-        self.loadedCharacter = self.characterController.getCharacterDataFromSaveLine(contents, character())
-        self.characterController.generateStatPoints(self.loadedCharacter)
 
     def startGraphing(self):
         self.beforeTime = time.time()
@@ -64,9 +128,17 @@ class dmgCalcMenu(menu):
         self.startTime = self.beforeTime
         self.timer = 0
         self.startAttacking()
-
-    def stopAttacking(self):
+        self.startRunning()
+    
+    def startAttacking(self):
+        self.attacking = True
+        self.lastAttackTimes = []
+        for i in self.graphingCharacters:
+            self.lastAttackTimes.append(self.timer - self.drawLimit)
+    
+    def stopGraphing(self):
         self.attacking = False
+        self.stopRunning()
 
     def update(self):
         if self.attacking:
@@ -84,49 +156,15 @@ class dmgCalcMenu(menu):
                 self.screenBeforeTime = time.time()
                 self.graph.updateCanvas()
 
-    def startAttacking(self):
-        self.attacking = True
-        self.lastAttackTime = self.timer - self.drawLimit
-
-        if self.loadedWeaponIndex == -1:
-            self.loadedWeaponIndex = self.icons["weaponListBox"].getItems().index("Fist")
-            self.loadedCharacter.weapon = self.weapons[self.loadedWeaponIndex]
-
     def attack(self):
         if self.attacking:
-            if self.timer - self.lastAttackTime > self.loadedCharacter.weapon.wpnType.attackInterval:
-                hitList = self.damageCalculator.getDamageFromHit(self.loadedCharacter)
-                dmg = 0
-                for i in hitList:
-                    dmg += i.getDmg()
-                
-                self.graph.addPoint(self.timer, dmg)
-                self.lastAttackTime = self.timer
-
-    def displayWeapons(self):
-        self.weapons = self.weaponController.getWeapons()
-        for i in self.weapons:
-            self.icons["weaponListBox"].append(i.name)
-
-    def loadWeapon(self):
-        index = self.icons["weaponListBox"].getIndex()
-        if len(index) == 0:
-            return
-        self.loadedWeaponIndex = index[0]
-        self.loadedCharacter.weapon = self.weapons[index[0]]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            for x in range(len(self.graphingCharacters)):
+                if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
+                    hitList = self.damageCalculator.getDamageFromHit(self.graphingCharacters[x])
+                    dmg = 0
+                    for i in hitList:
+                        dmg += i.getDmg()
+                    
+                    self.graph.addPoint(x, self.timer, dmg)
+                    self.graph.pointCollectionList[x].lastPointTime = self.timer
+        

@@ -32,10 +32,26 @@ characterWeaponMenu = characterWeaponMenu()
 classes = ["Warrior", "Ranger", "Mage", "Rogue", "Druid"]
 
 dmgCalcMenu.assignIcons({
-    "displayCanvas" : canvas([200, 60], [599, 400]),
-    "weaponListBox" : listBox([1, 100], [201, 160], lambda *args : dmgCalcMenu.loadWeapon()),
-    "attackButton" : button([100, 80], [100, 19], "Start attacking", dmgCalcMenu.startGraphing),
-    "menuButton" : button([100, 100], [100, 19], "menu", lambda : main.popUpMenu(0, 1)),
+    "displayCanvas" : canvas([201, 60], [598, 400]),
+    
+    "startGraphingButton" : button([1, 80], [99, 19], "Start graphing", dmgCalcMenu.startGraphing),
+    "stopGraphingButton" : button([101, 80], [99, 19], "Stop graphing", dmgCalcMenu.stopGraphing),
+    
+    "characterNameLabel" : label([1, 100], [40, 19], "Name"),
+    "characterNameDisplayLabel" : label([42, 100], [158, 19], ""),
+    "characterColourLabel" : label([1, 120], [50, 19], "Colour"),
+    "characterColourEntry" : entry([52, 120], [48, 19]),
+    "classLabel" : label([101, 120], [99, 19], ""),
+    "weaponLabel" : label([1, 140], [199, 19], ""),
+    "characterEditButton" : button([1, 160], [99, 19], "Edit", lambda : dmgCalcMenu.setLoadedCharacterAndPopUpMenu(lambda : main.popUpMenu(0, 1))),
+    "characterRemoveButton" : button([101, 160], [99, 19], "Remove", dmgCalcMenu.removeCharacter),
+    
+    "loadedCharactersListBoxLabel" : label([1, 180], [199, 19], "Loaded characters"),
+    "loadedCharactersListBox" : listBox([1, 200], [199, 74], lambda *args : dmgCalcMenu.loadCharacterForViewing()),
+    
+    "charactersListBoxLabel" : label([1, 280], [199, 19], "Select characters"),
+    "charactersListBox" : listBox([1, 300], [199, 160], lambda *args : dmgCalcMenu.loadCharacterToBeGraphed()),
+
 })
 charMenuNavigationButtons = {
     "levelButton" : button([1, 1], [99, 30], "level", lambda : characterEditorPopup.changeMenu(1)),
@@ -51,7 +67,7 @@ characterOptionsMenu.assignIcons({
     "newCharButton" : button([1, 120], [100, 19], "New character", lambda : characterEditorPopup.changeMenu(2)),
     "deleteCharButton" : button([1, 140], [100, 19], "Delete character", characterOptionsMenu.deleteCharacter),
 
-    "charactersListbox" : listBox([199, 60], [201, 189], None),
+    "charactersListBox" : listBox([199, 60], [201, 189], None),
 })
 
 characterAttributeMenu.assignIcons({
@@ -67,6 +83,9 @@ characterAttributeMenu.assignIcons({
 
     "classLabel" : label([50, 60], [40, 19], "Class"),
     "classOptionBox" : optionBox([30, 80], [80, 19], classes, ""),
+
+    "remainingAttributePointsLabel" : label([300, 60], [92, 19], "Attribute points"),
+    "remainingAttributePointsDisplayLabel" : label([325, 80], [40, 19], ""),
 })
 
 characterTalentMenu.assignIcons({
@@ -171,7 +190,7 @@ characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, 
 main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
-#main.activate()
-main.popUpMenu(0, 4)
+main.activate()
+#main.popUpMenu(0, 1)
 #main.root.mainloop()
 #'''

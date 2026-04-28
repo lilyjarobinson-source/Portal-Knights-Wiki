@@ -6,9 +6,7 @@ class graph:
     width = 0
     height = 0
 
-    pointXList = []
-    pointYList = []
-    drawList = []
+    pointCollectionList = []
 
     xAxisScale = 1
     yAxisScale = 1
@@ -64,17 +62,19 @@ class graph:
 
     def drawPoints(self):
         self.getPointsToDraw()
-        for i in range(len(self.drawList)-1):
-            self.canvas.dot(
-                self.originX+self.width-(self.width * self.pointXList[self.drawList[i]]/self.xAxisScale),
-                self.originY-(self.height * self.pointYList[self.drawList[i]]/self.yAxisScale)
-            )
+        for x in self.pointCollectionList:
+            for i in range(len(x.drawList)-1):
+                self.canvas.dot(
+                    self.originX+self.width-(self.width * self.pointXList[x.drawList[i]]/self.xAxisScale),
+                    self.originY-(self.height * self.pointYList[x.drawList[i]]/self.yAxisScale)
+                )
 
     def getPointsToDraw(self):
-        self.drawList = range(len(self.pointXList))
+        for i in self.pointCollectionList:
+            i.drawList = range(len(i.pointXList))
 
-    def addPoint(self, x, y):
-        self.pointXList.append(x)
-        self.pointXList.append(y)
+    def addPoint(self, pointCollectionIndex, x, y):
+        self.pointCollectionList[pointCollectionIndex].pointXList.append(x)
+        self.pointCollectionList[pointCollectionIndex].pointYList.append(y)
         
     
