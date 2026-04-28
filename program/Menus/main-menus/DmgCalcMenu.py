@@ -50,6 +50,7 @@ class dmgCalcMenu(characterMenuTemplate):
             for x in self.characters:
                 if self.graphingCharacters[i].characterId == x.characterId:
                     self.graphingCharacters[i] = x
+                    self.characterController.generateStatPoints(x)
                     break
         self.displayLoadedCharacters()
         if self.loadedCharacterIndex != -1:
@@ -75,10 +76,7 @@ class dmgCalcMenu(characterMenuTemplate):
         index = index[0]
         self.graphingCharacters.append(self.characters[index])
         self.displayLoadedCharacters()
-        self.characterController.generateAttributePoints(self.characters[index])
-        self.characterController.generateBaseStatPoints(self.characters[index])
-        self.characterController.getArmourBonusPoints(self.characters[index])
-        #print(self.characters[index].armourMultipliers)
+        self.characterController.generateStatPoints(self.characters[index])
         self.graph.pointCollectionList.append(pointCollection(self.characters[index].characterId))
 
     def displayLoadedCharacters(self):
@@ -164,9 +162,7 @@ class dmgCalcMenu(characterMenuTemplate):
                     hitList = self.damageCalculator.getDamageFromHit(self.graphingCharacters[x])
                     dmg = 0
                     for i in hitList:
-                        print(i.getDmg())
                         dmg += i.getDmg()
-                    print()
                     
                     self.graph.addPoint(x, self.timer, dmg)
                     self.graph.pointCollectionList[x].lastPointTime = self.timer
