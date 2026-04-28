@@ -1,1 +1,1 @@
-472143,Lily,Titanium masterwork fists of war,30,Warrior,None,None,Outlaw gloves,Gladiator legbraces,None,Ring of fire,0,87,0,0,0,0,
+472143,Lily,Titanium masterwork fists of war,30,Warrior,Outlaw hood,Elite eliminator jerkin,Outlaw gloves,Gladiator legbraces,None,Ring of fire,0,87,0,0,0,0,
