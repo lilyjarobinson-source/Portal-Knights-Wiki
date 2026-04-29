@@ -146,6 +146,8 @@ class dmgCalcMenu(characterMenuTemplate):
     def startAttacking(self):
         self.attacking = True
         for i in self.graph.pointCollectionList:
+            i.pointXList = []
+            i.pointYList = []
             i.lastPointTime = self.timer - self.drawLimit
     
     def stopGraphing(self):
@@ -179,10 +181,11 @@ class dmgCalcMenu(characterMenuTemplate):
                 self.icons["displayCanvas"].write(420, 1, "Total", "n")
                 self.icons["displayCanvas"].write(420, 13, "dmg", "n")
                 for i in range(len(self.graphingCharacters)):
+                    self.icons["displayCanvas"].write(380, 38 + 12 * i, self.graphingCharacters[i].name, "n")
                     self.icons["displayCanvas"].write(570, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDps(self.timer), "n")
-                    self.icons["displayCanvas"].write(535, 38 + 12 * i, self.graphingCharacters[i].damageStats.getDps(self.timer, 2), "n")
+                    self.icons["displayCanvas"].write(535, 38 + 12 * i, self.graphingCharacters[i].damageStats.getDps(self.timer, self.drawLimit), "n")
                     self.icons["displayCanvas"].write(500, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalAverageDamage(), "n")
-                    self.icons["displayCanvas"].write(455, 38 + 12 * i, self.graphingCharacters[i].damageStats.getAverageDamage(self.timer, 2), "n")
+                    self.icons["displayCanvas"].write(455, 38 + 12 * i, self.graphingCharacters[i].damageStats.getAverageDamage(self.timer, self.drawLimit), "n")
                     self.icons["displayCanvas"].write(420, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDmg(), "n")
 
 
