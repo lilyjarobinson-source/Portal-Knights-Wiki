@@ -180,6 +180,8 @@ class characterController:
         #print(f"finished generating stat points for {c.name}")
 
     def getArmourBonusPoints(self, c):
+        for x in c.armourMultipliers:
+            c.armourMultipliers[x] = 0
         for i in c.armour.values():
             if i != None:
                 for x in c.statPoints:
@@ -188,7 +190,6 @@ class characterController:
                 for x in c.bonusAttributePoints:
                     if x in i.multipliers:
                         c.bonusAttributePoints[x] += int(i.multipliers[x])
-                #print(i.multipliers)
                 for x in i.multipliers:
                     if x in characterController.multipliers:
                         if x in c.armourMultipliers:

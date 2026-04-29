@@ -141,9 +141,8 @@ class dmgCalcMenu(characterMenuTemplate):
     
     def startAttacking(self):
         self.attacking = True
-        self.lastAttackTimes = []
-        for i in self.graphingCharacters:
-            self.lastAttackTimes.append(self.timer - self.drawLimit)
+        for i in self.graph.pointCollectionList:
+            i.lastPointTime = self.timer - self.drawLimit
     
     def stopGraphing(self):
         self.attacking = False
