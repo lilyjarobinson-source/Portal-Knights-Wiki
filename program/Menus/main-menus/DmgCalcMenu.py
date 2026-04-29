@@ -5,6 +5,7 @@ sys.path.append(classPath + "Classes\\DmgCalculation")
 sys.path.append(classPath + "Classes\\Graphing")
 sys.path.append(classPath + "Menus")
 from DamageCalculator import damageCalculator
+from DamageStats import damageStats
 from WeaponController import weaponController
 from CharacterController import characterController
 from PointCollection import pointCollection
@@ -50,6 +51,7 @@ class dmgCalcMenu(characterMenuTemplate):
         for i in range(len(self.graphingCharacters)):
             for x in self.characters:
                 if self.graphingCharacters[i].characterId == x.characterId:
+                    x.damageStats = self.graphingCharacters[i].damageStats
                     self.graphingCharacters[i] = x
                     self.characterController.generateStatPoints(x)
                     break
@@ -78,7 +80,9 @@ class dmgCalcMenu(characterMenuTemplate):
         self.graphingCharacters.append(self.characters[index])
         self.displayLoadedCharacters()
         self.characterController.generateStatPoints(self.characters[index])
-        self.graph.pointCollectionList.append(pointCollection(self.characters[index]))
+        pc = pointCollection(self.characters[index])
+        self.graph.pointCollectionList.append(pc)
+        self.characters[index].damageStats = damageStats(pc)
 
     def displayLoadedCharacters(self):
         self.icons["loadedCharactersListBox"].clear()
@@ -157,12 +161,30 @@ class dmgCalcMenu(characterMenuTemplate):
 
             self.graph.setTimer(self.timer)
             self.attack()
-            self.graph.garbageCollectPoints()
+            #self.graph.garbageCollectPoints()
 
             self.screenDeltaTime = time.time() - self.screenBeforeTime
             if self.screenDeltaTime > 0.016:
                 self.screenBeforeTime = time.time()
                 self.graph.updateCanvas()
+                self.icons["displayCanvas"].write(570, 1, "Average", "n")
+                self.icons["displayCanvas"].write(570, 13, "dps", "n")
+                self.icons["displayCanvas"].write(535, 1, "Dps", "n")
+                self.icons["displayCanvas"].write(500, 1, "Total", "n")
+                self.icons["displayCanvas"].write(500, 13, "Average", "n")
+                self.icons["displayCanvas"].write(500, 25, "dmg", "n")
+                self.icons["displayCanvas"].write(455, 1, "Recent", "n")
+                self.icons["displayCanvas"].write(455, 13, "Average", "n")
+                self.icons["displayCanvas"].write(455, 25, "dmg", "n")
+                self.icons["displayCanvas"].write(420, 1, "Total", "n")
+                self.icons["displayCanvas"].write(420, 13, "dmg", "n")
+                for i in range(len(self.graphingCharacters)):
+                    self.icons["displayCanvas"].write(570, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDps(self.timer), "n")
+                    self.icons["displayCanvas"].write(535, 38 + 12 * i, self.graphingCharacters[i].damageStats.getDps(self.timer, 2), "n")
+                    self.icons["displayCanvas"].write(500, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalAverageDamage(), "n")
+                    self.icons["displayCanvas"].write(455, 38 + 12 * i, self.graphingCharacters[i].damageStats.getAverageDamage(self.timer, 2), "n")
+                    self.icons["displayCanvas"].write(420, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDmg(), "n")
+
 
     def attack(self):
         if self.attacking:
