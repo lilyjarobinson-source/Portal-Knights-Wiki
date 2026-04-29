@@ -80,13 +80,13 @@ class characterController:
         
         c.level = int(line[3])
         c.characterClass = line[4]
+        c.colour = line[5]
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
-            c.armour[keyList[i]] = a.getArmourPiece(line[5 + i])
+            c.armour[keyList[i]] = a.getArmourPiece(line[6 + i])
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
-            c.attributePointDistribution[attrKeyList[i]] = int(line[11 + i])
-        self.generateAttributePoints(c)
+            c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
         #print("finished getting character data from line")
         return c
 
@@ -134,6 +134,7 @@ class characterController:
         result += characterToConvert.weapon.name + ","
         result += str(characterToConvert.level) + ","
         result += characterToConvert.characterClass + ","
+        result += characterToConvert.colour + ","
         for i in list(characterToConvert.armour.keys()):
             # change to characterToConvert.armour[i].name
             if characterToConvert.armour[i] != None:

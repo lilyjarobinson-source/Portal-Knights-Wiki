@@ -36,6 +36,7 @@ class dmgCalcMenu(characterMenuTemplate):
     attacking = False
 
     def initialise(self, root):
+        self.icons["characterColourEntry"].bindFunctionToKeypress(self.setCharacterColour)
         self.refreshList()
         self.initialiseGraph()
         self.graph.drawAxis()
@@ -77,7 +78,7 @@ class dmgCalcMenu(characterMenuTemplate):
         self.graphingCharacters.append(self.characters[index])
         self.displayLoadedCharacters()
         self.characterController.generateStatPoints(self.characters[index])
-        self.graph.pointCollectionList.append(pointCollection(self.characters[index].characterId))
+        self.graph.pointCollectionList.append(pointCollection(self.characters[index]))
 
     def displayLoadedCharacters(self):
         self.icons["loadedCharactersListBox"].clear()
@@ -93,6 +94,7 @@ class dmgCalcMenu(characterMenuTemplate):
         self.displayCharacterName()
         self.displayCharacterWeapon()
         self.displayCharacterClass()
+        self.displayCharacterColour()
 
     def displayCharacterName(self):
         self.icons["characterNameDisplayLabel"].set(self.loadedCharacter.name)
@@ -102,6 +104,14 @@ class dmgCalcMenu(characterMenuTemplate):
 
     def displayCharacterClass(self):
         self.icons["classLabel"].set(self.loadedCharacter.characterClass)
+
+    def displayCharacterColour(self):
+        self.icons["characterColourEntry"].set(self.loadedCharacter.colour)
+
+    def setCharacterColour(self):
+        self.loadedCharacter.colour = self.icons["characterColourEntry"].get()
+        self.graph.pointCollectionList[self.loadedCharacterIndex].updateColour(self.loadedCharacter.colour)
+        self.saveCharacter()
 
     def removeCharacter(self):
         if self.loadedCharacterIndex == -1:

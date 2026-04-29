@@ -345,11 +345,11 @@ class canvas(obj):
         self.obj = Canvas(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0)
         self.place()
 
-    def dot(self, x, y):
-        self.obj.create_oval(x-3, y-3, x+3, y+3, fill="black")
+    def dot(self, x, y, colour="black"):
+        self.obj.create_oval(x-3, y-3, x+3, y+3, fill=colour, outline=colour)
 
-    def line(self, x1, y1, x2, y2, arrow="none"):
-        self.obj.create_line(x1, y1, x2, y2, arrow=arrow)
+    def line(self, x1, y1, x2, y2, arrow="none", colour="black"):
+        self.obj.create_line(x1, y1, x2, y2, arrow=arrow, fill=colour)
 
     def image(self, x, y, image, anchor="center"):
         self.obj.create_image(x, y, image=image, anchor=anchor)
