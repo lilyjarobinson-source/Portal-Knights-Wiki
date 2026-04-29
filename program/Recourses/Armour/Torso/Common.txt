@@ -1,0 +1,2 @@
+Elite eliminator jerkin,24,323,None,Torso,,Multistrike rate=5,Multistrike amount=1,
+Adept ghost bandit gambeson,24,323,None,Torso,,dark res=5,Crit rate=7,Crit damage=0.05,

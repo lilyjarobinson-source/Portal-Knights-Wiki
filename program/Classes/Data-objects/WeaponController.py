@@ -1,6 +1,4 @@
 from Weapon import weapon
-from WeaponType import *
-
 class weaponController:
     weaponTypeDictionary = {
         "Warrior" : {

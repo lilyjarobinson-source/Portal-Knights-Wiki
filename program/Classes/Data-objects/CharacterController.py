@@ -2,7 +2,15 @@ import sys, random
 from WeaponController import weaponController
 from ArmourController import armourController
 from Character import character
-class characterController:    
+class characterController:
+    multipliers = [
+        "Crit rate",
+        "Crit damage",
+        "Multistrike rate",
+        "Multistrike amount",
+        "Weaken enemy chance",
+        "Backstab damage"
+    ]
     def new(self):
         c = character()
         self.generateCharacterId(c)
@@ -72,13 +80,13 @@ class characterController:
         
         c.level = int(line[3])
         c.characterClass = line[4]
+        c.colour = line[5]
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
-            c.armour[keyList[i]] = a.getArmourPiece(line[5 + i])
+            c.armour[keyList[i]] = a.getArmourPiece(line[6 + i])
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
-            c.attributePointDistribution[attrKeyList[i]] = int(line[11 + i])
-        self.generateAttributePoints(c)
+            c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
         #print("finished getting character data from line")
         return c
 
@@ -126,6 +134,7 @@ class characterController:
         result += characterToConvert.weapon.name + ","
         result += str(characterToConvert.level) + ","
         result += characterToConvert.characterClass + ","
+        result += characterToConvert.colour + ","
         for i in list(characterToConvert.armour.keys()):
             # change to characterToConvert.armour[i].name
             if characterToConvert.armour[i] != None:
@@ -171,17 +180,33 @@ class characterController:
         #print(f"finished generating stat points for {c.name}")
 
     def getArmourBonusPoints(self, c):
-        for i in c.baseStatPoints:
-            c.statPoints[i] = c.baseStatPoints[i]
-        for i in c.bonusAttributePoints:
-            c.bonusAttributePoints[i] = 0
+        for x in c.armourMultipliers:
+            c.armourMultipliers[x] = 0
         for i in c.armour.values():
             if i != None:
-                if "Melee Bonus" in i.multipliers:
-                    c.statPoints["melee damage"] += int(i.multipliers["Melee Bonus"])
+                for x in c.statPoints:
+                    if x in i.multipliers:
+                        c.statPoints[x] += int(i.multipliers[x])
                 for x in c.bonusAttributePoints:
                     if x in i.multipliers:
                         c.bonusAttributePoints[x] += int(i.multipliers[x])
+                for x in i.multipliers:
+                    if x in characterController.multipliers:
+                        if x in c.armourMultipliers:
+                            c.armourMultipliers[x] += i.multipliers[x]
+                        else:
+                            c.armourMultipliers.update({x : i.multipliers[x]})
+
+    def generateStatPoints(self, c):
+        for i in c.statPoints:
+            c.statPoints[i] = 0
+        self.generateAttributePoints(c)
+        for i in c.bonusAttributePoints:
+            c.bonusAttributePoints[i] = 0
+        self.getArmourBonusPoints(c)
+        self.generateBaseStatPoints(c)
+        for i in c.baseStatPoints:
+            c.statPoints[i] += c.baseStatPoints[i]
 
     def getMaximumAttributePoints(self, c):
         #print(f"generating maximum attribute points for {c.name}")

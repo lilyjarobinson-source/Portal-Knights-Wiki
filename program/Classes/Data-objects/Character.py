@@ -13,6 +13,7 @@ class character:
         self.weapon = None
         self.level = 1
         self.characterClass = ""
+        self.colour = ""
         self.attributePoints = {
             "constitution" : 0,
             "strength" : 0,
@@ -53,6 +54,9 @@ class character:
             "wisdom" : 0,
             "intelligence" : 0
         }
+        self.armourMultipliers = {}
+        self.damageStats = None
+        self.buffTimers = {}
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value

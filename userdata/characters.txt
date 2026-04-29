@@ -1,3 +1,0 @@
-472143,Lily,Axe of the lone archfiend,30,Warrior,None,None,Outlaw gloves,Gladiator legbraces,None,Zeehida's ring of divine shield,0,87,0,0,0,0,
-853328,t,Fist,30,Warrior,None,None,None,None,None,None,0,87,0,0,0,0,
-100192,Mage,Fist,15,Mage,None,None,None,None,None,None,0,0,0,0,0,42,
