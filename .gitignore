@@ -1,2 +1,4 @@
 *.pyc
 /.idea/
+/program/recourses/loadedCharacter.txt
+/userdata/characters.txt

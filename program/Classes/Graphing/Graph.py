@@ -66,7 +66,8 @@ class graph:
             for i in range(len(x.drawList)-1):
                 self.canvas.dot(
                     self.originX+self.width-(self.width * self.pointXList[x.drawList[i]]/self.xAxisScale),
-                    self.originY-(self.height * self.pointYList[x.drawList[i]]/self.yAxisScale)
+                    self.originY-(self.height * self.pointYList[x.drawList[i]]/self.yAxisScale),
+                    x.colour
                 )
 
     def getPointsToDraw(self):

@@ -13,6 +13,7 @@ class character:
         self.weapon = None
         self.level = 1
         self.characterClass = ""
+        self.colour = ""
         self.attributePoints = {
             "constitution" : 0,
             "strength" : 0,
