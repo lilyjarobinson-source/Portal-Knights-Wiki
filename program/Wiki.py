@@ -33,6 +33,8 @@ classes = ["Warrior", "Ranger", "Mage", "Rogue", "Druid"]
 
 dmgCalcMenu.assignIcons({
     "displayCanvas" : canvas([201, 60], [598, 400]),
+
+    "charcterMenuButton" : button([1, 60], [199, 19], "Characters menu", lambda : main.popUpMenu(0, 0)),
     
     "startGraphingButton" : button([1, 80], [99, 19], "Start graphing", dmgCalcMenu.startGraphing),
     "stopGraphingButton" : button([101, 80], [99, 19], "Stop graphing", dmgCalcMenu.stopGraphing),
@@ -146,7 +148,9 @@ characterNewMenu.assignIcons({
     "nameEntry" : entry([62, 60], [200, 19]),
     "classOptionBox" : optionBox([62, 80], [200, 19], classes, "warrior"),
 
-    "createCharacterButton" : button([1, 120], [124, 39], "Create", lambda : characterNewMenu.createCharacter(characterEditorPopup))
+    "createCharacterButton" : button([1, 120], [124, 39], "Create", lambda : characterNewMenu.createCharacter(characterEditorPopup)),
+
+    "backButton" : button([300, 1], [100, 19], "Back", lambda : characterEditorPopup.changeMenu(0))
 })
 
 filters = ["Name", "Damage", "Stat", "Buff"]
@@ -182,7 +186,7 @@ for i in [characterArmourMenu, characterWeaponMenu]:
     })
 
 
-for i in [characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu]:
+for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu]:
     i.addIcons(charMenuNavigationButtons)
 
 characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu])
@@ -192,5 +196,5 @@ main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
 #main.popUpMenu(0, 1)
-#main.root.mainloop()
+main.root.mainloop()
 #'''
