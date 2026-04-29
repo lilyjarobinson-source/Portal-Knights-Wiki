@@ -56,6 +56,7 @@ class character:
         }
         self.armourMultipliers = {}
         self.damageStats = None
+        self.buffTimers = {}
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value
