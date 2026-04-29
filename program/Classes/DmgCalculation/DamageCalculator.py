@@ -35,7 +35,15 @@ class damageCalculator:
                 multipliers[i] += hitToCalculate.weapon.multipliers[i]
         for i in hitToCalculate.character.armourMultipliers:
             multipliers[i] += hitToCalculate.character.armourMultipliers[i]
+            
+        if random.randint(1, 100) <= multipliers["Weaken enemy chance"]:
+            hitToCalculate.character.buffTimers.update({"Weaken enemy" : 3})
 
+        if "Weaken enemy" in hitToCalculate.character.buffTimers:
+            if hitToCalculate.character.buffTimers["Weaken enemy"] > 0:
+                hitToCalculate.dmg *= 1.3
+            else:
+                hitToCalculate.character.buffTimers.pop("Weaken enemy")
 
         if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
             if random.randint(1, 100) <= multipliers["Crit rate"]:
@@ -48,5 +56,6 @@ class damageCalculator:
                     newHit = hitToCalculate.copy()
                     newHit.isAdditionalStrike = True
                     self.hitList.append(newHit)
+        
 
         return hitToCalculate

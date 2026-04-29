@@ -1,0 +1,1 @@
+Cloak of the eternal watcher,29,48,None,Cape,,Crit rate=8,Crit damage=0.05,

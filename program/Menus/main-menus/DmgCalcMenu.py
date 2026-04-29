@@ -163,10 +163,13 @@ class dmgCalcMenu(characterMenuTemplate):
             if self.screenDeltaTime > 0.016:
                 self.screenBeforeTime = time.time()
                 self.graph.updateCanvas()
+                self.icons["displayCanvas"].write(50, 50, self.loadedCharacter.buffTimers)
 
     def attack(self):
         if self.attacking:
             for x in range(len(self.graphingCharacters)):
+                for i in self.graphingCharacters[x].buffTimers:
+                    self.graphingCharacters[x].buffTimers[i] -= self.deltaTime
                 if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
                     hitList = self.damageCalculator.getDamageFromHit(self.graphingCharacters[x])
                     dmg = 0
