@@ -91,7 +91,12 @@ characterAttributeMenu.assignIcons({
 })
 
 characterTalentMenu.assignIcons({
-    "canvas" : canvas([1, 55], [399, 194]),
+    "frameLabel" : label([1, 55], [399, 194], ""),
+    
+    "talentLabel" : label([3, 60], [50, 19], "Talents"),
+    
+    "classLabel" : label([338, 60], [40, 19], "Class"),
+    "classOptionBox" : optionBox([318, 80], [80, 19], classes, ""),
 })
 
 characterArmourMenu.assignIcons({
@@ -113,7 +118,12 @@ for i in range(6):
         f"{armourSlots[i].lower()}Label" : label([1, 60 + i * 20], [40, 19], armourSlots[i]),
         f"{armourSlots[i].lower()}Entry" : entry([42, 60 + i * 20], [158, 19]),
     })
-
+unlockLevels = [2, 5, 10, 15, 20, 25, 30]
+for i in range(7):
+    characterTalentMenu.addIcons({
+        f"level{i}Label" : label([3, 80 + i * 20], [30, 19], unlockLevels[i]),
+        f"talent{i}OptionBox" : optionBox([34, 80 + i * 20], [150, 19], [""], "")
+    })
 
 for i in [characterAttributeMenu, characterTalentMenu]:
     i.addIcons({
@@ -146,7 +156,7 @@ characterNewMenu.assignIcons({
     "classLabel" : label([1, 80], [60, 19], "Class:"),
     
     "nameEntry" : entry([62, 60], [200, 19]),
-    "classOptionBox" : optionBox([62, 80], [200, 19], classes, "warrior"),
+    "classOptionBox" : optionBox([62, 80], [200, 19], classes, "Warrior"),
 
     "createCharacterButton" : button([1, 120], [124, 39], "Create", lambda : characterNewMenu.createCharacter(characterEditorPopup)),
 
@@ -195,6 +205,6 @@ main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
-#main.popUpMenu(0, 1)
-main.root.mainloop()
+#main.popUpMenu(0, 3)
+#main.root.mainloop()
 #'''

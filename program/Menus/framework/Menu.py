@@ -272,7 +272,7 @@ class optionBox(obj):
     def setOptions(self, root, theme, options):
         self.options = options
         self.deactivate()
-        self.activate(root, theme)
+        self.activate(root, theme, self.isPopupMenuClosedFunction)
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun

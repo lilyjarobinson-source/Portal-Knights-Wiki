@@ -87,6 +87,8 @@ class characterController:
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
             c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
+        for i in range(7):
+            c.talents[i] = int(line[18 + i])
         #print("finished getting character data from line")
         return c
 
@@ -138,11 +140,13 @@ class characterController:
         for i in list(characterToConvert.armour.keys()):
             # change to characterToConvert.armour[i].name
             if characterToConvert.armour[i] != None:
-                result += str(characterToConvert.armour[i].name) + ","
+                result += f"{characterToConvert.armour[i].name},"
             else:
-                result += str(characterToConvert.armour[i]) + ","
+                result += f"{characterToConvert.armour[i]},"
         for i in list(characterToConvert.attributePointDistribution.keys()):
-            result += str(characterToConvert.attributePointDistribution[i]) + ","
+            result += f"{characterToConvert.attributePointDistribution[i]},"
+        for i in characterToConvert.talents:
+            result += f"{i},"
         #print("finished converting characters to line")
         return result
 
