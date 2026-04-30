@@ -54,9 +54,11 @@ class character:
             "wisdom" : 0,
             "intelligence" : 0
         }
+        self.talents = [0,0,0,0,0,0,0]
         self.armourMultipliers = {}
         self.damageStats = None
         self.buffTimers = {}
+        self.hitCounter = 0
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value
