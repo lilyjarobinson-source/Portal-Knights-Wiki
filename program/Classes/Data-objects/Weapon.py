@@ -9,6 +9,8 @@ class weapon:
         self.buff = ""
         self.dmgMult = 0
         self.hitInterval = 0
+        self.damageType = ""
+        self.damageStat = ""
         
 
     def toString(self):
