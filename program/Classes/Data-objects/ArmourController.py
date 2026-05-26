@@ -57,7 +57,6 @@ class armourController:
     def getDefence(self, c):
         total = 0
         for i in c.armour.values():
-            print(i, i.name)
             total += i.baseDefence
         return total
 

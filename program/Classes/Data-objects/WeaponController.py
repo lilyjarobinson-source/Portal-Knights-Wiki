@@ -26,9 +26,11 @@ class weaponController:
     def fist(self):
         fist = weapon()
         fist.name = "Fist"
-        fist.classRestriction == "None"
+        fist.classRestriction = "None"
         fist.requiredLevel = 0
         fist.wpnType = "Weapon"
+        fist.damageType = "melee damage"
+        fist.damageStat = "physical"
         self.getWeaponDmgMultAndHitRate(fist)
         return fist
 
@@ -47,16 +49,22 @@ class weaponController:
         return contents.split("\n")[:-1]
 
     def getWeaponDataFromLine(self, line):
-        line = line.split(",")
-        w = weapon()
-        w.name = line[0]
-        w.classRestriction = line[1]
-        w.requiredLevel = int(line[2])
-        w.baseDmg = int(line[3])
-        w.wpnType = line[4]
-        w.multipliers = self.getMultipliers(line[5:-1])
-        self.getWeaponDmgMultAndHitRate(w)
-        return w
+        try:
+            line = line.split(",")
+            w = weapon()
+            w.name = line[0]
+            w.classRestriction = line[1]
+            w.damageType = line[2]
+            w.damageStat = line[3]
+            w.requiredLevel = int(line[4])
+            w.baseDmg = int(line[5])
+            w.wpnType = line[6]
+            w.multipliers = self.getMultipliers(line[7:-1])
+            self.getWeaponDmgMultAndHitRate(w)
+            return w
+        except:
+            print("Failed at line\n" + str(line))
+            return self.fist()
 
     def getWeapon(self, name):
         for i in self.weapons:
