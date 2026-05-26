@@ -26,7 +26,7 @@ class weaponController:
     def fist(self):
         fist = weapon()
         fist.name = "Fist"
-        fist.classRestriction == "None"
+        fist.classRestriction = "None"
         fist.requiredLevel = 0
         fist.wpnType = "Weapon"
         fist.damageType = "melee damage"

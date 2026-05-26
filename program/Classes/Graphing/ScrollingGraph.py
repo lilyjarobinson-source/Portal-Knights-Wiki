@@ -68,8 +68,8 @@ class scrollingGraph(graph):
     def getPointsToDraw(self):
         for x in self.pointCollectionList:
             x.drawList = []
-            for i in range(len(x.pointXList)-1, 0, -1):
-                if self.timer - x.pointXList[i] < self.drawLimit:
+            for i in range(len(x.pointXList)-1, -1, -1):
+                if self.timer - x.pointXList[i] <= self.drawLimit:
                     x.drawList.append(i)
                 else:
                     break

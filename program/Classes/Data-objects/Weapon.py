@@ -14,4 +14,4 @@ class weapon:
         
 
     def toString(self):
-        return f"{self.name} {self.requiredLevel} {self.baseDmg} {self.wpnType.name} {self.multipliers} {self.perk}"
+        return f"{self.name} {self.classRestriction} {self.requiredLevel} {self.baseDmg} {self.wpnType} {self.multipliers} {self.buff} {self.damageType} {self.damageStat}"
