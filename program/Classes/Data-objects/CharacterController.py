@@ -15,8 +15,7 @@ class characterController:
         c = character()
         self.generateCharacterId(c)
         w = weaponController()
-        w.loadWeapons()
-        c.weapon = w.getWeapon("Fist")
+        c.weapon = w.fist()
         return c
 
     def generateCharacterId(self, c):
@@ -67,8 +66,6 @@ class characterController:
         
         w = weaponController()
         a = armourController()
-        w.loadWeapons()
-        a.loadArmourPieces()
         
         #print("getting character data from line")
         line = line.split(",")[:-1]
@@ -76,10 +73,12 @@ class characterController:
         c.characterId = line[0]
         c.name = line[1]
         
-        c.weapon = w.getWeapon(line[2])
         
         c.level = int(line[3])
         c.characterClass = line[4]
+        w.loadWeapons(c)
+        c.weapon = w.getWeapon(line[2])
+        a.loadArmourPieces(c)
         c.colour = line[5]
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
@@ -183,9 +182,13 @@ class characterController:
                 c.baseStatPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
         #print(f"finished generating stat points for {c.name}")
 
-    def getArmourBonusPoints(self, c):
-        for x in c.armourMultipliers:
-            c.armourMultipliers[x] = 0
+    def getBonuses(self, c):
+        for x in c.extraMultipliers:
+            c.extraMultipliers[x] = 0
+        self.getArmourBonuses(c)
+        self.getWeaponBonuses(c)
+            
+    def getArmourBonuses(self, c):
         for i in c.armour.values():
             if i != None:
                 for x in c.statPoints:
@@ -195,11 +198,23 @@ class characterController:
                     if x in i.multipliers:
                         c.bonusAttributePoints[x] += int(i.multipliers[x])
                 for x in i.multipliers:
-                    if x in characterController.multipliers:
-                        if x in c.armourMultipliers:
-                            c.armourMultipliers[x] += i.multipliers[x]
-                        else:
-                            c.armourMultipliers.update({x : i.multipliers[x]})
+                    if x in c.extraMultipliers:
+                        c.extraMultipliers[x] += i.multipliers[x]
+                    else:
+                        c.extraMultipliers.update({x : i.multipliers[x]})
+
+    def getWeaponBonuses(self, c):
+        for x in c.statPoints:
+            if x in c.weapon.multipliers:
+                c.statPoints[x] += int(c.weapon.multipliers[x])
+        for x in c.bonusAttributePoints:
+            if x in c.weapon.multipliers:
+                c.bonusAttributePoints[x] += int(c.weapon.multipliers[x])
+        for x in c.weapon.multipliers:
+            if x in c.extraMultipliers:
+                c.extraMultipliers[x] += c.weapon.multipliers[x]
+            else:
+                c.extraMultipliers.update({x : c.weapon.multipliers[x]})
 
     def generateStatPoints(self, c):
         for i in c.statPoints:
@@ -207,7 +222,8 @@ class characterController:
         self.generateAttributePoints(c)
         for i in c.bonusAttributePoints:
             c.bonusAttributePoints[i] = 0
-        self.getArmourBonusPoints(c)
+        self.getBonuses(c)
+        self.getDefence(c)
         self.generateBaseStatPoints(c)
         for i in c.baseStatPoints:
             c.statPoints[i] += c.baseStatPoints[i]
@@ -215,6 +231,36 @@ class characterController:
     def getMaximumAttributePoints(self, c):
         #print(f"generating maximum attribute points for {c.name}")
         return (c.level-1) * 3
+
+    def addWeaponDmgToStatPoints(self, c):
+        match (c.weapon.classRestriction):
+            case "Warrior":
+                c.statPoints["melee damage"] += c.weapon.baseDmg
+            case "Mage":
+                c.statPoints["magic damage"] += c.weapon.baseDmg
+            case "Ranger":
+                c.statPoints["ranged damage"] += c.weapon.baseDmg
+            case "Rogue":
+                c.statPoints["ranged damage"] += c.weapon.baseDmg
+            case "Druid":
+                c.statPoints["melee damage"] += c.weapon.baseDmg
+
+    def getDefence(self, c):
+        a = armourController()
+        c.defence = a.getDefence(c)
+        for x in c.weapon.multipliers:
+            if x == "defence":
+                c.defence += c.weapon.multipliers[x]
+
+    def changeClass(self, c, characterClass):
+        c.characterClass = characterClass
+        a = armourController()
+        for i in c.armour:
+            if c.armour[i].classRestriction != c.characterClass:
+                c.armour[i] = armourController.none()
+        if c.weapon.classRestriction != c.characterClass:
+            w = weaponController()
+            c.weapon = w.fist()
         
 
 

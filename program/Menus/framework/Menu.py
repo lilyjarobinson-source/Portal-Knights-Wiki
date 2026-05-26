@@ -354,8 +354,8 @@ class canvas(obj):
     def image(self, x, y, image, anchor="center"):
         self.obj.create_image(x, y, image=image, anchor=anchor)
         
-    def write(self, x, y, text, anchor="center"):
-        self.obj.create_text(x, y, text=text, fill=self.textColour, anchor=anchor)
+    def write(self, x, y, text, anchor="center", font="TkDefaultFont"):
+        self.obj.create_text(x, y, text=text, fill=self.textColour, anchor=anchor, font=font)
 
     def clear(self):
         self.obj.delete("all")

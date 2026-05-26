@@ -34,12 +34,10 @@ class damageCalculator:
         }
 
         self.calculateTalents(hitToCalculate)
-        
-        for i in hitToCalculate.weapon.multipliers:
-            if i in damageCalculator.multipliers:
-                multipliers[i] += hitToCalculate.weapon.multipliers[i]
-        for i in hitToCalculate.character.armourMultipliers:
-            multipliers[i] += hitToCalculate.character.armourMultipliers[i]
+
+        for i in hitToCalculate.character.extraMultipliers:
+            if i in multipliers.keys():
+                multipliers[i] += hitToCalculate.character.extraMultipliers[i]
             
         if random.randint(1, 100) <= multipliers["Weaken enemy chance"]:
             hitToCalculate.character.buffTimers.update({"Weaken enemy" : 3})
@@ -93,11 +91,13 @@ class damageCalculator:
                         hitToCalculate.character.hitCounter += 1
 
     def calculateMultistrikeTalents(self, hitToCalculate):
-        if hitToCalculate.character.talents[6] == 0:
-            if not hitToCalculate.isAdditionalStrike:
-                if random.randint(1, 100) <= 10:
-                    newHit = hitToCalculate.copy()
-                    newHit.isAdditionalStrike = True
-                    self.hitList.append(newHit)
+        match hitToCalculate.character.characterClass:
+            case "Warrior":
+                if hitToCalculate.character.talents[6] == 0:
+                    if not hitToCalculate.isAdditionalStrike:
+                        if random.randint(1, 100) <= 10:
+                            newHit = hitToCalculate.copy()
+                            newHit.isAdditionalStrike = True
+                            self.hitList.append(newHit)
 
                 

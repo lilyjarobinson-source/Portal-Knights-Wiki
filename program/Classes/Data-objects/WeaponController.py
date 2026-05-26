@@ -23,9 +23,18 @@ class weaponController:
     def __init__(self):
         self.weapons = []
 
-    def loadWeapons(self):
+    def fist(self):
+        fist = weapon()
+        fist.name = "Fist"
+        fist.classRestriction == "None"
+        fist.requiredLevel = 0
+        fist.wpnType = "Weapon"
+        self.getWeaponDmgMultAndHitRate(fist)
+        return fist
+
+    def loadWeapons(self, c):
         self.weapons = []
-        for i in ["Common", "Warrior"]:
+        for i in ["Common", c.characterClass]:
             contents = self.loadWeaponsFileContent(i)
             for line in contents:
                 self.weapons.append(self.getWeaponDataFromLine(line))

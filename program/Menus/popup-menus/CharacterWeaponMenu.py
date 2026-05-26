@@ -14,7 +14,7 @@ class characterWeaponMenu(characterMenuTemplate):
         self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
         
         self.loadCharacter()
-        self.weaponController.loadWeapons()
+        self.weaponController.loadWeapons(self.loadedCharacter)
 
         self.displayWeapons()
         self.loadCharacterWeapon()
@@ -25,8 +25,7 @@ class characterWeaponMenu(characterMenuTemplate):
     def displayWeapons(self):
         self.icons["weaponListBox"].clear()
         for i in self.weaponController.weapons:
-            if i.classRestriction in ["None", self.loadedCharacter.characterClass]:
-                self.icons["weaponListBox"].append(i.name)
+            self.icons["weaponListBox"].append(i.name)
 
     def loadCharacterWeapon(self):
         self.loadedWeapon = self.loadedCharacter.weapon
@@ -44,7 +43,7 @@ class characterWeaponMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayWeapons()
 

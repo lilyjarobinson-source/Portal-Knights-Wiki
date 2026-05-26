@@ -4,7 +4,7 @@ class weapon:
         self.classRestriction = ""
         self.requiredLevel = 0
         self.baseDmg = 0
-        self.wpnType = None
+        self.wpnType = ""
         self.multipliers = {}
         self.buff = ""
         self.dmgMult = 0

@@ -114,7 +114,7 @@ class main:
             if self.poppedUpMenu:
                 self.popDownMenu()
             self.currentPopupMenuIndex = index
-            #'''
+            '''
             if self.currentMenu.running:
                 self.menuWasRunning = True
                 self.currentMenu.stopRunning()

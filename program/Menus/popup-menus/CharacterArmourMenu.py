@@ -12,11 +12,11 @@ class characterArmourMenu(characterMenuTemplate):
         self.searchingSlot = None
         
     def initialise(self, root):
-        self.armourController.loadArmourPieces()
         self.loadCharacter()
+        self.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
         self.displayClass()
-        self.searchForArmour("Ring")
+        self.searchForArmour("Head")
         self.displayArmourOptions()
 
         self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Head"))
@@ -39,13 +39,13 @@ class characterArmourMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayArmour()
 
     def assignArmourToSlot(self):
         if self.searchingSlot == None:
-            return None
+            return self.armourController.none()
         value = self.icons["armourListBox"].getValue()
         armourPiece = self.armourController.getArmourPiece(value)
         if value == "None":

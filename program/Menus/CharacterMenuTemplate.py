@@ -37,5 +37,3 @@ class characterMenuTemplate(menu):
 
         self.loadedCharacter = self.characterController.getCharacterDataFromSaveLine(contents)
         #print("finished loading character")
-        
-        

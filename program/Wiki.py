@@ -17,6 +17,7 @@ from CharacterNewMenu import characterNewMenu
 from CharacterTalentMenu import characterTalentMenu
 from CharacterArmourMenu import characterArmourMenu
 from CharacterWeaponMenu import characterWeaponMenu
+from CharacterOverviewMenu import characterOverviewMenu
 #'''
 main = main("wiki", "800x500")
 characterEditorPopup = popupMenu("Character editor", "401x250")
@@ -28,8 +29,10 @@ characterNewMenu = characterNewMenu()
 characterTalentMenu = characterTalentMenu()
 characterArmourMenu = characterArmourMenu()
 characterWeaponMenu = characterWeaponMenu()
+characterOverviewMenu = characterOverviewMenu()
 
 classes = ["Warrior", "Ranger", "Mage", "Rogue", "Druid"]
+graphTypes = ["Standard", "Cumulative"]
 
 dmgCalcMenu.assignIcons({
     "displayCanvas" : canvas([201, 60], [598, 400]),
@@ -45,7 +48,7 @@ dmgCalcMenu.assignIcons({
     "characterColourEntry" : entry([52, 120], [48, 19]),
     "classLabel" : label([101, 120], [99, 19], ""),
     "weaponLabel" : label([1, 140], [199, 19], ""),
-    "characterEditButton" : button([1, 160], [99, 19], "Edit", lambda : dmgCalcMenu.setLoadedCharacterAndPopUpMenu(lambda : main.popUpMenu(0, 1))),
+    "characterEditButton" : button([1, 160], [99, 19], "Edit", lambda : dmgCalcMenu.setLoadedCharacterAndPopUpMenu(lambda : main.popUpMenu(0, 6))),
     "characterRemoveButton" : button([101, 160], [99, 19], "Remove", dmgCalcMenu.removeCharacter),
     
     "loadedCharactersListBoxLabel" : label([1, 180], [199, 19], "Loaded characters"),
@@ -54,12 +57,16 @@ dmgCalcMenu.assignIcons({
     "charactersListBoxLabel" : label([1, 280], [199, 19], "Select characters"),
     "charactersListBox" : listBox([1, 300], [199, 160], lambda *args : dmgCalcMenu.loadCharacterToBeGraphed()),
 
+    "graphTypeLabel" : label([600, 40], [99, 19], "Graph type"),
+    "graphTypeOptionBox" : optionBox([700, 40], [99, 19], graphTypes, graphTypes[0]),
+
 })
 charMenuNavigationButtons = {
-    "levelButton" : button([1, 1], [99, 30], "level", lambda : characterEditorPopup.changeMenu(1)),
-    "optionsButton" : button([301, 1], [99, 30], "options", lambda : characterEditorPopup.changeMenu(0)),
-    "armourButton" : button([101, 1], [99, 30], "armour", lambda : characterEditorPopup.changeMenu(4)),
-    "weaponButton" : button([201, 1], [99, 30], "weapon", lambda : characterEditorPopup.changeMenu(5)),
+    "OverviewButton" : button([1, 1], [79, 30], "Overview", lambda : characterEditorPopup.changeMenu(6)),
+    "levelButton" : button([81, 1], [79, 30], "Level", lambda : characterEditorPopup.changeMenu(1)),
+    "optionsButton" : button([321, 1], [79, 30], "Options", lambda : characterEditorPopup.changeMenu(0)),
+    "armourButton" : button([241, 1], [79, 30], "Armour", lambda : characterEditorPopup.changeMenu(4)),
+    "weaponButton" : button([161, 1], [79, 30], "Weapon", lambda : characterEditorPopup.changeMenu(5)),
 }
 
 characterOptionsMenu.assignIcons({
@@ -189,6 +196,10 @@ characterWeaponMenu.assignIcons({
     #"filterDamageLabel" : label([83, 180], [35, 19], "->"),
 })
 
+characterOverviewMenu.assignIcons({
+    "canvas" : canvas([1, 32], [399, 217])
+})
+
 for i in [characterArmourMenu, characterWeaponMenu]:
     i.addIcons({
         "classLabel" : label([201, 40], [99, 19], "Class"),
@@ -196,15 +207,15 @@ for i in [characterArmourMenu, characterWeaponMenu]:
     })
 
 
-for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu]:
+for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu]:
     i.addIcons(charMenuNavigationButtons)
 
-characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu])
+characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu])
 
 main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
-#main.popUpMenu(0, 3)
-#main.root.mainloop()
+#main.popUpMenu(0, 6)
+main.root.mainloop()
 #'''

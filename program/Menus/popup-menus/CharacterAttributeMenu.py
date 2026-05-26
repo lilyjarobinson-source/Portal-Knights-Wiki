@@ -129,8 +129,8 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
+        self.saveCharacter()
         self.displayAttributePoints()
         self.displayStatPoints()
-        self.saveCharacter()
         

@@ -15,7 +15,7 @@ class characterOptionsMenu(characterMenuTemplate):
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "w")
         file.write(self.characterController.convertCharacterToSaveFormat(self.characters[index]))
         file.close()
-        main.changeMenu(1)
+        main.changeMenu(6)
 
     def displayCharacters(self):
         self.icons["charactersListBox"].clear()

@@ -2,24 +2,37 @@ from Graph import graph
 class scrollingGraph(graph):
     timer = 0
     drawLimit = 0
+    graphType = ""
 
     def setDrawLimit(self, limit):
         self.drawLimit = limit
 
+    def setGraphType(self, graphType):
+        self.graphType = graphType
+
     def updateCanvas(self):
-        self.canvas.clear()
         self.drawGraph()
         self.canvas.write(self.originX + self.width, self.originY + 10, f"{self.timer:.2f}", "n")
         self.canvas.write(self.originX, self.originY + 10, f"{self.timer-self.drawLimit:.2f}", "n")
         self.drawPoints()
 
     def drawXGrating(self):
+        if self.graphType == "Standard":
+            self.drawXGratingStandard()
+
+    def drawXGratingStandard(self):
         for i in range(int(self.timer-self.drawLimit+1), int(self.timer)+1):
             position = self.originX+self.width-((self.width/self.drawLimit) * (self.timer - i))
             self.canvas.line(position, self.originY, position, self.originY+10)
             self.canvas.write(position, self.originY+10, i, "n")
-
+            
     def drawPoints(self):
+        if self.graphType == "Standard":
+            self.drawPointsStandard()
+        else:
+            self.drawPointsCumulative()
+
+    def drawPointsStandard(self):
         self.getPointsToDraw()
         self.generateYaxisScale()
         for x in self.pointCollectionList:
@@ -34,6 +47,20 @@ class scrollingGraph(graph):
                     self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
                     x.pointYList[x.drawList[i]],
                     "sw",
+                )
+    
+    def drawPointsCumulative(self):
+        self.getPointsToDraw()
+        self.generateYaxisScale()
+        for x in self.pointCollectionList:
+            for i in range(len(x.drawList)-1):
+                self.canvas.line(
+                    self.originX+self.width-((self.width/self.drawLimit) * (self.timer - x.pointXList[x.drawList[i]])),
+                    self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
+                    self.originX+self.width-((self.width/self.drawLimit) * (self.timer - x.pointXList[x.drawList[i+1]])),
+                    self.originY-(self.height * x.pointYList[x.drawList[i+1]]/self.yAxisScale),
+                    "",
+                    x.colour
                 )
 
             

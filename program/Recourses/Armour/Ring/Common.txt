@@ -1,3 +1,0 @@
-Ring of fire,14,60,None,Ring,,fire res=10,Crit damage=0.04,Crit rate=5,
-Ring of divine protection,24,100,None,Ring,,light res=10,Multistrike rate=4,Multistrike amount=1,
-Zeehida's ring of divine shield,30,130,None,Ring,,light res=15,dexterity=15,strength=15,intelligence=15,
