@@ -210,33 +210,37 @@ class entry(obj):
         super().__init__(pos, dimensions)
         self.fun = None
         self.contents = None
-        self.initialising = False
+        self.suppressChanges = False
 
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         if self.contents == None:
             self.contents = StringVar()
         self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def get(self):
         return self.contents.get()
 
     def set(self, contents):
-        self.contents.set(contents)
+        self.suppressChanges = True
+        self.contents.set(contents[:])
         self.obj.config(textvariable=self.contents)
+        self.suppressChanges = False
 
     def clear(self):
+        self.suppressChanges = True
         self.contents.set("")
         self.obj.config(textvariable=self.contents)
+        self.suppressChanges = False
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
-        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 
@@ -250,24 +254,27 @@ class optionBox(obj):
         self.selectedOption = None
         self.fun = None
         self.options = options
-        self.initialising = False
+        self.suppressChanges = False
     
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         if self.selectedOption == None:
             self.selectedOption = StringVar(value=self.defaultOption)
         else:
             self.setSelectedOption(self.defaultOption)
         self.obj = OptionMenu(root, self.selectedOption, *self.options)
         self.obj.config(bg=self.colour, borderwidth=1, relief="solid", highlightthickness=0, fg=self.textColour)
+        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def get(self):
         return self.selectedOption.get()
 
     def setSelectedOption(self, option):
-        self.selectedOption.set(option)
+        self.suppressChanges = True
+        self.selectedOption.set(option[:])
+        self.suppressChanges = False
 
     def setOptions(self, root, theme, options):
         self.options = options
@@ -276,10 +283,9 @@ class optionBox(obj):
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
-        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 
@@ -291,18 +297,18 @@ class listBox(obj):
         super().__init__(pos, dimensions)
         self.items = []
         self.fun = command
-        self.initialising = False
+        self.suppressChanges = False
 
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         self.obj = Listbox(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0, fg=self.textColour)
         self.clear()
         self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 

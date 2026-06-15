@@ -63,4 +63,5 @@ class armourController:
     def none(self):
         a = armour()
         a.name = "None"
+        a.classRestriction = "None"
         return a

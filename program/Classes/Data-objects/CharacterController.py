@@ -253,14 +253,18 @@ class characterController:
                 c.defence += c.weapon.multipliers[x]
 
     def changeClass(self, c, characterClass):
-        c.characterClass = characterClass
-        a = armourController()
-        for i in c.armour:
-            if c.armour[i].classRestriction != c.characterClass:
-                c.armour[i] = armourController.none()
-        if c.weapon.classRestriction != c.characterClass:
-            w = weaponController()
-            c.weapon = w.fist()
+        if characterClass != c.characterClass:
+            print(f"changed class to {characterClass}")
+            c.characterClass = characterClass
+            a = armourController()
+            for i in c.armour:
+                if c.armour[i].classRestriction not in ["None", c.characterClass]:
+                    print(f"Armour {c.armour[i]} removed as {c.armour[i].classRestriction}")
+                    c.armour[i] = a.none()
+            if c.weapon.classRestriction not in ["None", c.characterClass]:
+                print(f"Armour {c.weapon} removed as {c.weapon.classRestriction}")
+                w = weaponController()
+                c.weapon = w.fist()
         
 
 

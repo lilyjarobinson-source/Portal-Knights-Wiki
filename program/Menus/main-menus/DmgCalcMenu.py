@@ -1,13 +1,14 @@
 import sys, time
 classPath = __file__.split("Menus")[0]
 sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Classes\\DmgCalculation")
+sys.path.append(classPath + "Classes\\Simulation")
 sys.path.append(classPath + "Classes\\Graphing")
 sys.path.append(classPath + "Menus")
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
 from WeaponController import weaponController
 from CharacterController import characterController
+from BuffController import buffController
 from PointCollection import pointCollection
 from ScrollingGraph import scrollingGraph
 from CharacterMenuTemplate import characterMenuTemplate
@@ -15,7 +16,9 @@ from CharacterMenuTemplate import characterMenuTemplate
 class dmgCalcMenu(characterMenuTemplate):
     characterController = characterController()
     weaponController = weaponController()
+    buffController = buffController()
     damageCalculator = damageCalculator()
+    buffController.loadBuffs()
     displayWeapons = []
     graphingCharacters = []
     loadedCharacterIndex = -1
@@ -82,7 +85,6 @@ class dmgCalcMenu(characterMenuTemplate):
         index = index[0]
         self.graphingCharacters.append(self.characters[index])
         self.displayLoadedCharacters()
-        self.characterController.generateStatPoints(self.characters[index])
         pc = pointCollection(self.characters[index])
         self.graph.pointCollectionList.append(pc)
         self.characters[index].damageStats = damageStats(pc)
@@ -200,15 +202,18 @@ class dmgCalcMenu(characterMenuTemplate):
     def attack(self):
         if self.attacking:
             for x in range(len(self.graphingCharacters)):
-                for i in self.graphingCharacters[x].buffTimers:
-                    self.graphingCharacters[x].buffTimers[i] -= self.deltaTime
+                self.buffController.cleanBuffs(self.graphingCharacters[x], self.deltaTime)
                 if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
-                    hitList = self.damageCalculator.getDamageFromHit(self.graphingCharacters[x])
-                    dmg = 0
-                    for i in hitList:
-                        dmg += i.getDmg()
-                    self.addPoint(x, dmg)
-                    self.graph.pointCollectionList[x].lastPointTime = self.timer
+                    if self.buffController.checkToApplyBuffs(self.graphingCharacters[x]):
+                        self.graph.pointCollectionList[x].lastPointTime = self.timer + 0.5 - self.graphingCharacters[x].weapon.hitInterval
+                    else:
+                        hitList = self.damageCalculator.getDamageFromHit(self.characterController, self.buffController, self.graphingCharacters[x])
+                        dmg = 0
+                        for i in hitList:
+                            dmg += i.getDmg()
+                        self.addPoint(x, dmg)
+                        self.graph.pointCollectionList[x].lastPointTime = self.timer
+            
 
     def displayGraphType(self):
         self.icons["graphTypeOptionBox"].set(self.graphType)

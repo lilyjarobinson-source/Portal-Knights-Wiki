@@ -1,37 +1,35 @@
 import random
 from Hit import hit
-class damageCalculator:
-    multipliers = [
-        "Crit rate",
-        "Crit damage",
-        "Multistrike rate",
-        "Multistrike amount",
-        "Weaken enemy chance",
-        "Backstab damage"
-    ]
-    
+class damageCalculator:    
     # change this to use character
     def __init__(self):
         self.hitList = []
     
-    def getDamageFromHit(self, character):
+    def getDamageFromHit(self, characterController, buffController, character):
+        characterController.generateStatPoints(character)
         self.hitList = []
-        hitCalculated = self.calculateDamage(hit(character))
+        hitCalculated = self.calculateDamage(hit(character), buffController)
         self.hitList.insert(0, hitCalculated)
         for i in range(1, len(self.hitList)):
-            self.hitList[i] = self.calculateDamage(self.hitList[i])
+            self.hitList[i] = self.calculateDamage(self.hitList[i], buffController)
 
         return self.hitList
         
-    def calculateDamage(self, hitToCalculate):
+    def calculateDamage(self, hitToCalculate, buffController):
         multipliers = {
             "Crit rate" : 20,
             "Crit damage" : 1,
             "Multistrike rate" : 0,
             "Multistrike amount" : 1,
-            "Weaken enemy chance" : 0,
             "Backstab damage" : 1.25,
+            "Weaken enemy chance" : 0
         }
+        if not hitToCalculate.isAdditionalStrike:
+            self.calculatePotionAndEnrageBonus(hitToCalculate, buffController)
+
+            self.calculateHitStartingDamage(hitToCalculate)
+
+            self.calculateWarCryBonus(hitToCalculate, buffController)
 
         self.calculateTalents(hitToCalculate)
 
@@ -40,13 +38,12 @@ class damageCalculator:
                 multipliers[i] += hitToCalculate.character.extraMultipliers[i]
             
         if random.randint(1, 100) <= multipliers["Weaken enemy chance"]:
-            hitToCalculate.character.buffTimers.update({"Weaken enemy" : 3})
+            hitToCalculate.character.buffs.append(buffController.getBuff("weaken enemy"))
 
-        if "Weaken enemy" in hitToCalculate.character.buffTimers:
-            if hitToCalculate.character.buffTimers["Weaken enemy"] > 0:
+        weakenEnenmyIndex = buffController.checkIfBuffNameInList("weaken enemy", hitToCalculate.character.buffs)
+        if weakenEnenmyIndex != -1:
+            if hitToCalculate.character.buffs[weakenEnenmyIndex].activeTime > 0:
                 hitToCalculate.dmg *= 1.3
-            else:
-                hitToCalculate.character.buffTimers.pop("Weaken enemy")
 
         if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
             if random.randint(1, 100) <= multipliers["Crit rate"]:
@@ -99,5 +96,21 @@ class damageCalculator:
                             newHit = hitToCalculate.copy()
                             newHit.isAdditionalStrike = True
                             self.hitList.append(newHit)
+
+    def calculateHitStartingDamage(self, hitToCalculate):
+        hitToCalculate.dmg = (hitToCalculate.weapon.baseDmg + hitToCalculate.character.statPoints["melee damage"]) * 0.3 * hitToCalculate.weapon.dmgMult
+        
+    def calculatePotionAndEnrageBonus(self, hitToCalculate, buffController):
+        enrageIndex = buffController.checkIfBuffNameInList("enrage", hitToCalculate.character.buffs)
+        if enrageIndex != -1:
+            if hitToCalculate.character.buffs[enrageIndex].activeTime > 0:
+                hitToCalculate.character.statPoints["melee damage"] = int(hitToCalculate.character.statPoints["melee damage"] * (1.2 + (hitToCalculate.character.attributePoints["strength"] * 0.002)))
+
+    def calculateWarCryBonus(self, hitToCalculate, buffController):
+        warCryIndex = buffController.checkIfBuffNameInList("war cry", hitToCalculate.character.buffs)
+        if warCryIndex != -1:
+            if hitToCalculate.character.buffs[warCryIndex].activeTime > 0:
+                hitToCalculate.dmg *= 1.1 + (hitToCalculate.character.attributePoints["strength"] * 0.002)
+                
 
                 

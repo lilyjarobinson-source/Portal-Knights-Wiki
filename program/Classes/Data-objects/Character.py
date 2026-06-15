@@ -57,9 +57,14 @@ class character:
         self.talents = [0,0,0,0,0,0,0]
         self.extraMultipliers = {}
         self.damageStats = None
-        self.buffTimers = {}
+        self.buffs = []
+        self.cooldownTimers = {}
         self.hitCounter = 0
         self.defence = 0
+        self.warriorShoutOnCooldown = False
+        self.warriorShoutCooldown = 0
+        self.buffPotionOnCooldown = False
+        self.buffPotionCooldown = 0
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value

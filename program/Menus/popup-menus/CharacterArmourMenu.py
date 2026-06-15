@@ -30,10 +30,7 @@ class characterArmourMenu(characterMenuTemplate):
 
     def displayArmour(self):
         for i in self.armourController.armourSlots:
-            if self.loadedCharacter.armour[i] != None:
-                self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i].name)
-            else:
-                self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i])
+            self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i].name)
 
     def displayClass(self):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
@@ -57,8 +54,7 @@ class characterArmourMenu(characterMenuTemplate):
             armourPiece = self.armourController.getArmourPiece(value)
             
         self.loadedCharacter.armour[self.searchingSlot] = armourPiece
-        if armourPiece != None:
-            self.displayArmourStats(armourPiece)
+        self.displayArmourStats(armourPiece)
         self.saveCharacter()
 
     def searchAndAssign(self, slot):
