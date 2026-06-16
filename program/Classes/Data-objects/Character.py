@@ -22,6 +22,14 @@ class character:
             "wisdom" : 0,
             "intelligence" : 0,
         }
+        self.attributePointDistribution = {
+            "constitution" : 0,
+            "strength" : 0,
+            "agility" : 0,
+            "dexterity" : 0,
+            "wisdom" : 0,
+            "intelligence" : 0
+        }
         self.bonusAttributePoints = {
             "constitution" : 0,
             "strength" : 0,
@@ -46,25 +54,14 @@ class character:
             "mana" : 0,
             "magic damage" : 0
         }
-        self.attributePointDistribution = {
-            "constitution" : 0,
-            "strength" : 0,
-            "agility" : 0,
-            "dexterity" : 0,
-            "wisdom" : 0,
-            "intelligence" : 0
-        }
+        self.startingBuffs = []
+        self.buffTimers = []
+        self.cooldownTimers = []
         self.talents = [0,0,0,0,0,0,0]
         self.extraMultipliers = {}
         self.damageStats = None
-        self.buffs = []
-        self.cooldownTimers = {}
         self.hitCounter = 0
         self.defence = 0
-        self.warriorShoutOnCooldown = False
-        self.warriorShoutCooldown = 0
-        self.buffPotionOnCooldown = False
-        self.buffPotionCooldown = 0
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value

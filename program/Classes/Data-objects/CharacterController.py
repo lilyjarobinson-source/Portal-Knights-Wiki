@@ -1,6 +1,7 @@
 import sys, random
 from WeaponController import weaponController
 from ArmourController import armourController
+from BuffController import buffController
 from Character import character
 class characterController:
     multipliers = [
@@ -88,8 +89,13 @@ class characterController:
             c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
         for i in range(7):
             c.talents[i] = int(line[18 + i])
+        self.getBuffDataFromList(c, line[25:])
         #print("finished getting character data from line")
         return c
+
+    def getBuffDataFromList(self, c, buffData):
+        for i in buffData:
+            c.startingBuffs.append(i)           
 
     def saveCharacterData(self, characterToSave):
         #print("saving character data")
@@ -146,10 +152,12 @@ class characterController:
             result += f"{characterToConvert.attributePointDistribution[i]},"
         for i in characterToConvert.talents:
             result += f"{i},"
+        for i in characterToConvert.startingBuffs:
+            result += f"{i},"
         #print("finished converting characters to line")
         return result
 
-    def generateAttributePoints(self, c):
+    def generateattributePoints(self, c):
         #print(f"generating attribute points for {c.name} as {c.characterClass}")
         for i in list(c.attributePoints.keys()):
             c.attributePoints[i] = 10
@@ -177,39 +185,45 @@ class characterController:
         attrKeyList = list(c.attributePoints.keys())
         for i in range(len(attrKeyList)):
             if statKeyList[i] in ["health", "mana"]:
-                c.baseStatPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]]
+                c.baseStatPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
             else:
                 c.baseStatPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
         #print(f"finished generating stat points for {c.name}")
 
-    def getBonuses(self, c):
-        for x in c.extraMultipliers:
-            c.extraMultipliers[x] = 0
-        self.getArmourBonuses(c)
-        self.getWeaponBonuses(c)
-            
-    def getArmourBonuses(self, c):
+    def getArmourStatBonuses(self, c):
         for i in c.armour.values():
             if i != None:
                 for x in c.statPoints:
                     if x in i.multipliers:
                         c.statPoints[x] += int(i.multipliers[x])
+            
+    def getArmourAttributeBonuses(self, c):
+        for i in c.armour.values():
+            if i != None:
                 for x in c.bonusAttributePoints:
                     if x in i.multipliers:
                         c.bonusAttributePoints[x] += int(i.multipliers[x])
+            
+    def getArmourMultiplierBonuses(self, c):
+        for i in c.armour.values():
+            if i != None:
                 for x in i.multipliers:
                     if x in c.extraMultipliers:
                         c.extraMultipliers[x] += i.multipliers[x]
                     else:
                         c.extraMultipliers.update({x : i.multipliers[x]})
 
-    def getWeaponBonuses(self, c):
+    def getWeaponStatBonuses(self, c):
         for x in c.statPoints:
             if x in c.weapon.multipliers:
                 c.statPoints[x] += int(c.weapon.multipliers[x])
+
+    def getWeaponAttributeBonuses(self, c):
         for x in c.bonusAttributePoints:
             if x in c.weapon.multipliers:
                 c.bonusAttributePoints[x] += int(c.weapon.multipliers[x])
+
+    def getWeaponMultiplierBonuses(self, c):
         for x in c.weapon.multipliers:
             if x in c.extraMultipliers:
                 c.extraMultipliers[x] += c.weapon.multipliers[x]
@@ -217,17 +231,43 @@ class characterController:
                 c.extraMultipliers.update({x : c.weapon.multipliers[x]})
 
     def generateStatPoints(self, c):
+        self.generateAttributePoints(c)
         for i in c.statPoints:
             c.statPoints[i] = 0
-        self.generateAttributePoints(c)
+        self.getArmourStatBonuses(c)
+        self.getWeaponStatBonuses(c)
+        self.generateBaseStatPoints(c)
+        self.generateFinalStatPoints(c)
+        for x in c.extraMultipliers:
+            c.extraMultipliers[x] = 0
+        self.getArmourMultiplierBonuses(c)
+        self.getWeaponMultiplierBonuses(c)
+        self.getDefence(c)
+
+    def generateAttributePoints(self, c):
+        self.generateattributePoints(c)
         for i in c.bonusAttributePoints:
             c.bonusAttributePoints[i] = 0
-        self.getBonuses(c)
-        self.getDefence(c)
-        self.generateBaseStatPoints(c)
+        self.getArmourAttributeBonuses(c)
+        self.getWeaponAttributeBonuses(c)
+        self.generatePotionBonuses(c)
+             
+    def generatePotionBonuses(self, c):
+        damagePotions = ["strength", "intelligence", "dexterity"]
+        b = buffController()
+        for i in damagePotions:
+            if b.characterHasBuffName(c, f"{i} potion"):
+                c.bonusAttributePoints[i] += int((c.attributePoints[i] + c.attributePointDistribution[i] + c.bonusAttributePoints[i]) * 0.3)
+
+    def generateFinalStatPoints(self, c):
         for i in c.baseStatPoints:
             c.statPoints[i] += c.baseStatPoints[i]
-
+        
+        b = buffController()
+        if b.characterHasBuffName(c, "enrage"):
+            c.statPoints["melee damage"] = int(c.statPoints["melee damage"] * (1.2 + ((c.attributePoints["strength"] + c.attributePointDistribution["strength"] + c.bonusAttributePoints["strength"]) * 0.002)))
+        
+            
     def getMaximumAttributePoints(self, c):
         #print(f"generating maximum attribute points for {c.name}")
         return (c.level-1) * 3

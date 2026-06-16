@@ -1,10 +1,14 @@
 import sys
 sys.path.append(__file__.split("Menus")[0] + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
+from BuffController import buffController
 
 class characterAttributeMenu(characterMenuTemplate):
     def initialise(self, root):
         self.loadCharacter()
+        self.buffController = buffController()
+        self.buffController.loadBuffs()
+        self.buffController.applyStartingBuffs(self.loadedCharacter)
         #'''
         for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])

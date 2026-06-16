@@ -1,7 +1,6 @@
 import random
 from Hit import hit
-class damageCalculator:    
-    # change this to use character
+class damageCalculator:
     def __init__(self):
         self.hitList = []
     
@@ -25,11 +24,10 @@ class damageCalculator:
             "Weaken enemy chance" : 0
         }
         if not hitToCalculate.isAdditionalStrike:
-            self.calculatePotionAndEnrageBonus(hitToCalculate, buffController)
-
             self.calculateHitStartingDamage(hitToCalculate)
 
             self.calculateWarCryBonus(hitToCalculate, buffController)
+            print(hitToCalculate.character.statPoints)
 
         self.calculateTalents(hitToCalculate)
 
@@ -38,12 +36,10 @@ class damageCalculator:
                 multipliers[i] += hitToCalculate.character.extraMultipliers[i]
             
         if random.randint(1, 100) <= multipliers["Weaken enemy chance"]:
-            hitToCalculate.character.buffs.append(buffController.getBuff("weaken enemy"))
+            buffController.applyBuffName(hitToCalculate.character, "weaken enemy")
 
-        weakenEnenmyIndex = buffController.checkIfBuffNameInList("weaken enemy", hitToCalculate.character.buffs)
-        if weakenEnenmyIndex != -1:
-            if hitToCalculate.character.buffs[weakenEnenmyIndex].activeTime > 0:
-                hitToCalculate.dmg *= 1.3
+        if buffController.characterHasBuffName(hitToCalculate.character, "weaken enemy"):
+            hitToCalculate.dmg *= 1.3
 
         if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
             if random.randint(1, 100) <= multipliers["Crit rate"]:
@@ -99,18 +95,10 @@ class damageCalculator:
 
     def calculateHitStartingDamage(self, hitToCalculate):
         hitToCalculate.dmg = (hitToCalculate.weapon.baseDmg + hitToCalculate.character.statPoints["melee damage"]) * 0.3 * hitToCalculate.weapon.dmgMult
-        
-    def calculatePotionAndEnrageBonus(self, hitToCalculate, buffController):
-        enrageIndex = buffController.checkIfBuffNameInList("enrage", hitToCalculate.character.buffs)
-        if enrageIndex != -1:
-            if hitToCalculate.character.buffs[enrageIndex].activeTime > 0:
-                hitToCalculate.character.statPoints["melee damage"] = int(hitToCalculate.character.statPoints["melee damage"] * (1.2 + (hitToCalculate.character.attributePoints["strength"] * 0.002)))
 
     def calculateWarCryBonus(self, hitToCalculate, buffController):
-        warCryIndex = buffController.checkIfBuffNameInList("war cry", hitToCalculate.character.buffs)
-        if warCryIndex != -1:
-            if hitToCalculate.character.buffs[warCryIndex].activeTime > 0:
-                hitToCalculate.dmg *= 1.1 + (hitToCalculate.character.attributePoints["strength"] * 0.002)
+        if buffController.characterHasBuffName(hitToCalculate.character, "war cry"):
+            hitToCalculate.dmg *= 1.1 + (hitToCalculate.character.attributePoints["strength"] * 0.002)
                 
 
                 

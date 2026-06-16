@@ -149,7 +149,7 @@ class button(obj):
     textColour = "#000000"
     def __init__(self, pos, dimensions, text, command):
         super().__init__(pos, dimensions)
-        self.text = text
+        self.text = str(text)[:]
         self.fun = command
 
     def initialise(self, root):
@@ -162,7 +162,7 @@ class button(obj):
                 self.fun()
 
     def set(self, text):
-        self.text = text
+        self.text = str(text)[:]
         self.obj.config(text=text)
 
     def get(self):
@@ -177,7 +177,7 @@ class label(obj):
     textColour = "#000000"
     def __init__(self, pos, dimensions, text, textAlign="c"):
         super().__init__(pos, dimensions)
-        self.text = text
+        self.text = str(text)[:]
         self.textAlign = textAlign
         match textAlign:
             case "w":
@@ -192,7 +192,7 @@ class label(obj):
         self.place()
         
     def set(self, text):
-        self.text = text
+        self.text = str(text)[:]
         self.obj.config(text=self.text)
 
     def get(self):
@@ -226,7 +226,7 @@ class entry(obj):
 
     def set(self, contents):
         self.suppressChanges = True
-        self.contents.set(contents[:])
+        self.contents.set(str(contents)[:])
         self.obj.config(textvariable=self.contents)
         self.suppressChanges = False
 
@@ -273,7 +273,7 @@ class optionBox(obj):
 
     def setSelectedOption(self, option):
         self.suppressChanges = True
-        self.selectedOption.set(option[:])
+        self.selectedOption.set(str(option)[:])
         self.suppressChanges = False
 
     def setOptions(self, root, theme, options):

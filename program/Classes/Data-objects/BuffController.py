@@ -1,101 +1,126 @@
 class buff:
     def __init__(self):
         self.name = ""
+        self.buffType = ""
+        self.sharedCooldownName = ""
         self.activeTime = 0
         self.cooldown = 0
-        self.hasCooldown = 0
         # buffType in ["buff", "shout", "recoveryPotion", "buffPotion"]
-        self.buffType = ""
+
+    def toString(self):
+        return f"Buff : {self.name}, {self.buffType}, {self.sharedCooldownName}, {self.activeTime}, {self.cooldown}"
+
+    def getActiveTimer(self):
+        return timer(self.name, self.activeTime)
+    
+    def getCooldownTimer(self):
+        if self.sharedCooldownName == "":
+            return timer(self.name, self.cooldown)
+        return timer(self.buffType, self.cooldown)
+
+class timer:
+    def __init__(self, name, time):
+        self.name = name
+        self.time = time
+
+    def updateAndCheck(self, deltaTime):
+        self.time -= deltaTime
+        return self.time < 0
+
+    def toString(self):
+        return f"Timer : {self.name}, {self.time}"
 
 class buffController:
     def __init__(self):
         self.buffs = []
 
     def loadBuffs(self):
-        self.buffs = [buff(), buff(), buff(), buff()]
+        self.buffs = []
         
-        self.buffs[0].name = "weaken enemy"
-        self.buffs[0].activeTime = 3
-        self.buffs[0].hasCooldown = False
-        self.buffs[0].buffType = "buff"
-        
-        self.buffs[1].name = "enrage"
-        self.buffs[1].activeTime = 10
-        self.buffs[1].cooldown = 10
-        self.buffs[1].hasCooldown = True
-        self.buffs[1].buffType = "shout"
-        
-        self.buffs[2].name = "war cry"
-        self.buffs[2].activeTime = 10
-        self.buffs[2].cooldown = 10
-        self.buffs[2].hasCooldown = True
-        self.buffs[2].buffType = "shout"
-        
-        self.buffs[3].name = "strength potion"
-        self.buffs[3].activeTime = 9
-        self.buffs[3].hasCooldown = False
-        self.buffs[3].buffType = "buffPotion"
+        classPath = __file__.split("program")[0]
+        file = open(f"{classPath}program\\Recourses\\buffs.txt", "r")
+        contents = file.read()
+        file.close()
 
-    def cleanBuffs(self, c, deltaTime):
+        contents = contents.split("\n")[:-1]
+
+        for i in contents:
+            self.buffs.append(self.getBuffFromData(i))
+
+    def getBuffFromData(self, line):
+        line = line.split(",")
+        b = buff()
+        b.name = line[0]
+        b.buffType = line[1]
+        b.sharedCooldownName = line[2]
+        b.activeTime = int(line[3])
+        b.cooldown = int(line[4])
+        return b
+
+    def updateBuffs(self, c, deltaTime):
         buffsToRemove = []
-        for i in c.cooldownTimers:
-            if c.cooldownTimers[i].cooldown > 0:
-                c.cooldownTimers[i].cooldown -= deltaTime
-            else:
-                buffsToRemove.append(i)
+        for i in range(len(c.buffTimers)):
+            if c.buffTimers[i].updateAndCheck(deltaTime):
+                buffsToRemove.insert(0, i)
+        cooldownsToRemove = []
+        for i in range(len(c.cooldownTimers)):
+            if c.cooldownTimers[i].updateAndCheck(deltaTime):
+                cooldownsToRemove.insert(0, i)
         for i in buffsToRemove:
-            c.cooldownTimers.remove(i)
-        if c.warriorShoutOnCooldown:
-            c.warriorShoutCooldown -= deltaTime
-            if c.warriorShoutCooldown < 0:
-                c.warriorShoutOnCooldown = False
-        if c.buffPotionOnCooldown:
-            c.buffPotionCooldown -= deltaTime
-            if c.buffPotionCooldown < 0:
-                c.buffPotionOnCooldown = False
-        
-        buffsToRemove = []
-        for i in c.buffs:
-            if i.activeTime < 0:
-                buffsToRemove.append(i)
-            else:
-                i.activeTime -= deltaTime
-        for i in buffsToRemove:
-            c.buffs.remove(i)
-            if i.hasCooldown:
-                match i.buffType:
-                    case "buff":
-                        c.cooldownTimers.update(i)
-                    case "shout":
-                        c.warriorShoutOnCooldown = True
-                        c.warriorShoutCooldown = 10
-                    case "buffPotion":
-                        c.buffPotionOnCooldown = True
-                        c.buffPotionCooldown = 0#i.cooldown
+            c.buffTimers.pop(i)
+        for i in cooldownsToRemove:
+            c.cooldownTimers.pop(i)
     
     def checkToApplyBuffs(self, c):
-        for i in self.buffs[1:]:
-            match i.buffType:
-                case "buff":
-                    if i not in c.buffs and i not in c.cooldownTimers:
-                        c.buffs.append(i)
-                        return True
-                case "shout":
-                    if self.checkIfBuffNameInList(i.name, c.buffs) == -1 and not c.warriorShoutOnCooldown:
-                        c.buffs.append(i)
-                        return True
-                case "buffPotion":
-                    if self.checkIfBuffNameInList(i.name, c.buffs) == -1 and not c.buffPotionOnCooldown:
-                        c.buffs.append(i)
-                        return True
+        buffsToApply = ["enrage", "war cry", "strength potion"]
+        for i in self.buffs:
+            if i.name in buffsToApply:
+                return self.applyBuff(c, i)
         return False
 
-    def checkIfBuffNameInList(self, name, buffList):
+    def applyStartingBuffs(self, c):
+        c.buffTimers = []
+        c.cooldownTimers = []
+        for i in c.startingBuffs:
+            buffToApply = self.getBuff(i)
+            c.buffTimers.append(buffToApply.getActiveTimer())
+            c.cooldownTimers.append(buffToApply.getCooldownTimer())
+
+    def applyBuff(self, c, buffToApply):
+        if self.checkToApplyBuff(c, buffToApply):
+            c.buffTimers.append(buffToApply.getActiveTimer())
+            c.cooldownTimers.append(buffToApply.getCooldownTimer())
+            return True
+        return False
+            
+    def applyBuffName(self, c, buffName):
+        buffToApply = self.getBuff(buffName)
+        return self.applyBuff(c, buffToApply)
+
+
+    def checkToApplyBuff(self, c, b):
+        if b.sharedCooldownName == "":
+            for i in c.cooldownTimers:
+                if b.name == i.name:
+                    return False
+        else:
+            for i in c.cooldownTimers:
+                if b.sharedCooldownName == i.name:
+                    return False
+        return True
+
+    def getBuffIndex(self, name, buffList):
         for i in range(len(buffList)):
             if name == buffList[i].name:
                 return i
         return -1
 
+    def characterHasBuffName(self, c, buffName):
+        for i in c.buffTimers:
+            if buffName == i.name:
+                return True
+        return False
+        
     def getBuff(self, name):
         for i in self.buffs:
             if name == i.name:

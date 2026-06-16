@@ -188,12 +188,17 @@ class dmgCalcMenu(characterMenuTemplate):
                     self.icons["displayCanvas"].write(420, 1, "Total", "n")
                     self.icons["displayCanvas"].write(420, 13, "dmg", "n")
                     for i in range(len(self.graphingCharacters)):
+                        #dmg
                         self.icons["displayCanvas"].write(380, 38 + 12 * i, self.graphingCharacters[i].name, "n")
                         self.icons["displayCanvas"].write(570, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDps(self.timer), "n")
                         self.icons["displayCanvas"].write(535, 38 + 12 * i, self.graphingCharacters[i].damageStats.getDps(self.timer, self.drawLimit), "n")
                         self.icons["displayCanvas"].write(500, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalAverageDamage(), "n")
                         self.icons["displayCanvas"].write(455, 38 + 12 * i, self.graphingCharacters[i].damageStats.getAverageDamage(self.timer, self.drawLimit), "n")
                         self.icons["displayCanvas"].write(420, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDmg(), "n")
+                        #buffs
+                        self.icons["displayCanvas"].write(100, 38 + 12 * i, self.graphingCharacters[i].name, "n")
+                        for x in range(len(self.graphingCharacters[i].buffTimers)):
+                            self.icons["displayCanvas"].write(140, 38 + 12 * i + 12 * x, self.graphingCharacters[i].buffTimers[x].name, "n")
                 else:
                     self.graph.setDrawLimit(self.timer)
                 self.graph.updateCanvas()
@@ -202,7 +207,7 @@ class dmgCalcMenu(characterMenuTemplate):
     def attack(self):
         if self.attacking:
             for x in range(len(self.graphingCharacters)):
-                self.buffController.cleanBuffs(self.graphingCharacters[x], self.deltaTime)
+                self.buffController.updateBuffs(self.graphingCharacters[x], self.deltaTime)
                 if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
                     if self.buffController.checkToApplyBuffs(self.graphingCharacters[x]):
                         self.graph.pointCollectionList[x].lastPointTime = self.timer + 0.5 - self.graphingCharacters[x].weapon.hitInterval
