@@ -38,6 +38,14 @@ class character:
             "wisdom" : 0,
             "intelligence" : 0,
         }
+        self.displayAttributePoints = {
+            "constitution" : 0,
+            "strength" : 0,
+            "agility" : 0,
+            "dexterity" : 0,
+            "wisdom" : 0,
+            "intelligence" : 0,
+        }
         self.baseStatPoints = {
             "health" : 0,
             "melee damage" : 0,

@@ -154,6 +154,7 @@ class dmgCalcMenu(characterMenuTemplate):
             i.pointXList = []
             i.pointYList = []
             i.lastPointTime = self.timer - self.drawLimit
+            self.buffController.applyStartingBuffs(self.loadedCharacter)
     
     def stopGraphing(self):
         self.attacking = False
@@ -210,6 +211,7 @@ class dmgCalcMenu(characterMenuTemplate):
                 self.buffController.updateBuffs(self.graphingCharacters[x], self.deltaTime)
                 if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
                     if self.buffController.checkToApplyBuffs(self.graphingCharacters[x]):
+                        print("buff applied")
                         self.graph.pointCollectionList[x].lastPointTime = self.timer + 0.5 - self.graphingCharacters[x].weapon.hitInterval
                     else:
                         hitList = self.damageCalculator.getDamageFromHit(self.characterController, self.buffController, self.graphingCharacters[x])

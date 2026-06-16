@@ -185,10 +185,19 @@ class characterController:
         attrKeyList = list(c.attributePoints.keys())
         for i in range(len(attrKeyList)):
             if statKeyList[i] in ["health", "mana"]:
-                c.baseStatPoints[statKeyList[i]] = 100 + 20 * (c.attributePoints[attrKeyList[i]]-10) + 10 * c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
+                c.baseStatPoints[statKeyList[i]] = 100 + 10 * (2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]]) + c.bonusAttributePoints[attrKeyList[i]]
             else:
+                damagePotions = ["strength", "intelligence", "dexterity"]
+                damageStats = ["melee damage", "magic damage", "ranged damage"]
+                b = buffController()
                 c.baseStatPoints[statKeyList[i]] = 10 + 2 * (c.attributePoints[attrKeyList[i]]-10) + c.attributePointDistribution[attrKeyList[i]] + c.bonusAttributePoints[attrKeyList[i]]
-        #print(f"finished generating stat points for {c.name}")
+                if b.characterHasBuffName(c, "star potion"):
+                    for x in range(len(damagePotions)):
+                        c.baseStatPoints[damageStats[x]] = (10 + (c.attributePoints[damagePotions[x]]-10) + c.attributePointDistribution[damagePotions[x]])*1.2 + (c.attributePoints[damagePotions[x]]-10) + c.bonusAttributePoints[damagePotions[x]]
+                for x in range(len(damagePotions)):
+                    if b.characterHasBuffName(c, f"{damagePotions[x]} potion"):
+                        c.baseStatPoints[damageStats[x]] = (10 + (c.attributePoints[damagePotions[x]]-10) + c.attributePointDistribution[damagePotions[x]])*1.3 + (c.attributePoints[damagePotions[x]]-10) + c.bonusAttributePoints[damagePotions[x]]
+
 
     def getArmourStatBonuses(self, c):
         for i in c.armour.values():
@@ -231,33 +240,38 @@ class characterController:
                 c.extraMultipliers.update({x : c.weapon.multipliers[x]})
 
     def generateStatPoints(self, c):
-        self.generateAttributePoints(c)
-        for i in c.statPoints:
-            c.statPoints[i] = 0
-        self.getArmourStatBonuses(c)
-        self.getWeaponStatBonuses(c)
-        self.generateBaseStatPoints(c)
-        self.generateFinalStatPoints(c)
-        for x in c.extraMultipliers:
-            c.extraMultipliers[x] = 0
-        self.getArmourMultiplierBonuses(c)
-        self.getWeaponMultiplierBonuses(c)
-        self.getDefence(c)
-
-    def generateAttributePoints(self, c):
         self.generateattributePoints(c)
         for i in c.bonusAttributePoints:
             c.bonusAttributePoints[i] = 0
         self.getArmourAttributeBonuses(c)
         self.getWeaponAttributeBonuses(c)
         self.generatePotionBonuses(c)
-             
+        
+        for i in c.statPoints:
+            c.statPoints[i] = 0
+        self.getArmourStatBonuses(c)
+        self.getWeaponStatBonuses(c)
+        self.generateBaseStatPoints(c)
+        self.generateFinalStatPoints(c)
+        
+        for x in c.extraMultipliers:
+            c.extraMultipliers[x] = 0
+        self.getArmourMultiplierBonuses(c)
+        self.getWeaponMultiplierBonuses(c)
+        self.getDefence(c)
+
     def generatePotionBonuses(self, c):
         damagePotions = ["strength", "intelligence", "dexterity"]
+        for i in c.attributePoints:
+            c.displayAttributePoints[i] = c.attributePoints[i] + c.attributePointDistribution[i] + c.bonusAttributePoints[i]
         b = buffController()
+        if b.characterHasBuffName(c, "star potion"):
+            for i in damagePotions:
+                c.displayAttributePoints[i] += round((c.attributePoints[i] + c.attributePointDistribution[i]) * 0.2)
         for i in damagePotions:
             if b.characterHasBuffName(c, f"{i} potion"):
-                c.bonusAttributePoints[i] += int((c.attributePoints[i] + c.attributePointDistribution[i] + c.bonusAttributePoints[i]) * 0.3)
+                c.displayAttributePoints[i] += round((c.attributePoints[i] + c.attributePointDistribution[i]) * 0.3)
+                break
 
     def generateFinalStatPoints(self, c):
         for i in c.baseStatPoints:
@@ -265,7 +279,7 @@ class characterController:
         
         b = buffController()
         if b.characterHasBuffName(c, "enrage"):
-            c.statPoints["melee damage"] = int(c.statPoints["melee damage"] * (1.2 + ((c.attributePoints["strength"] + c.attributePointDistribution["strength"] + c.bonusAttributePoints["strength"]) * 0.002)))
+            c.statPoints["melee damage"] = round(c.statPoints["melee damage"] * (1.2 + ((c.displayAttributePoints["strength"]) * 0.002)))
         
             
     def getMaximumAttributePoints(self, c):

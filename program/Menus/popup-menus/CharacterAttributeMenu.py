@@ -112,7 +112,7 @@ class characterAttributeMenu(characterMenuTemplate):
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.attributePoints[i])
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
-            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.attributePoints[i] + self.loadedCharacter.attributePointDistribution[i] + self.loadedCharacter.bonusAttributePoints[i])
+            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.displayAttributePoints[i])
         
     def displayStatPoints(self):
         #print("displaying stat points")

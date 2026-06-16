@@ -224,6 +224,6 @@ main.assignMenus([dmgCalcMenu])
 main.assignPopupMenus([characterEditorPopup])
 #characterEditorPopup.changeMenu(3)
 main.activate()
-main.popUpMenu(0, 7)
+main.popUpMenu(0, 1)
 main.root.mainloop()
 #'''

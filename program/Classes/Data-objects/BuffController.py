@@ -72,10 +72,11 @@ class buffController:
             c.cooldownTimers.pop(i)
     
     def checkToApplyBuffs(self, c):
-        buffsToApply = ["enrage", "war cry", "strength potion"]
+        buffsToApply = []#"enrage", "war cry", "strength potion"]
         for i in self.buffs:
             if i.name in buffsToApply:
-                return self.applyBuff(c, i)
+                if self.applyBuff(c, i):
+                    return True
         return False
 
     def applyStartingBuffs(self, c):
