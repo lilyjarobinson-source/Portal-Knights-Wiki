@@ -154,7 +154,8 @@ class dmgCalcMenu(characterMenuTemplate):
             i.pointXList = []
             i.pointYList = []
             i.lastPointTime = self.timer - self.drawLimit
-            self.buffController.applyStartingBuffs(self.loadedCharacter)
+        for i in self.graphingCharacters:
+            self.buffController.applyStartingBuffs(i)
     
     def stopGraphing(self):
         self.attacking = False

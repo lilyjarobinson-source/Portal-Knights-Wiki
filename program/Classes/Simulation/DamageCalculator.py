@@ -27,7 +27,7 @@ class damageCalculator:
             self.calculateHitStartingDamage(hitToCalculate)
 
             self.calculateWarCryBonus(hitToCalculate, buffController)
-            print(hitToCalculate.character.statPoints)
+            #print(hitToCalculate.character.statPoints)
 
         self.calculateTalents(hitToCalculate)
 
