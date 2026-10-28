@@ -5,7 +5,7 @@ from CharacterMenuTemplate import characterMenuTemplate
 
 class characterTalentMenu(characterMenuTemplate):
     talents = {
-        "Warrior" : [
+        "warrior" : [
             ["Axe expert", "Hammer expert", "Sword expert"],
             ["Eye for an eye", "Fortification", "Commander"],
             ["Adrenaline Rush", "Last stand"],
@@ -14,7 +14,7 @@ class characterTalentMenu(characterMenuTemplate):
             ["Finishing blow", "Tank mode", "Empowered Lung"],
             ["Combo swing", "Hardened armour", "Eternal rage"]
         ],
-        "Ranger" : [
+        "ranger" : [
             [1, 2, 3],
             [1, 2, 3],
             [1, 2, 3],
@@ -23,7 +23,7 @@ class characterTalentMenu(characterMenuTemplate):
             [1, 2, 3],
             [1, 2, 3]
         ],
-        "Mage" : [
+        "mage" : [
             [1, 2, 3],
             [1, 2, 3],
             [1, 2, 3],
@@ -32,7 +32,7 @@ class characterTalentMenu(characterMenuTemplate):
             [1, 2, 3],
             [1, 2, 3]
         ],
-        "Rogue" : [
+        "rogue" : [
             [1, 2, 3],
             [1, 2, 3],
             [1, 2, 3],
@@ -41,7 +41,7 @@ class characterTalentMenu(characterMenuTemplate):
             [1, 2, 3],
             [1, 2, 3]
         ],
-        "Druid" : [
+        "druid" : [
             [1, 2, 3],
             [1, 2, 3],
             [1, 2, 3],

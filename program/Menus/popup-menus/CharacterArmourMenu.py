@@ -16,17 +16,16 @@ class characterArmourMenu(characterMenuTemplate):
         self.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
         self.displayClass()
-        self.searchForArmour("Head")
+        self.searchForArmour("head")
         self.displayArmourOptions()
+        self.displayDefence()
 
-        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Head"))
-        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Torso"))
-        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Arms"))
-        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Legs"))
-        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Cape"))
-        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Ring"))
-
-
+        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("head"))
+        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("torso"))
+        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("arms"))
+        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("legs"))
+        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("cape"))
+        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("ring"))
 
     def displayArmour(self):
         for i in self.armourController.armourSlots:
@@ -34,6 +33,10 @@ class characterArmourMenu(characterMenuTemplate):
 
     def displayClass(self):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
+
+    def displayDefence(self):
+        self.characterController.getDefence(self.loadedCharacter)
+        self.icons["defenceDisplayLabel"].set(self.loadedCharacter.defence)
 
     def setClass(self):
         self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
@@ -56,6 +59,7 @@ class characterArmourMenu(characterMenuTemplate):
         self.loadedCharacter.armour[self.searchingSlot] = armourPiece
         self.displayArmourStats(armourPiece)
         self.saveCharacter()
+        self.displayDefence()
 
     def searchAndAssign(self, slot):
         self.searchForArmour(slot)

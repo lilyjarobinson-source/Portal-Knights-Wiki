@@ -106,7 +106,6 @@ class characterAttributeMenu(characterMenuTemplate):
     def generatePoints(self):
         self.characterController.generateStatPoints(self.loadedCharacter)
 
-
     def displayAttributePoints(self):
         self.generatePoints()
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:

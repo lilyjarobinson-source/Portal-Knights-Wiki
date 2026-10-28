@@ -45,15 +45,24 @@ class characterWeaponMenu(characterMenuTemplate):
     def setClass(self):
         self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
+        self.weaponController.loadWeapons(self.loadedCharacter)
         self.displayWeapons()
 
     def displayWeapon(self):
         self.icons["nameLabel"].set(self.loadedWeapon.name)
-        self.icons["weaponTypeLabel"].set(self.loadedWeapon.wpnType)
-        self.icons["damageDisplayLabel"].set(self.loadedWeapon.baseDmg)
+        self.prettyPrintToIcon("weaponTypeLabel", self.loadedWeapon.wpnType)
+        self.prettyPrintToIcon("damageDisplayLabel", self.loadedWeapon.baseDmg)
+        self.prettyPrintToIcon("dmgTypeLabel", self.loadedWeapon.damageType)
         self.icons["statListBox"].clear()
         for i in self.loadedWeapon.multipliers:
-            self.icons["statListBox"].append(f"{i} : {self.loadedWeapon.multipliers[i]}")
+            if i != "defence":
+                self.icons["statListBox"].append(f"{self.uppercaseFirstLetter(i)} : {self.loadedWeapon.multipliers[i]}")
+
+        if "defence" in self.loadedWeapon.multipliers:
+            self.icons["defenceDisplayLabel"].set(int(self.loadedWeapon.multipliers["defence"]))
+        else:
+            self.icons["defenceDisplayLabel"].set(0)
+        
         if self.loadedWeapon.buff == "":
             self.icons["buffLabel"].deactivate()
             self.icons["statListBox"].place([1, 100], [199, 59])

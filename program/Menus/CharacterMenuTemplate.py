@@ -37,3 +37,9 @@ class characterMenuTemplate(menu):
 
         self.loadedCharacter = self.characterController.getCharacterDataFromSaveLine(contents)
         #print("finished loading character")
+
+    def prettyPrintToIcon(self, iconName, value):
+        self.icons[iconName].set(self.uppercaseFirstLetter(str(value)))
+        
+    def uppercaseFirstLetter(self, word):
+        return word[0].upper() + word[1:]

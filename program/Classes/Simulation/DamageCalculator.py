@@ -16,12 +16,12 @@ class damageCalculator:
         
     def calculateDamage(self, hitToCalculate, buffController):
         multipliers = {
-            "Crit rate" : 20,
-            "Crit damage" : 1,
-            "Multistrike rate" : 0,
-            "Multistrike amount" : 1,
-            "Backstab damage" : 1.25,
-            "Weaken enemy chance" : 0
+            "crit rate" : 20,
+            "crit damage" : 1,
+            "multistrike rate" : 0,
+            "multistrike amount" : 1,
+            "backstab damage" : 1.25,
+            "weaken enemy chance" : 0
         }
         if not hitToCalculate.isAdditionalStrike:
             self.calculateHitStartingDamage(hitToCalculate)
@@ -35,20 +35,20 @@ class damageCalculator:
             if i in multipliers.keys():
                 multipliers[i] += hitToCalculate.character.extraMultipliers[i]
             
-        if random.randint(1, 100) <= multipliers["Weaken enemy chance"]:
+        if random.randint(1, 100) <= multipliers["weaken enemy chance"]:
             buffController.applyBuffName(hitToCalculate.character, "weaken enemy")
 
         if buffController.characterHasBuffName(hitToCalculate.character, "weaken enemy"):
             hitToCalculate.dmg *= 1.3
 
         if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
-            if random.randint(1, 100) <= multipliers["Crit rate"]:
-                hitToCalculate.dmg *= 1.25 * multipliers["Crit damage"]
+            if random.randint(1, 100) <= multipliers["crit rate"]:
+                hitToCalculate.dmg *= 1.25 * multipliers["crit damage"]
                 hitToCalculate.isCriticalStrike = True
 
         if not hitToCalculate.isAdditionalStrike:
-            if random.randint(1, 100) <= multipliers["Multistrike rate"]:
-                for i in range(int(multipliers["Multistrike amount"])):
+            if random.randint(1, 100) <= multipliers["multistrike rate"]:
+                for i in range(int(multipliers["multistrike amount"])):
                     newHit = hitToCalculate.copy()
                     newHit.isAdditionalStrike = True
                     self.hitList.append(newHit)
@@ -60,17 +60,17 @@ class damageCalculator:
 
     def calculateTalents(self, hitToCalculate):
         match hitToCalculate.character.characterClass:
-            case "Warrior":
+            case "warrior":
                 if not hitToCalculate.isAdditionalStrike:
                     match hitToCalculate.character.talents[0]:
                         case 0:
-                            if hitToCalculate.weapon.wpnType == "Axe":
+                            if hitToCalculate.weapon.wpnType == "axe":
                                 hitToCalculate.dmg *= 1.25
                         case 1:
-                            if hitToCalculate.weapon.wpnType == "Hammer":
+                            if hitToCalculate.weapon.wpnType == "hammer":
                                 hitToCalculate.dmg *= 1.25
                         case 2:
-                            if hitToCalculate.weapon.wpnType in ["Sword", "Saber"]:
+                            if hitToCalculate.weapon.wpnType in ["sword", "saber"]:
                                 hitToCalculate.dmg *= 1.25
                     if hitToCalculate.character.talents[1] == 2:
                         hitToCalculate.dmg *= 1.15
@@ -85,7 +85,7 @@ class damageCalculator:
 
     def calculateMultistrikeTalents(self, hitToCalculate):
         match hitToCalculate.character.characterClass:
-            case "Warrior":
+            case "warrior":
                 if hitToCalculate.character.talents[6] == 0:
                     if not hitToCalculate.isAdditionalStrike:
                         if random.randint(1, 100) <= 10:

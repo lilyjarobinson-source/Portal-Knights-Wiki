@@ -1,23 +1,35 @@
 from Weapon import weapon
 class weaponController:
     weaponTypeDictionary = {
-        "Warrior" : {
-            "Sword" : [1, 3/10],
-            "HammerL" : [7/3, 7/10],
-            "HammerS" : [4/3, 2/5],
-            "Axe" : [7/3, 7/10],
-            "AxeS" : [1, 3/10],
-            "Saber" : [1, 3/10],
-            "Club" : [4/3, 2/5],
-            "Mace" : [4/3, 2/5],
-            "Knife" : [11/10, 8/25],
-            "Gauntlet" : [9/10, 1/4],
-            "Weapon" : [1, 2/5]
+        "warrior" : {
+            "sword" : [1, 3/10],
+            "hammerl" : [7/3, 7/10],
+            "hammers" : [4/3, 2/5],
+            "axe" : [7/3, 7/10],
+            "axes" : [1, 3/10],
+            "saber" : [1, 3/10],
+            "club" : [4/3, 2/5],
+            "mace" : [4/3, 2/5],
+            "knife" : [11/10, 8/25],
+            "gauntlet" : [9/10, 1/4],
+            "weapon" : [1, 2/5]
         },
-        "None" : {
-            "Saber" : [1, 3/10],
-            "Weapon" : [1, 2/5]
-        }
+        "ranger" : {
+            "bow" : [1, 5/3],
+            "crossbow" : [11/6, 3/10],
+            "slingshot" : [4/3, 2/5],
+            "dagger" : [9/10, 1/4],
+            "gun" : [5/6, 7/10],
+            "knife" : [4/3, 3/10],
+            "weapon" : [1, 2/5]
+        },
+        "none" : {
+            "saber" : [1, 3/10],
+            "weapon" : [1, 2/5],
+            "crossbow" : [11/6, 3/10],
+            "bow" : [1, 5/3],
+        },
+        
     }
 
     def __init__(self):
@@ -26,9 +38,9 @@ class weaponController:
     def fist(self):
         fist = weapon()
         fist.name = "Fist"
-        fist.classRestriction = "None"
+        fist.classRestriction = "none"
         fist.requiredLevel = 0
-        fist.wpnType = "Weapon"
+        fist.wpnType = "weapon"
         fist.damageType = "melee damage"
         fist.damageStat = "physical"
         self.getWeaponDmgMultAndHitRate(fist)
@@ -50,20 +62,30 @@ class weaponController:
 
     def getWeaponDataFromLine(self, line):
         try:
+            step = 0
             line = line.split(",")
             w = weapon()
             w.name = line[0]
+            step += 1
             w.classRestriction = line[1]
+            step += 1
             w.damageType = line[2]
+            step += 1
             w.damageStat = line[3]
+            step += 1
             w.requiredLevel = int(line[4])
+            step += 1
             w.baseDmg = int(line[5])
+            step += 1
             w.wpnType = line[6]
+            step += 1
             w.multipliers = self.getMultipliers(line[7:-1])
+            step += 1
             self.getWeaponDmgMultAndHitRate(w)
+            step += 1
             return w
         except:
-            print("Failed at line\n" + str(line))
+            print("Failed at line\n" + str(line) + "\nAt step:" + str(step))
             return self.fist()
 
     def getWeapon(self, name):

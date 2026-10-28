@@ -8,7 +8,7 @@ class main:
         self.popupMenus = []
         self.currentPopupMenuIndex = -1
         self.menus = []
-        self.currentMenuIndex = -1
+        self.currentMenuIndex = 0
         self.currentMenu = None
         self.menuWasRunning = False
         self.root = None

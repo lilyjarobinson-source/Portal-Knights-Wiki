@@ -32,7 +32,7 @@ class characterBuffMenu(characterMenuTemplate):
             return None
         index = index[0]
         self.buffController.applyBuff(self.loadedCharacter, self.buffController.buffs[index])
-        self.loadedCharacter.startingBuffs.append(self.buffController.buffs[index].name)
+        self.buffController.applyStartingBuff(self.loadedCharacter, self.buffController.buffs[index].name)
         self.displayCharacterBuffs()
         self.saveCharacter()
 

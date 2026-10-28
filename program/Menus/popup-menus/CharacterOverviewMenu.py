@@ -24,7 +24,6 @@ class dataValue(canvasTextBox):
         self.type = ""
 
     def formatText(self):
-        self.text = f"{self.name} : "
         match (self.type):
             case "integer":
                 self.value = int(float(self.value))
@@ -210,9 +209,9 @@ class characterOverviewMenu(characterMenuTemplate):
     def setUpMultipliers(self):
         self.resetMultipliers()
         defaultEmptyMultipliers = {
-            "Crit damage" : 1,
-            "Multistrike rate" : 0,
-            "Multistrike amount" : 1,
+            "crit damage" : 1,
+            "multistrike rate" : 0,
+            "multistrike amount" : 1,
         }
         
         for i in self.loadedCharacter.extraMultipliers:
@@ -263,12 +262,9 @@ class characterOverviewMenu(characterMenuTemplate):
 
     def resetMultipliers(self):
         self.multipliers = {
-            "Crit rate" : 20,
-            "Crit damage" : 1,
-            "Multistrike rate" : 0,
-            "Multistrike amount" : 1,
+            "crit rate" : 20,
+            "crit damage" : 1,
+            "multistrike rate" : 0,
+            "multistrike amount" : 1,
             "backstab" : 1.25,
         }
-
-    def uppercaseFirstLetter(self, word):
-        return word[0].upper() + word[1:]

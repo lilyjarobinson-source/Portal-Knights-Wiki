@@ -1,7 +1,7 @@
 from Armour import armour
 
 class armourController:
-    armourSlots = ["Head", "Torso", "Arms", "Legs", "Cape", "Ring"]
+    armourSlots = ["head", "torso", "arms", "legs", "cape", "ring"]
     def __init__(self):
         self.armourPieces = []
     
@@ -13,7 +13,7 @@ class armourController:
                 self.armourPieces.append(self.getArmourDataFromLine(line))
 
         for i in range(len(self.armourPieces)-1, 0, -1):
-            if self.armourPieces[i].classRestriction != "None" and self.armourPieces[i].classRestriction != c.characterClass:
+            if self.armourPieces[i].classRestriction != "none" and self.armourPieces[i].classRestriction != c.characterClass:
                 self.armourPieces.pop(i)
 
     def loadArmourFileContent(self, slot):
@@ -63,5 +63,5 @@ class armourController:
     def none(self):
         a = armour()
         a.name = "None"
-        a.classRestriction = "None"
+        a.classRestriction = "none"
         return a

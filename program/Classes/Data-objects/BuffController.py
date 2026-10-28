@@ -90,14 +90,18 @@ class buffController:
         for i in c.startingBuffs:
             buffToApply = self.getBuff(i)
             cooldownModifier = self.getTalentCooldownModifier(c, buffToApply)
-            print(cooldownModifier)
             c.buffTimers.append(buffToApply.getActiveTimer())
             c.cooldownTimers.append(buffToApply.getCooldownTimer(cooldownModifier))
+    
+    def applyStartingBuff(self, c, buffToApply):
+        if buffToApply not in c.startingBuffs:
+            c.startingBuffs.append(buffToApply)
+            return True
+        return False
 
     def applyBuff(self, c, buffToApply):
         if self.checkToApplyBuff(c, buffToApply):
             cooldownModifier = self.getTalentCooldownModifier(c, buffToApply)
-            print(cooldownModifier)
             c.buffTimers.append(buffToApply.getActiveTimer())
             c.cooldownTimers.append(buffToApply.getCooldownTimer(cooldownModifier))
             return True

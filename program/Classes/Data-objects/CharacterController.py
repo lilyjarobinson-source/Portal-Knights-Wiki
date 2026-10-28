@@ -5,12 +5,12 @@ from BuffController import buffController
 from Character import character
 class characterController:
     multipliers = [
-        "Crit rate",
-        "Crit damage",
-        "Multistrike rate",
-        "Multistrike amount",
-        "Weaken enemy chance",
-        "Backstab damage"
+        "crit rate",
+        "crit damage",
+        "multistrike rate",
+        "multistrike amount",
+        "weaken enemy chance",
+        "backstab damage"
     ]
     def new(self):
         c = character()
@@ -162,19 +162,19 @@ class characterController:
         for i in list(c.attributePoints.keys()):
             c.attributePoints[i] = 10
         match (c.characterClass):
-            case "Warrior":
+            case "warrior":
                 c.attributePoints["constitution"] += (c.level-1) * 2
                 c.attributePoints["strength"] += (c.level-1) * 2
-            case "Mage":
+            case "mage":
                 c.attributePoints["wisdom"] += (c.level-1) * 2
                 c.attributePoints["intelligence"] += (c.level-1) * 2
-            case "Ranger":
+            case "ranger":
                 c.attributePoints["agility"] += (c.level-1) * 2
                 c.attributePoints["dexterity"] += (c.level-1) * 2
-            case "Rogue":
+            case "rogue":
                 c.attributePoints["dexterity"] += (c.level-1) * 2
                 c.attributePoints["wisdom"] += (c.level-1) * 2
-            case "Druid":
+            case "druid":
                 c.attributePoints["strength"] += (c.level-1) * 2
                 c.attributePoints["wisdom"] += (c.level-1) * 2
         #print(f"finished generating attribute points for {c.name}")
@@ -288,15 +288,15 @@ class characterController:
 
     def addWeaponDmgToStatPoints(self, c):
         match (c.weapon.classRestriction):
-            case "Warrior":
+            case "warrior":
                 c.statPoints["melee damage"] += c.weapon.baseDmg
-            case "Mage":
+            case "mage":
                 c.statPoints["magic damage"] += c.weapon.baseDmg
-            case "Ranger":
+            case "ranger":
                 c.statPoints["ranged damage"] += c.weapon.baseDmg
-            case "Rogue":
+            case "rogue":
                 c.statPoints["ranged damage"] += c.weapon.baseDmg
-            case "Druid":
+            case "druid":
                 c.statPoints["melee damage"] += c.weapon.baseDmg
 
     def getDefence(self, c):
@@ -312,10 +312,10 @@ class characterController:
             c.characterClass = characterClass
             a = armourController()
             for i in c.armour:
-                if c.armour[i].classRestriction not in ["None", c.characterClass]:
+                if c.armour[i].classRestriction not in ["none", c.characterClass]:
                     print(f"Armour {c.armour[i]} removed as {c.armour[i].classRestriction}")
                     c.armour[i] = a.none()
-            if c.weapon.classRestriction not in ["None", c.characterClass]:
+            if c.weapon.classRestriction not in ["none", c.characterClass]:
                 print(f"Armour {c.weapon} removed as {c.weapon.classRestriction}")
                 w = weaponController()
                 c.weapon = w.fist()

@@ -3,12 +3,12 @@ class character:
         self.characterId = ""
         self.name = ""
         self.armour = {
-            "Head" : None,
-            "Torso" : None,
-            "Arms" : None,
-            "Legs" : None,
-            "Cape" : None,
-            "Ring" : None
+            "head" : None,
+            "torso" : None,
+            "arms" : None,
+            "legs" : None,
+            "cape" : None,
+            "ring" : None
         }
         self.weapon = None
         self.level = 1
@@ -20,7 +20,7 @@ class character:
             "agility" : 0,
             "dexterity" : 0,
             "wisdom" : 0,
-            "intelligence" : 0,
+            "intelligence" : 0
         }
         self.attributePointDistribution = {
             "constitution" : 0,
@@ -36,7 +36,7 @@ class character:
             "agility" : 0,
             "dexterity" : 0,
             "wisdom" : 0,
-            "intelligence" : 0,
+            "intelligence" : 0
         }
         self.displayAttributePoints = {
             "constitution" : 0,
@@ -44,7 +44,7 @@ class character:
             "agility" : 0,
             "dexterity" : 0,
             "wisdom" : 0,
-            "intelligence" : 0,
+            "intelligence" : 0
         }
         self.baseStatPoints = {
             "health" : 0,
