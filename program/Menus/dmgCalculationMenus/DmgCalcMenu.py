@@ -1,9 +1,3 @@
-import sys, time
-classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Classes\\Simulation")
-sys.path.append(classPath + "Classes\\Graphing")
-sys.path.append(classPath + "Menus")
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
 from WeaponController import weaponController
@@ -68,10 +62,10 @@ class dmgCalcMenu(characterMenuTemplate):
             self.displayCharacterWeapon()
             self.displayCharacterClass()
 
-    def setLoadedCharacterAndPopUpMenu(self, popUpFunction):
+    def setLoadedCharacterAndChangeMenu(self, main):
         if self.loadedCharacterIndex != -1:
             self.saveCharacter()
-            popUpFunction()
+            main.changeMenu(3)
 
     def displayCharacterChoices(self):
         self.icons["charactersListBox"].clear()

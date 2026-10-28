@@ -1,6 +1,3 @@
-import sys
-classPath = __file__.split("popupMenus")[0]
-sys.path.append(classPath)
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterTalentMenu(characterMenuTemplate):

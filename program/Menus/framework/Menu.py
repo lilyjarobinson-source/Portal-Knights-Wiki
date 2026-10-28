@@ -9,18 +9,16 @@ class menu:
     runable = False
     running = False
     root = None
-    isPopupMenuClosedFunction = None
 
     def __init__(self, runable=False):
         self.runable = runable
 
     # Ran to set up the menu
-    def activate(self, root, theme, isPopupMenuClosedFunction):
+    def activate(self, root, theme):
         self.root = root
         self.theme = theme
-        self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
         for i in self.icons.values():
-            i.activate(root, theme, self.isPopupMenuClosedFunction)
+            i.activate(root, theme)
         self.initialise(root)
 
     def assignIcons(self, icons):
@@ -87,15 +85,12 @@ class obj:
         self.obj = None
         self.dimensions = dimensions
         self.active = False
-        self.isPopupMenuClosedFunction = None
-        self.isMenuActiveFunction = None
 
-    def activate(self, root, theme, isPopupMenuClosedFunction):
+    def activate(self, root, theme):
         if not self.active:
             self.setColour(theme)
             self.initialise(root)
             self.active = True
-            self.isPopupMenuClosedFunction = isPopupMenuClosedFunction
         
     def deactivate(self):
         if self.active:
@@ -157,9 +152,8 @@ class button(obj):
         self.place()
 
     def checkForPopUpMenu(self):
-        if self.isPopupMenuClosedFunction():
-            if self.fun != None:
-                self.fun()
+        if self.fun != None:
+            self.fun()
 
     def set(self, text):
         self.text = str(text)[:]
@@ -240,7 +234,7 @@ class entry(obj):
         self.fun = fun
 
     def checkForPopUpMenu(self):
-        if not self.suppressChanges and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
 
@@ -279,13 +273,13 @@ class optionBox(obj):
     def setOptions(self, root, theme, options):
         self.options = options
         self.deactivate()
-        self.activate(root, theme, self.isPopupMenuClosedFunction)
+        self.activate(root, theme)
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
 
     def checkForPopUpMenu(self):
-        if not self.suppressChanges and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
 
@@ -308,7 +302,7 @@ class listBox(obj):
         self.suppressChanges = False
 
     def checkForPopUpMenu(self):
-        if not self.suppressChanges and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
 
