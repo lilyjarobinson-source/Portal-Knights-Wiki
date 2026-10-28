@@ -4,22 +4,24 @@ hexDigits = "0123456789abcdef"
 
 
 class menu:
-    icons = {}
-    theme = {}
-    runable = False
-    running = False
-    root = None
-
-    def __init__(self, runable=False):
-        self.runable = runable
+    def __init__(self):
+        self.icons = {}
+        self.theme = {}
+        self.runable = False
+        self.running = False
+        self.main = None
+        self.root = None
+        self.name = self.__class__.__name__
 
     # Ran to set up the menu
-    def activate(self, root, theme):
-        self.root = root
+    def activate(self, main, theme):
+        self.main = main
+        self.root = main.root
         self.theme = theme
         for i in self.icons.values():
-            i.activate(root, theme)
-        self.initialise(root)
+            i.activate(self.root, theme)
+        self.assignIconFunctions()
+        self.initialise()
 
     def assignIcons(self, icons):
         self.icons = {}
@@ -37,8 +39,11 @@ class menu:
             i.deactivate()
         self.unitialise()
 
+    def assignIconFunctions(self):
+        pass
+
     # custom code for startup goes here
-    def initialise(self, root):
+    def initialise(self):
         pass
 
     # custom code for teardown goes here
@@ -49,9 +54,10 @@ class menu:
     def reload(self):
         pass
 
+    def setRunable(self, runable=True):
+        self.runable = runable
 
-    def run(self):
-        self.update()
+    def updateScreen(self):
         self.root.update()
 
     def startRunning(self):
@@ -59,7 +65,7 @@ class menu:
             self.running = True
             self.runInitialisation()
             while self.running:
-                self.run()
+                self.update()
 
     def stopRunning(self):
         if self.runable:
@@ -85,6 +91,8 @@ class obj:
         self.obj = None
         self.dimensions = dimensions
         self.active = False
+        self.isMenuActiveFunction = None
+        self.name = self.__class__.__name__
 
     def activate(self, root, theme):
         if not self.active:
@@ -139,19 +147,21 @@ class obj:
         
 
 class button(obj):
-    name = "button"
     colour = "#e0e0e0"
     textColour = "#000000"
-    def __init__(self, pos, dimensions, text, command):
+    def __init__(self, pos, dimensions, text):
         super().__init__(pos, dimensions)
         self.text = str(text)[:]
-        self.fun = command
+        self.fun = None
 
     def initialise(self, root):
-        self.obj = Button(root, text=self.text, command=self.checkForPopUpMenu, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
+        self.obj = Button(root, text=self.text, command=self.checkToRunFunction, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
         self.place()
 
-    def checkForPopUpMenu(self):
+    def bindFunction(self, fun):
+        self.fun = fun
+
+    def checkToRunFunction(self):
         if self.fun != None:
             self.fun()
 
@@ -197,7 +207,6 @@ class label(obj):
         self.obj.config(text=self.text)
 
 class entry(obj):
-    name = "entry"
     colour = "#000000"
     textColour = "#000000"
     def __init__(self, pos, dimensions):
@@ -211,7 +220,7 @@ class entry(obj):
         if self.contents == None:
             self.contents = StringVar()
         self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
-        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkToRunFunction())
         self.place()
         self.suppressChanges = False
 
@@ -233,16 +242,15 @@ class entry(obj):
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
 
-    def checkForPopUpMenu(self):
+    def checkToRunFunction(self):
         if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
 
 class optionBox(obj):
-    name = "optionBox"
     colour = "SystemButtonFace"
     textColour = "#000000"
-    def __init__(self, pos, dimensions, options, defaultOption):
+    def __init__(self, pos, dimensions, defaultOption, options):
         super().__init__(pos, dimensions)
         self.defaultOption = defaultOption
         self.selectedOption = None
@@ -258,7 +266,7 @@ class optionBox(obj):
             self.setSelectedOption(self.defaultOption)
         self.obj = OptionMenu(root, self.selectedOption, *self.options)
         self.obj.config(bg=self.colour, borderwidth=1, relief="solid", highlightthickness=0, fg=self.textColour)
-        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
+        self.selectedOption.trace_add("write", lambda *args : self.checkToRunFunction())
         self.place()
         self.suppressChanges = False
 
@@ -273,35 +281,37 @@ class optionBox(obj):
     def setOptions(self, root, theme, options):
         self.options = options
         self.deactivate()
-        self.activate(root, theme)
+        self.activate(root, theme, self.checkToRunFunction)
 
-    def bindFunctionToKeypress(self, fun):
+    def bindFunctionToChange(self, fun):
         self.fun = fun
 
-    def checkForPopUpMenu(self):
+    def checkToRunFunction(self):
         if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
 
 class listBox(obj):
-    name = "listBox"
     colour = "#000000"
     textColour = "#000000"
-    def __init__(self, pos, dimensions, command):
+    def __init__(self, pos, dimensions):
         super().__init__(pos, dimensions)
         self.items = []
-        self.fun = command
+        self.fun = None
         self.suppressChanges = False
 
     def initialise(self, root):
         self.suppressChanges = True
         self.obj = Listbox(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0, fg=self.textColour)
         self.clear()
-        self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkForPopUpMenu())
+        self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkToRunFunction())
         self.place()
         self.suppressChanges = False
 
-    def checkForPopUpMenu(self):
+    def bindFunctionToChange(self, fun):
+        self.fun = fun
+
+    def checkToRunFunction(self):
         if not self.suppressChanges:
             if self.fun != None:
                 self.fun()
@@ -341,12 +351,22 @@ class canvas(obj):
     name = "canvas"
     colour = "#ffffff"
     textColour = "#000000"
+    def __init__(self, pos, dimensions):
+        super().__init__(pos, dimensions)
+        self.suppressChanges = False
+        self.boundFunctions = {}
+    
     def initialise(self, root):
+        self.suppressChanges = True
         self.obj = Canvas(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0)
         self.place()
+        self.suppressChanges = False
 
     def dot(self, x, y, colour="black"):
         self.obj.create_oval(x-3, y-3, x+3, y+3, fill=colour, outline=colour)
+
+    def circle(self, x, y, radius, colour="black"):
+        self.obj.create_oval(x-radius, y-radius, x+radius, y+radius, fill=colour, outline=colour)
 
     def line(self, x1, y1, x2, y2, arrow="none", colour="black"):
         self.obj.create_line(x1, y1, x2, y2, arrow=arrow, fill=colour)
@@ -360,13 +380,26 @@ class canvas(obj):
     def clear(self):
         self.obj.delete("all")
 
+    def bindFuncitonToMouseEvent(self, event, fun):
+        self.bindFunction(event, fun)
+        self.obj.bind(event, lambda event : self.checkForFunction(event))
+
+    def bindFunction(self, event, fun):
+        self.boundFunctions.update({event : fun})
+
+    def checkForFunction(self, event):
+        if not self.suppressChanges and event in self.boundFunctions:
+            if self.boundFunctions[event] != None:
+                self.boundFunctions[event]()
+
+
 class image(obj):
-    name = "label"
     colour = "SystemButtonFace"
     textColour = "#000000"
     def __init__(self, pos, dimensions, image=None):
         super().__init__(pos, dimensions)
         self.image = image
+        self.name = "label"
                 
     def initialise(self, root):
         if self.image == None:

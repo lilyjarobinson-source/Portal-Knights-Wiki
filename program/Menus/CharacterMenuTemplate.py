@@ -2,10 +2,12 @@ from CharacterController import characterController
 from Menu import menu
 
 class characterMenuTemplate(menu):
-    characterController = characterController()
-    loadedCharacter = None
-    characters = []
-    classPath = __file__.split("Menus")[0]
+    def __init__(self):
+        super().__init__()
+        self.characterController = characterController()
+        self.loadedCharacter = None
+        self.characters = []
+        self.classPath = __file__.split("Menus")[0]
 
     def loadCharacters(self):
         #print("loading characters")

@@ -3,9 +3,14 @@ from CharacterMenuTemplate import characterMenuTemplate
 
 class characterBuffMenu(characterMenuTemplate):
     def __init__(self):
+        super().__init__()
         self.buffController = buffController()
+        
+    def assignIconFunctions(self):
+        self.icons["buffListBox"].bindFunctionToChange(self.addBuff)
+        self.icons["selectedBuffListBox"].bindFunctionToChange(self.removeBuff)
 
-    def initialise(self, root):
+    def initialise(self):
         self.loadCharacter()
         self.buffController.loadBuffs()
         self.buffController.applyStartingBuffs(self.loadedCharacter)

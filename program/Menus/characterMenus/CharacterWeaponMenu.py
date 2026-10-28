@@ -3,12 +3,18 @@ from CharacterMenuTemplate import characterMenuTemplate
 
 class characterWeaponMenu(characterMenuTemplate):
     def __init__(self):
+        super().__init__()
         self.weaponController = weaponController()
         self.loadedWeapon = None
         
-    def initialise(self, root):
-        self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
-        
+    def assignIconFunctions(self):
+        self.icons["classOptionBox"].bindFunctionToChange(self.setClass)
+        self.icons["weaponListBox"].bindFunctionToChange(self.setCharacterWeapon)
+        self.icons["filterResetButton"].bindFunction(self.resetFilters)
+        self.icons["filterApplyButton"].bindFunction(self.getFilters)
+        self.icons["filtersDisplayListbox"].bindFunctionToChange(self.removeFilter)
+
+    def initialise(self):
         self.loadCharacter()
         self.weaponController.loadWeapons(self.loadedCharacter)
 
@@ -63,7 +69,7 @@ class characterWeaponMenu(characterMenuTemplate):
             self.icons["buffLabel"].deactivate()
             self.icons["statListBox"].place([1, 100], [199, 59])
         else:
-            self.icons["buffLabel"].activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+            self.icons["buffLabel"].activate(self.root, self.theme)
             self.icons["statListBox"].place([1, 120], [199, 39])
 
     def getFilters(self):

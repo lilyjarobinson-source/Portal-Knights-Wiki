@@ -2,7 +2,18 @@ from CharacterMenuTemplate import characterMenuTemplate
 from BuffController import buffController
 
 class characterAttributeMenu(characterMenuTemplate):
-    def initialise(self, root):
+    def assignIconFunctions(self):
+        self.icons[f"constitutionAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("constitution"))
+        self.icons[f"strengthAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("strength"))
+        self.icons[f"agilityAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("agility"))
+        self.icons[f"dexterityAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("dexterity"))
+        self.icons[f"intelligenceAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("intelligence"))
+        self.icons[f"wisdomAssignedPointsEntry"].bindFunctionToKeypress(lambda : self.assignAttributePoints("wisdom"))
+
+        self.icons["levelEntry"].bindFunctionToKeypress(self.setLevel)
+        self.icons["classOptionBox"].bindFunctionToChange(self.setClass)
+        
+    def initialise(self):
         self.loadCharacter()
         self.buffController = buffController()
         self.buffController.loadBuffs()
@@ -10,18 +21,8 @@ class characterAttributeMenu(characterMenuTemplate):
         #'''
         for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
-
-        self.icons[f"constitutionAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("constitution"))
-        self.icons[f"strengthAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("strength"))
-        self.icons[f"agilityAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("agility"))
-        self.icons[f"dexterityAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("dexterity"))
-        self.icons[f"intelligenceAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("intelligence"))
-        self.icons[f"wisdomAssignedPointsEntry"].bindFunctionToKeypress(lambda *args : self.assignAttributePoints("wisdom"))
-
-        self.icons["levelEntry"].bindFunctionToKeypress(lambda *args : self.setLevel())
-        self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
-        
         #'''
+        
         #'''
         self.displayLevel()
         self.displayAttributePoints()

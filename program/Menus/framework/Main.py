@@ -1,53 +1,96 @@
 from tkinter import *
+from IconFileParser import iconFileParser
+from Keylogger import keylogger
+import threading
+from time import time
 class main:
     hexDigits = "0123456789abcdef"
     
     def __init__(self, title, geometry):
         self.title = title
         self.geometry = geometry
-        self.popupMenus = []
-        self.currentPopupMenuIndex = -1
-        self.menus = []
-        self.currentMenuIndex = 0
+        self.menus = {}
+        self.currentMenuKey = 0
         self.currentMenu = None
         self.menuWasRunning = False
         self.root = None
         self.theme = {}
-        self.poppedUpMenu = False
-        self.popupMenuHasJustClosed = False
+        self.lookForIconFile = True
+        self.iconFileParser = iconFileParser()
+        self.keylogger = keylogger()
+        self.runableMenuThread = None
+        self.isFullscreen = False
 
     def initialise(self):
+        if self.lookForIconFile:
+            self.iconFileParser.assignIconsToMenus(self.menus)
         self.root = Tk()
         self.root.title(self.title)
         self.root.geometry(self.geometry)
-        #self.root.bind('<Button-1>', lambda event : self.raisePopupOnFocus())
+        
+        if self.isFullscreen:
+            self.root.state("zoomed")
+                
+        self.root.update()
+        self.screenWidth = self.root.winfo_width()
+        self.screenHeight = self.root.winfo_height()
+        self.screenX = self.root.winfo_x()
+        self.screenY = self.root.winfo_y()
 
-    def assignMenus(self, menus):
-        self.menus = menus
+        self.root.bind("<KeyPress>", self.keylogger.onKeyEvent)
+        self.root.bind("<KeyRelease>", self.keylogger.onKeyEvent)
+
+    def ignoreIconFile(self, look=False):
+        self.lookForIconFile = look
+
+    def assignIconFileLocation(self, location):
+        self.iconFileParser.assignIconFileLocaion(location)
 
     def addMenus(self, menus):
-        self.menus += menus
-        
-    def assignPopupMenus(self, popupMenus):
-        self.popupMenus = popupMenus
+        if isinstance(menus, dict):
+            for i in menus:
+                self.menus.update({i : menus[i]})
+        elif isinstance(menus, list):
+            for i in menus:
+                self.menus.update({i.name : i})
+        else:
+            self.menus.update({menus.name : menus})
 
-    def activate(self):
+    def activate(self, startingMenuKey):
         self.initialise()
-        self.currentMenuIndex = 0
-        self.currentMenu = self.menus[self.currentMenuIndex]
-        self.reloadMenu()
+        self.loadTheme()
+        #for i in self.menus.values():
+        #    i.assignIconFunctions()
+        self.currentMenuKey = startingMenuKey
+        self.currentMenu = self.menus[self.currentMenuKey]
+        self.currentMenu.activate(self, self.theme)
+        self.startMenuRunning()
+        self.root.mainloop()
+
+    def startMenuRunning(self):
+        if self.currentMenu.runable:
+            self.runableMenuThread = threading.Thread(target=self.currentMenu.startRunning)
+            self.runableMenuThread.start()
+
+    def stopMenuRunning(self):
+        if self.currentMenu.runable:
+            self.currentMenu.stopRunning()
 
     def reloadMenu(self):
         self.loadTheme()
+        self.stopMenuRunning()
         self.currentMenu.deactivate()
-        self.currentMenu.activate(self.root, self.theme)#, self.isPopupMenuClosedFunction)
+        self.currentMenu.activate(self, self.theme)
+        self.startMenuRunning()
 
-    def changeMenu(self, targetIndex):
+    def changeMenu(self, targetMenu):
         self.loadTheme()
+        self.stopMenuRunning()
         self.currentMenu.deactivate()
-        self.currentMenuIndex = targetIndex
-        self.currentMenu = self.menus[targetIndex]
-        self.currentMenu.activate(self.root, self.theme)#, self.isPopupMenuClosedFunction)
+        self.currentMenuKey = targetMenu
+        self.currentMenu = self.menus[targetMenu]
+        self.currentMenu.activate(self, self.theme)
+        self.startMenuRunning()
 
     def loadTheme(self):
         try:
@@ -109,51 +152,11 @@ class main:
             colour = "#" + colour
         self.root.config(bg=colour)
 
-    def popUpMenu(self, index, menuIndex):
-        if self.isPopupMenuClosedFunction():
-            if self.poppedUpMenu:
-                self.popDownMenu()
-            self.currentPopupMenuIndex = index
-            '''
-            if self.currentMenu.running:
-                self.menuWasRunning = True
-                self.currentMenu.stopRunning()
-            #'''
-            self.popupMenus[index].activate(self.root, "", menuIndex)
-            self.poppedUpMenu = True
-            self.popupMenus[self.currentPopupMenuIndex].root.wm_attributes("-topmost", True)
-
-    def popDownMenu(self):
-        if self.poppedUpMenu:
-            self.popupMenuHasJustClosed = True
-            self.poppedUpMenu = False
-            self.popupMenus[self.currentPopupMenuIndex].deactivate()
-            self.currentPopupMenuIndex = -1
-
-    def raisePopupOnFocus(self):
-        self.isPopupMenuClosedFunction()
-        if self.popupMenuHasJustClosed:
-            self.popupMenuHasJustClosed = False
-            self.onPopupClosure()
-
-    def onPopupClosure(self):
-        self.currentMenu.reload(self.root)
-        if self.menuWasRunning:
-            self.menuWasRunning = False
-            self.currentMenu.startRunning()
-
-    def isPopupMenuClosedFunction(self):
-        if self.poppedUpMenu:
-            try:
-                if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():
-                    self.popupMenus[self.currentPopupMenuIndex].active = True
-                else:
-                    self.popDownMenu()
-            except:
-                self.popDownMenu()
-        else:
-            self.popDownMenu()
-        return not self.popupMenus[self.currentPopupMenuIndex].active
+    def fullscreen(self, fullscreen=True):
+        self.isFullscreen = fullscreen
+        if self.root != None:
+            if self.isFullscreen:
+                self.root.state("zoomed")
 
         
     
