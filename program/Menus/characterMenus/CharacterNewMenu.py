@@ -1,6 +1,3 @@
-import sys
-classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterNewMenu(characterMenuTemplate):

@@ -1,15 +1,18 @@
 import sys
 classPath = __file__.split(__file__.split("\\")[-1])[0]
-sys.path.append(classPath + "Menus\\main-menus")
-sys.path.append(classPath + "Menus\\popup-menus")
+sys.path.append(classPath + "Menus\\")
+sys.path.append(classPath + "Menus\\dmgCalculationMenus")
+sys.path.append(classPath + "Menus\\characterMenus")
 sys.path.append(classPath + "Menus\\framework")
 sys.path.append(classPath + "Menus\\main-menus")
 sys.path.append(classPath + "Classes\\Data-objects")
+sys.path.append(classPath + "Classes\\Simulation")
+sys.path.append(classPath + "Classes\\Graphing")
 from Main import main
-from PopupMenu import popupMenu
 
-from Menu import menu, obj, button, label, entry, optionBox, listBox, canvas, image
+from Menu import menu, button, label, entry, optionBox, listBox, canvas, image
 
+from BuffController import buffController
 from DmgCalcMenu import dmgCalcMenu
 from CharacterOptionsMenu import characterOptionsMenu
 from CharacterAttributeMenu import characterAttributeMenu
@@ -21,7 +24,6 @@ from CharacterOverviewMenu import characterOverviewMenu
 from CharacterBuffMenu import characterBuffMenu
 #'''
 main = main("wiki", "800x500")
-characterEditorPopup = popupMenu("Character editor", "401x250")
 
 mainMenu = menu()
 dmgCalcMenu = dmgCalcMenu(True)
@@ -71,12 +73,12 @@ dmgCalcMenu.assignIcons({
 
 })
 charMenuNavigationButtons = {
-    "OverviewButton" : button([1, 1], [65, 30], "Overview", lambda : characterEditorPopup.changeMenu(6)),
-    "levelButton" : button([67, 1], [66, 30], "Level", lambda : characterEditorPopup.changeMenu(1)),
-    "weaponButton" : button([134, 1], [66, 30], "Weapon", lambda : characterEditorPopup.changeMenu(5)),
-    "armourButton" : button([201, 1], [66, 30], "Armour", lambda : characterEditorPopup.changeMenu(4)),
-    "buffButton" : button([268, 1], [66, 30], "Buffs", lambda : characterEditorPopup.changeMenu(7)),
-    "optionsButton" : button([335, 1], [65, 30], "Options", lambda : characterEditorPopup.changeMenu(0)),
+    "OverviewButton" : button([1, 1], [65, 30], "Overview", lambda : main.changeMenu(3)),
+    "levelButton" : button([67, 1], [66, 30], "Level", lambda : main.changeMenu(5)),
+    "weaponButton" : button([134, 1], [66, 30], "Weapon", lambda : main.changeMenu(7)),
+    "armourButton" : button([201, 1], [66, 30], "Armour", lambda : main.changeMenu(8)),
+    "buffButton" : button([268, 1], [66, 30], "Buffs", lambda : main.changeMenu(9)),
+    "optionsButton" : button([335, 1], [65, 30], "Options", lambda : main.changeMenu(2)),
 }
 
 characterOptionsMenu.assignIcons({
@@ -143,8 +145,8 @@ for i in range(7):
 
 for i in [characterAttributeMenu, characterTalentMenu]:
     i.addIcons({
-        "attributesButton" : button([1, 35], [80, 19], "Attributes", lambda : characterEditorPopup.changeMenu(1)),
-        "talentButton" : button([82, 35], [80, 19], "Talents", lambda : characterEditorPopup.changeMenu(3)),
+        "attributesButton" : button([1, 35], [80, 19], "Attributes", lambda : main.changeMenu(5)),
+        "talentButton" : button([82, 35], [80, 19], "Talents", lambda : main.changeMenu(6)),
 
         "levelLabel" : label([317, 35], [42, 19], "Level"),
         "levelEntry" : entry([360, 35], [40, 19]),
@@ -225,12 +227,8 @@ for i in [characterArmourMenu, characterWeaponMenu]:
 for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu, characterBuffMenu]:
     i.addIcons(charMenuNavigationButtons)
 
-characterEditorPopup.assignMenus([characterOptionsMenu, characterAttributeMenu, characterNewMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu, characterBuffMenu])
-
-main.assignMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu])
-main.assignPopupMenus([characterEditorPopup])
-#characterEditorPopup.changeMenu(3)
+main.assignMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
 main.activate()
-main.popUpMenu(0, 1)
+main.changeMenu(3)
 main.root.mainloop()
 #'''

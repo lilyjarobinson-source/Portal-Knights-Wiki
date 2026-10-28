@@ -1,5 +1,3 @@
-import sys
-sys.path.append(__file__.split("Menus")[0] + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
 
 class canvasTextBox:

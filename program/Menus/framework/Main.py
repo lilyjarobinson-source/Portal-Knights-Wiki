@@ -20,7 +20,7 @@ class main:
         self.root = Tk()
         self.root.title(self.title)
         self.root.geometry(self.geometry)
-        self.root.bind('<Button-1>', lambda event : self.raisePopupOnFocus())
+        #self.root.bind('<Button-1>', lambda event : self.raisePopupOnFocus())
 
     def assignMenus(self, menus):
         self.menus = menus
@@ -40,14 +40,14 @@ class main:
     def reloadMenu(self):
         self.loadTheme()
         self.currentMenu.deactivate()
-        self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+        self.currentMenu.activate(self.root, self.theme)#, self.isPopupMenuClosedFunction)
 
     def changeMenu(self, targetIndex):
         self.loadTheme()
         self.currentMenu.deactivate()
         self.currentMenuIndex = targetIndex
         self.currentMenu = self.menus[targetIndex]
-        self.currentMenu.activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+        self.currentMenu.activate(self.root, self.theme)#, self.isPopupMenuClosedFunction)
 
     def loadTheme(self):
         try:
@@ -143,7 +143,6 @@ class main:
             self.currentMenu.startRunning()
 
     def isPopupMenuClosedFunction(self):
-        return True
         if self.poppedUpMenu:
             try:
                 if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():

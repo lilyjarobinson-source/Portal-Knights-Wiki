@@ -1,9 +1,3 @@
-import sys, time
-classPath = __file__.split("Menus")[0]
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Classes\\Simulation")
-sys.path.append(classPath + "Classes\\Graphing")
-sys.path.append(classPath + "Menus")
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
 from WeaponController import weaponController

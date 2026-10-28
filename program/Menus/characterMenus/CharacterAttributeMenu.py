@@ -1,5 +1,3 @@
-import sys
-sys.path.append(__file__.split("Menus")[0] + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
 from BuffController import buffController
 
@@ -42,27 +40,24 @@ class characterAttributeMenu(characterMenuTemplate):
         
     def assignAttributePoints(self, key):
         amount = self.icons[f"{key}AssignedPointsEntry"].get()
-        if amount == "":
-            self.icons[f"{key}AssignedPointsEntry"].set("0")
-        else:
-            try:
-                amount = int(amount)
-            except:
-                return None
-            if amount < 0:
-                self.loadedCharacter.attributePointDistribution.update({key : 0})
-                self.icons[f"{key}AssignedPointsEntry"].set(0)
-
+        try:
+            amount = int(amount)
+        except:
+            if amount == "":
+                amount = 0
             else:
-                self.loadedCharacter.attributePointDistribution.update({key : amount})
-                remainingPoints = self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints()
-                if remainingPoints < 0:
-                    self.loadedCharacter.attributePointDistribution.update({key : amount + remainingPoints})
-                    self.icons[f"{key}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[key])
-            self.displayAttributePoints()
-            self.displayStatPoints()
-            self.displayAvailibleAttributePoints()
-            self.saveCharacter()
+                return None
+        if amount < 0:
+            amount = 0
+        self.loadedCharacter.attributePointDistribution.update({key : amount})
+        remainingPoints = self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints()
+        if remainingPoints < 0:
+            self.loadedCharacter.attributePointDistribution.update({key : amount + remainingPoints})
+            self.icons[f"{key}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[key])
+        self.displayAttributePoints()
+        self.displayStatPoints()
+        self.displayAvailibleAttributePoints()
+        self.saveCharacter()
                     
 
     def getTotalAssignedPoints(self):
@@ -76,29 +71,29 @@ class characterAttributeMenu(characterMenuTemplate):
 
     def setLevel(self):
         amount = self.icons["levelEntry"].get()
-        if amount == "":
-            self.icons["levelEntry"].set("1")
-        else:
-            try:
-                amount = int(amount)
-            except:
-                return None
-            if amount < self.loadedCharacter.level:
-                self.resetAttributePoints()
-            if amount < 1:
+        try:
+            amount = int(amount)
+        except:
+            if amount == "":
+                amount = 1
                 self.loadedCharacter.level = 1
-                self.icons["levelEntry"].set(1)
             else:
-                self.loadedCharacter.level = amount
-                remainingPoints = 30 - amount
-                if remainingPoints < 0:
-                    self.loadedCharacter.level = amount + remainingPoints
-                    self.icons["levelEntry"].set(self.loadedCharacter.level)
-            self.displayLevel()
-            self.displayAvailibleAttributePoints()
-            self.displayAttributePoints()
-            self.displayStatPoints()
-            self.saveCharacter()
+                return None
+        if amount < self.loadedCharacter.level:
+            self.resetAttributePoints()
+        if amount < 1:
+            self.loadedCharacter.level = 1
+        else:
+            self.loadedCharacter.level = amount
+            remainingPoints = 30 - amount
+            if remainingPoints < 0:
+                self.loadedCharacter.level = amount + remainingPoints
+        self.icons["levelEntry"].set(self.loadedCharacter.level)
+        self.displayLevel()
+        self.displayAvailibleAttributePoints()
+        self.displayAttributePoints()
+        self.displayStatPoints()
+        self.saveCharacter()
 
     def displayAvailibleAttributePoints(self):
         self.icons["remainingAttributePointsDisplayLabel"].set(self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints())
