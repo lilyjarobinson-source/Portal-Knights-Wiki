@@ -1,10 +1,17 @@
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterOptionsMenu(characterMenuTemplate):
-    def initialise(self, root):
+    def assignIconFunctions(self):
+        self.icons["selectCharButton"].bindFunction(self.selectCharacter)
+        self.icons["saveCharButton"].bindFunction(self.saveCharacter)
+        self.icons["loadCharsButton"].bindFunction(self.refreshList)
+        self.icons["newCharButton"].bindFunction(lambda : self.main.changeMenu("characterNewMenu"))
+        self.icons["deleteCharButton"].bindFunction(self.deleteCharacter)
+    
+    def initialise(self):
         self.refreshList()
 
-    def selectCharacter(self, main):
+    def selectCharacter(self):
         index = self.icons["charactersListBox"].getIndex()
         if len(index) == 0:
             return None
@@ -12,7 +19,7 @@ class characterOptionsMenu(characterMenuTemplate):
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "w")
         file.write(self.characterController.convertCharacterToSaveFormat(self.characters[index]))
         file.close()
-        main.changeMenu(3)
+        self.main.changeMenu("characterOverviewMenu")
 
     def displayCharacters(self):
         self.icons["charactersListBox"].clear()

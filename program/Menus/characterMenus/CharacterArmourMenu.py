@@ -3,11 +3,22 @@ from CharacterMenuTemplate import characterMenuTemplate
 
 class characterArmourMenu(characterMenuTemplate):
     def __init__(self):
+        super().__init__()
         self.armourController = armourController()
         self.displayArmourPieces = []
         self.searchingSlot = None
+
+    def assignIconFunctions(self):
+        self.icons["armourListBox"].bindFunctionToChange(self.assignArmourToSlot)
         
-    def initialise(self, root):
+        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("head"))
+        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("torso"))
+        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("arms"))
+        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("legs"))
+        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("cape"))
+        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("ring"))
+        
+    def initialise(self):
         self.loadCharacter()
         self.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
@@ -15,13 +26,6 @@ class characterArmourMenu(characterMenuTemplate):
         self.searchForArmour("head")
         self.displayArmourOptions()
         self.displayDefence()
-
-        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("head"))
-        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("torso"))
-        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("arms"))
-        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("legs"))
-        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("cape"))
-        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("ring"))
 
     def displayArmour(self):
         for i in self.armourController.armourSlots:
@@ -84,7 +88,7 @@ class characterArmourMenu(characterMenuTemplate):
             self.icons["buffLabel"].deactivate()
             self.icons["multiplierListBox"].place([1, 200], [199, 49])
         else:
-            self.icons["buffLabel"].activate(self.root, self.theme, self.isPopupMenuClosedFunction)
+            self.icons["buffLabel"].activate(self.root, self.theme)
             self.icons["buffLabel"].set(a.buff)
             self.icons["multiplierListBox"].place([1, 220], [199, 29])
         self.icons["multiplierListBox"].clear()

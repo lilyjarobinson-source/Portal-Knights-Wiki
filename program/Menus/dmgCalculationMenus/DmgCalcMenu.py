@@ -1,42 +1,52 @@
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
 from WeaponController import weaponController
-from CharacterController import characterController
 from BuffController import buffController
 from PointCollection import pointCollection
 from ScrollingGraph import scrollingGraph
 from CharacterMenuTemplate import characterMenuTemplate
 
 class dmgCalcMenu(characterMenuTemplate):
-    characterController = characterController()
-    weaponController = weaponController()
-    buffController = buffController()
-    damageCalculator = damageCalculator()
-    buffController.loadBuffs()
-    displayWeapons = []
-    graphingCharacters = []
-    loadedCharacterIndex = -1
-    
-    graph = scrollingGraph()
-    
+    def __init__(self):
+        super().__init__()
+        self.weaponController = weaponController()
+        self.buffController = buffController()
+        self.damageCalculator = damageCalculator()
+        self.buffController.loadBuffs()
+        self.displayWeapons = []
+        self.graphingCharacters = []
+        self.loadedCharacterIndex = -1
+        
+        self.graph = scrollingGraph()
+        
 
-    # drawlimit for the graph in seconds
-    drawLimit = 6
+        # drawlimit for the graph in seconds
+        self.drawLimit = 6
 
-    startTime = 0
-    timer = 0
+        self.startTime = 0
+        self.timer = 0
 
-    deltaTime = 0
-    beforeTime = 0#time.time()
-    screenDeltaTime = 0
-    screenBeforeTime = 0#time.time()
+        self.deltaTime = 0
+        self.beforeTime = 0#time.time()
+        self.screenDeltaTime = 0
+        self.screenBeforeTime = 0#time.time()
 
-    attacking = False
-    graphType = "Standard"
+        self.attacking = False
+        self.graphType = "Standard"
 
-    def initialise(self, root):
+    def assignIconFunctions(self):
+        self.icons["backButton"].bindFunction(lambda : self.main.changeMenu("mainMenu"))
+        self.icons["charcterMenuButton"].bindFunction(lambda : self.main.changeMenu("characterOptionsMenu"))
+        self.icons["startGraphingButton"].bindFunction(self.startGraphing)
+        self.icons["stopGraphingButton"].bindFunction(self.stopGraphing)
+        self.icons["characterEditButton"].bindFunction(self.setLoadedCharacterAndChangeMenu)
+        self.icons["characterRemoveButton"].bindFunction(self.removeCharacter)
+        self.icons["loadedCharactersListBox"].bindFunctionToChange(self.loadCharacterForViewing)
+        self.icons["charactersListBox"].bindFunctionToChange(self.loadCharacterToBeGraphed)
         self.icons["characterColourEntry"].bindFunctionToKeypress(self.setCharacterColour)
-        self.icons["graphTypeOptionBox"].bindFunctionToKeypress(lambda *args : self.setGraphType())
+        self.icons["graphTypeOptionBox"].bindFunctionToChange(self.setGraphType)
+        
+    def initialise(self):
         self.refreshList()
         self.graph.graphType = "Standard"
         self.initialiseGraph()
@@ -46,7 +56,7 @@ class dmgCalcMenu(characterMenuTemplate):
         self.loadCharacters()
         self.displayCharacterChoices()
 
-    def reload(self, root):
+    def reload(self):
         self.refreshList()
         for i in range(len(self.graphingCharacters)):
             for x in self.characters:
@@ -62,10 +72,10 @@ class dmgCalcMenu(characterMenuTemplate):
             self.displayCharacterWeapon()
             self.displayCharacterClass()
 
-    def setLoadedCharacterAndChangeMenu(self, main):
+    def setLoadedCharacterAndChangeMenu(self):
         if self.loadedCharacterIndex != -1:
             self.saveCharacter()
-            main.changeMenu(3)
+            self.main.changeMenu("characterOverviewMenu")
 
     def displayCharacterChoices(self):
         self.icons["charactersListBox"].clear()

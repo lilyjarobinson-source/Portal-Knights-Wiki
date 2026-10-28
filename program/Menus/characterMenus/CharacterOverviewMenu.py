@@ -52,6 +52,7 @@ class camera:
 
 class characterOverviewMenu(characterMenuTemplate):
     def __init__(self):
+        super().__init__()
         self.camera = None
         self.oldMousePos = [0, 0]
         self.multipliers = {}
@@ -59,8 +60,15 @@ class characterOverviewMenu(characterMenuTemplate):
         self.defensiveMultipliers = {}
         self.miscellaneousMultipliers = {}
         self.loadMultiplierTypes()
+        
+    def assignIconFunctions(self):
+        self.icons["backButton"].bindFunction(lambda : self.main.changeMenu("mainMenu"))
+        
+        self.icons["canvas"].obj.bind('<ButtonPress-2>', lambda event : self.resetCamera())
+        self.icons["canvas"].obj.bind('<ButtonPress-3>', self.dragCanvasStart)
+        self.icons["canvas"].obj.bind('<B3-Motion>', self.drag)
     
-    def initialise(self, root):
+    def initialise(self):
         self.dataValues = {
             "characterName" : dataValue("Name ", [0, 0]),
             "characterLevel" : dataValue("Level", [0, 15]),
@@ -77,10 +85,6 @@ class characterOverviewMenu(characterMenuTemplate):
             "defensiveMultipliers" : canvasTextBox("", [-250, 180]),
             "miscellaneousMultipliers" : canvasTextBox("", [-500, 180]),
         }
-        
-        self.icons["canvas"].obj.bind('<ButtonPress-2>', lambda event : self.resetCamera())
-        self.icons["canvas"].obj.bind('<ButtonPress-3>', self.dragCanvasStart)
-        self.icons["canvas"].obj.bind('<B3-Motion>', lambda event : self.drag(event))
         if self.camera == None:
             self.camera = camera()
         self.resetCamera()
