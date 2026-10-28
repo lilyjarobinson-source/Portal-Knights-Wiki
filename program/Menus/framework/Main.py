@@ -143,6 +143,7 @@ class main:
             self.currentMenu.startRunning()
 
     def isPopupMenuClosedFunction(self):
+        return True
         if self.poppedUpMenu:
             try:
                 if self.popupMenus[self.currentPopupMenuIndex].root.winfo_exists():

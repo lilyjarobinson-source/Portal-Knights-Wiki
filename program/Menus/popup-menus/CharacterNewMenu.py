@@ -13,10 +13,10 @@ class characterNewMenu(characterMenuTemplate):
     def createCharacter(self, main):
         self.loadedCharacter.name = self.icons["nameEntry"].get()
         self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
-        if self.loadedCharacter.name == "":
+        if len(self.loadedCharacter.name) > 0:
+            self.saveCharacter()
+            main.changeMenu(3)
+        else:
             print("No name")
-            return None
-        self.saveCharacter()
-        main.changeMenu(0)
         
     

@@ -68,10 +68,10 @@ class dmgCalcMenu(characterMenuTemplate):
             self.displayCharacterWeapon()
             self.displayCharacterClass()
 
-    def setLoadedCharacterAndPopUpMenu(self, popUpFunction):
+    def setLoadedCharacterAndChangeMenu(self, main):
         if self.loadedCharacterIndex != -1:
             self.saveCharacter()
-            popUpFunction()
+            main.changeMenu(3)
 
     def displayCharacterChoices(self):
         self.icons["charactersListBox"].clear()
