@@ -1,10 +1,14 @@
 import sys
 sys.path.append(__file__.split("Menus")[0] + "Menus")
 from CharacterMenuTemplate import characterMenuTemplate
+from BuffController import buffController
 
 class characterAttributeMenu(characterMenuTemplate):
     def initialise(self, root):
         self.loadCharacter()
+        self.buffController = buffController()
+        self.buffController.loadBuffs()
+        self.buffController.applyStartingBuffs(self.loadedCharacter)
         #'''
         for i in ["constitution", "strength", "agility", "dexterity", "intelligence", "wisdom"]:
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
@@ -102,13 +106,12 @@ class characterAttributeMenu(characterMenuTemplate):
     def generatePoints(self):
         self.characterController.generateStatPoints(self.loadedCharacter)
 
-
     def displayAttributePoints(self):
         self.generatePoints()
         for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.attributePoints[i])
             self.icons[f"{i}AssignedPointsEntry"].set(self.loadedCharacter.attributePointDistribution[i])
-            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.attributePoints[i] + self.loadedCharacter.attributePointDistribution[i] + self.loadedCharacter.bonusAttributePoints[i])
+            self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.displayAttributePoints[i])
         
     def displayStatPoints(self):
         #print("displaying stat points")
@@ -129,8 +132,8 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
+        self.saveCharacter()
         self.displayAttributePoints()
         self.displayStatPoints()
-        self.saveCharacter()
         

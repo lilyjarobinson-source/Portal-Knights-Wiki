@@ -1,1 +1,0 @@
-Outlaw gloves,24,81,None,Arms,,melee damage=90,

@@ -1,3 +1,0 @@
-Gladiator legbraces,24,253,None,Legs,,Multistrike rate=4,Multistrike amount=1,
-Shaman dragon soul boots,26,242,None,Legs,,Weaken enemy chance=14,jump height bonus=1,dark res=5,
-Greaves of retribution,30,301,None,Legs,,Crit rate=8,Crit damage=0.05,

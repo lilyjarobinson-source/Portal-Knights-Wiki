@@ -149,7 +149,7 @@ class button(obj):
     textColour = "#000000"
     def __init__(self, pos, dimensions, text, command):
         super().__init__(pos, dimensions)
-        self.text = text
+        self.text = str(text)[:]
         self.fun = command
 
     def initialise(self, root):
@@ -162,7 +162,7 @@ class button(obj):
                 self.fun()
 
     def set(self, text):
-        self.text = text
+        self.text = str(text)[:]
         self.obj.config(text=text)
 
     def get(self):
@@ -177,7 +177,7 @@ class label(obj):
     textColour = "#000000"
     def __init__(self, pos, dimensions, text, textAlign="c"):
         super().__init__(pos, dimensions)
-        self.text = text
+        self.text = str(text)[:]
         self.textAlign = textAlign
         match textAlign:
             case "w":
@@ -192,7 +192,7 @@ class label(obj):
         self.place()
         
     def set(self, text):
-        self.text = text
+        self.text = str(text)[:]
         self.obj.config(text=self.text)
 
     def get(self):
@@ -210,33 +210,37 @@ class entry(obj):
         super().__init__(pos, dimensions)
         self.fun = None
         self.contents = None
-        self.initialising = False
+        self.suppressChanges = False
 
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         if self.contents == None:
             self.contents = StringVar()
         self.obj = Entry(root, textvariable=self.contents, borderwidth=1, relief="solid", bg=self.colour, fg=self.textColour)
+        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def get(self):
         return self.contents.get()
 
     def set(self, contents):
-        self.contents.set(contents)
+        self.suppressChanges = True
+        self.contents.set(str(contents)[:])
         self.obj.config(textvariable=self.contents)
+        self.suppressChanges = False
 
     def clear(self):
+        self.suppressChanges = True
         self.contents.set("")
         self.obj.config(textvariable=self.contents)
+        self.suppressChanges = False
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
-        self.obj.bind("<KeyRelease>", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 
@@ -250,36 +254,38 @@ class optionBox(obj):
         self.selectedOption = None
         self.fun = None
         self.options = options
-        self.initialising = False
+        self.suppressChanges = False
     
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         if self.selectedOption == None:
             self.selectedOption = StringVar(value=self.defaultOption)
         else:
             self.setSelectedOption(self.defaultOption)
         self.obj = OptionMenu(root, self.selectedOption, *self.options)
         self.obj.config(bg=self.colour, borderwidth=1, relief="solid", highlightthickness=0, fg=self.textColour)
+        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def get(self):
         return self.selectedOption.get()
 
     def setSelectedOption(self, option):
-        self.selectedOption.set(option)
+        self.suppressChanges = True
+        self.selectedOption.set(str(option)[:])
+        self.suppressChanges = False
 
     def setOptions(self, root, theme, options):
         self.options = options
         self.deactivate()
-        self.activate(root, theme)
+        self.activate(root, theme, self.isPopupMenuClosedFunction)
 
     def bindFunctionToKeypress(self, fun):
         self.fun = fun
-        self.selectedOption.trace_add("write", lambda *args : self.checkForPopUpMenu())
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 
@@ -291,18 +297,18 @@ class listBox(obj):
         super().__init__(pos, dimensions)
         self.items = []
         self.fun = command
-        self.initialising = False
+        self.suppressChanges = False
 
     def initialise(self, root):
-        self.initialising = True
+        self.suppressChanges = True
         self.obj = Listbox(root, borderwidth=1, relief="solid", bg=self.colour, highlightthickness=0, fg=self.textColour)
         self.clear()
         self.obj.bind("<<ListboxSelect>>", lambda *args : self.checkForPopUpMenu())
         self.place()
-        self.initialising = False
+        self.suppressChanges = False
 
     def checkForPopUpMenu(self):
-        if not self.initialising and self.isPopupMenuClosedFunction():
+        if not self.suppressChanges and self.isPopupMenuClosedFunction():
             if self.fun != None:
                 self.fun()
 
@@ -354,8 +360,8 @@ class canvas(obj):
     def image(self, x, y, image, anchor="center"):
         self.obj.create_image(x, y, image=image, anchor=anchor)
         
-    def write(self, x, y, text, anchor="center"):
-        self.obj.create_text(x, y, text=text, fill=self.textColour, anchor=anchor)
+    def write(self, x, y, text, anchor="center", font="TkDefaultFont"):
+        self.obj.create_text(x, y, text=text, fill=self.textColour, anchor=anchor, font=font)
 
     def clear(self):
         self.obj.delete("all")

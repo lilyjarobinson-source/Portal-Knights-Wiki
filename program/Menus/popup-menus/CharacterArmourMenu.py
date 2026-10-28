@@ -12,40 +12,40 @@ class characterArmourMenu(characterMenuTemplate):
         self.searchingSlot = None
         
     def initialise(self, root):
-        self.armourController.loadArmourPieces()
         self.loadCharacter()
+        self.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
         self.displayClass()
-        self.searchForArmour("Ring")
+        self.searchForArmour("head")
         self.displayArmourOptions()
+        self.displayDefence()
 
-        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Head"))
-        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Torso"))
-        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Arms"))
-        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Legs"))
-        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Cape"))
-        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("Ring"))
-
-
+        self.icons["headEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("head"))
+        self.icons["torsoEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("torso"))
+        self.icons["armsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("arms"))
+        self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("legs"))
+        self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("cape"))
+        self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("ring"))
 
     def displayArmour(self):
         for i in self.armourController.armourSlots:
-            if self.loadedCharacter.armour[i] != None:
-                self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i].name)
-            else:
-                self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i])
+            self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i].name)
 
     def displayClass(self):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
+    def displayDefence(self):
+        self.characterController.getDefence(self.loadedCharacter)
+        self.icons["defenceDisplayLabel"].set(self.loadedCharacter.defence)
+
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayArmour()
 
     def assignArmourToSlot(self):
         if self.searchingSlot == None:
-            return None
+            return self.armourController.none()
         value = self.icons["armourListBox"].getValue()
         armourPiece = self.armourController.getArmourPiece(value)
         if value == "None":
@@ -57,9 +57,9 @@ class characterArmourMenu(characterMenuTemplate):
             armourPiece = self.armourController.getArmourPiece(value)
             
         self.loadedCharacter.armour[self.searchingSlot] = armourPiece
-        if armourPiece != None:
-            self.displayArmourStats(armourPiece)
+        self.displayArmourStats(armourPiece)
         self.saveCharacter()
+        self.displayDefence()
 
     def searchAndAssign(self, slot):
         self.searchForArmour(slot)

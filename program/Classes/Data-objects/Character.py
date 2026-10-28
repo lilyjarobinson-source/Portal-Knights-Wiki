@@ -3,12 +3,12 @@ class character:
         self.characterId = ""
         self.name = ""
         self.armour = {
-            "Head" : None,
-            "Torso" : None,
-            "Arms" : None,
-            "Legs" : None,
-            "Cape" : None,
-            "Ring" : None
+            "head" : None,
+            "torso" : None,
+            "arms" : None,
+            "legs" : None,
+            "cape" : None,
+            "ring" : None
         }
         self.weapon = None
         self.level = 1
@@ -20,7 +20,15 @@ class character:
             "agility" : 0,
             "dexterity" : 0,
             "wisdom" : 0,
-            "intelligence" : 0,
+            "intelligence" : 0
+        }
+        self.attributePointDistribution = {
+            "constitution" : 0,
+            "strength" : 0,
+            "agility" : 0,
+            "dexterity" : 0,
+            "wisdom" : 0,
+            "intelligence" : 0
         }
         self.bonusAttributePoints = {
             "constitution" : 0,
@@ -28,7 +36,15 @@ class character:
             "agility" : 0,
             "dexterity" : 0,
             "wisdom" : 0,
-            "intelligence" : 0,
+            "intelligence" : 0
+        }
+        self.displayAttributePoints = {
+            "constitution" : 0,
+            "strength" : 0,
+            "agility" : 0,
+            "dexterity" : 0,
+            "wisdom" : 0,
+            "intelligence" : 0
         }
         self.baseStatPoints = {
             "health" : 0,
@@ -46,17 +62,14 @@ class character:
             "mana" : 0,
             "magic damage" : 0
         }
-        self.attributePointDistribution = {
-            "constitution" : 0,
-            "strength" : 0,
-            "agility" : 0,
-            "dexterity" : 0,
-            "wisdom" : 0,
-            "intelligence" : 0
-        }
-        self.armourMultipliers = {}
+        self.startingBuffs = []
+        self.buffTimers = []
+        self.cooldownTimers = []
+        self.talents = [0,0,0,0,0,0,0]
+        self.extraMultipliers = {}
         self.damageStats = None
-        self.buffTimers = {}
+        self.hitCounter = 0
+        self.defence = 0
 
     def setAttributePointAt(self, key, value):
         self.attributePoints[key] = value

@@ -14,7 +14,7 @@ class characterWeaponMenu(characterMenuTemplate):
         self.icons["classOptionBox"].bindFunctionToKeypress(lambda *args : self.setClass())
         
         self.loadCharacter()
-        self.weaponController.loadWeapons()
+        self.weaponController.loadWeapons(self.loadedCharacter)
 
         self.displayWeapons()
         self.loadCharacterWeapon()
@@ -25,8 +25,7 @@ class characterWeaponMenu(characterMenuTemplate):
     def displayWeapons(self):
         self.icons["weaponListBox"].clear()
         for i in self.weaponController.weapons:
-            if i.classRestriction in ["None", self.loadedCharacter.characterClass]:
-                self.icons["weaponListBox"].append(i.name)
+            self.icons["weaponListBox"].append(i.name)
 
     def loadCharacterWeapon(self):
         self.loadedWeapon = self.loadedCharacter.weapon
@@ -44,17 +43,26 @@ class characterWeaponMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.loadedCharacter.characterClass = self.icons["classOptionBox"].get()
+        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
+        self.weaponController.loadWeapons(self.loadedCharacter)
         self.displayWeapons()
 
     def displayWeapon(self):
         self.icons["nameLabel"].set(self.loadedWeapon.name)
-        self.icons["weaponTypeLabel"].set(self.loadedWeapon.wpnType)
-        self.icons["damageDisplayLabel"].set(self.loadedWeapon.baseDmg)
+        self.prettyPrintToIcon("weaponTypeLabel", self.loadedWeapon.wpnType)
+        self.prettyPrintToIcon("damageDisplayLabel", self.loadedWeapon.baseDmg)
+        self.prettyPrintToIcon("dmgTypeLabel", self.loadedWeapon.damageType)
         self.icons["statListBox"].clear()
         for i in self.loadedWeapon.multipliers:
-            self.icons["statListBox"].append(f"{i} : {self.loadedWeapon.multipliers[i]}")
+            if i != "defence":
+                self.icons["statListBox"].append(f"{self.uppercaseFirstLetter(i)} : {self.loadedWeapon.multipliers[i]}")
+
+        if "defence" in self.loadedWeapon.multipliers:
+            self.icons["defenceDisplayLabel"].set(int(self.loadedWeapon.multipliers["defence"]))
+        else:
+            self.icons["defenceDisplayLabel"].set(0)
+        
         if self.loadedWeapon.buff == "":
             self.icons["buffLabel"].deactivate()
             self.icons["statListBox"].place([1, 100], [199, 59])

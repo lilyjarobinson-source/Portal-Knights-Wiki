@@ -1,1 +1,0 @@
-Outlaw hood,24,162,None,Head,,Multistrike rate=4,Multistrike amount=1,
