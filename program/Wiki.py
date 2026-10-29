@@ -36,8 +36,6 @@ characterWeaponMenu = characterWeaponMenu()
 characterOverviewMenu = characterOverviewMenu()
 characterBuffMenu = characterBuffMenu()
 
-dmgCalcMenu.setRunable()
-
 classes = ["warrior", "ranger", "mage", "rogue", "druid"]
 graphTypes = ["Standard", "Cumulative"]
 
@@ -233,12 +231,13 @@ for i in [characterArmourMenu, characterWeaponMenu]:
         "classOptionBox" : optionBox([301, 40], [99, 19], "", classes),
     })
 
-
 for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu, characterBuffMenu]:
     i.addIcons(charMenuNavigationButtons)
 
+dmgCalcMenu.setRunable()
+
 main.addMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
 main.ignoreIconFile()
-main.activate("characterOverviewMenu")
-main.root.mainloop()
+main.activate("dmgCalcMenu")
+#main.root.mainloop()
 #'''

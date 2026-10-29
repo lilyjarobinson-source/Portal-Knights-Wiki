@@ -1,3 +1,4 @@
+Squire's helm,1,10,warrior,head,,crit rate=3,
 Beastmaster horned helm,2,31,none,head,rush,
 Beserker horned helm,6,52,none,head,health=37,earth res=3,
 Copper knight's helm,6,52,none,head,,spell res=3,

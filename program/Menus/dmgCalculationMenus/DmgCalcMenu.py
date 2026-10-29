@@ -1,3 +1,4 @@
+from time import time
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
 from WeaponController import weaponController
@@ -27,9 +28,9 @@ class dmgCalcMenu(characterMenuTemplate):
         self.timer = 0
 
         self.deltaTime = 0
-        self.beforeTime = 0#time.time()
+        self.beforeTime = 0#time()
         self.screenDeltaTime = 0
-        self.screenBeforeTime = 0#time.time()
+        self.screenBeforeTime = 0#time()
 
         self.attacking = False
         self.graphType = "Standard"
@@ -145,7 +146,7 @@ class dmgCalcMenu(characterMenuTemplate):
         self.graph.setDrawLimit(self.drawLimit)
 
     def startGraphing(self):
-        self.beforeTime = time.time()
+        self.beforeTime = time()
         self.screenBeforeTime = self.beforeTime
         self.startTime = self.beforeTime
         self.timer = 0
@@ -167,8 +168,8 @@ class dmgCalcMenu(characterMenuTemplate):
 
     def update(self):
         if self.attacking:
-            self.deltaTime = time.time() - self.beforeTime
-            self.beforeTime = time.time()
+            self.deltaTime = time() - self.beforeTime
+            self.beforeTime = time()
 
             self.timer += self.deltaTime
 
@@ -176,9 +177,9 @@ class dmgCalcMenu(characterMenuTemplate):
             self.attack()
             #self.graph.garbageCollectPoints()
 
-            self.screenDeltaTime = time.time() - self.screenBeforeTime
+            self.screenDeltaTime = time() - self.screenBeforeTime
             if self.screenDeltaTime > 0.016:
-                self.screenBeforeTime = time.time()
+                self.screenBeforeTime = time()
                 self.icons["displayCanvas"].clear()
                 if self.graphType == "Standard":
                     self.graph.setDrawLimit(self.drawLimit)
@@ -208,6 +209,7 @@ class dmgCalcMenu(characterMenuTemplate):
                 else:
                     self.graph.setDrawLimit(self.timer)
                 self.graph.updateCanvas()
+                self.updateScreen()
 
 
     def attack(self):
