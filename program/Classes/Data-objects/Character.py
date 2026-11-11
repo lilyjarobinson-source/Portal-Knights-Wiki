@@ -62,6 +62,7 @@ class character:
             "mana" : 0,
             "magic damage" : 0
         }
+        self.usesBuffs = False
         self.startingBuffs = []
         self.buffTimers = []
         self.cooldownTimers = []

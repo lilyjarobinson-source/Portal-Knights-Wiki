@@ -37,7 +37,7 @@ class armourController:
             return a
         except:
             print(f"failed getting armour data from line:\n{line}")
-            return self.none()
+            return armourController.none()
 
     def getMultipliers(listOfMults):
         multipliers = {}
@@ -48,19 +48,19 @@ class armourController:
 
     def getArmourPiece(self, name):
         if str(name) == "None":
-            return self.none()
+            return armourController.none()
         for i in self.armourPieces:
             if i.name.lower() == name.lower():
                 return i
-        return self.none()
+        return armourController.none()
 
-    def getDefence(self, c):
+    def getDefence(c):
         total = 0
         for i in c.armour.values():
             total += i.baseDefence
         return total
 
-    def none(self):
+    def none():
         a = armour()
         a.name = "None"
         a.classRestriction = "none"

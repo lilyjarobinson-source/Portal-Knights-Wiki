@@ -34,19 +34,19 @@ class damageCalculator:
         for i in hitToCalculate.character.extraMultipliers:
             if i in multipliers.keys():
                 multipliers[i] += hitToCalculate.character.extraMultipliers[i]
-            
+        
         if random.randint(1, 100) <= multipliers["weaken enemy chance"]:
             buffController.applyBuffName(hitToCalculate.character, "weaken enemy")
 
-        if buffController.characterHasBuffName(hitToCalculate.character, "weaken enemy"):
-            hitToCalculate.dmg *= 1.3
 
-        if not hitToCalculate.isCriticalStrike and not hitToCalculate.isAdditionalStrike:
+        if not hitToCalculate.isAdditionalStrike:
+            if buffController.characterHasBuffName(hitToCalculate.character, "weaken enemy"):
+                hitToCalculate.dmg *= 1.3
+            
             if random.randint(1, 100) <= multipliers["crit rate"]:
                 hitToCalculate.dmg *= 1.25 * multipliers["crit damage"]
                 hitToCalculate.isCriticalStrike = True
-
-        if not hitToCalculate.isAdditionalStrike:
+            
             if random.randint(1, 100) <= multipliers["multistrike rate"]:
                 for i in range(int(multipliers["multistrike amount"])):
                     newHit = hitToCalculate.copy()
@@ -67,7 +67,7 @@ class damageCalculator:
                             if hitToCalculate.weapon.wpnType == "axe":
                                 hitToCalculate.dmg *= 1.25
                         case 1:
-                            if hitToCalculate.weapon.wpnType == "hammer":
+                            if hitToCalculate.weapon.wpnType in ["hammerl"]:
                                 hitToCalculate.dmg *= 1.25
                         case 2:
                             if hitToCalculate.weapon.wpnType in ["sword", "saber"]:

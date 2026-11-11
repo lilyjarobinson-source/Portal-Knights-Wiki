@@ -7,7 +7,7 @@ class buff:
         self.cooldown = 0
         # buffType in ["buff", "shout", "recoveryPotion", "buffPotion"]
 
-    def toString(self):
+    def __str__(self):
         return f"Buff : {self.name}, {self.buffType}, {self.sharedCooldownName}, {self.activeTime}, {self.cooldown}"
 
     def getActiveTimer(self):
@@ -27,7 +27,7 @@ class timer:
         self.time -= deltaTime
         return self.time < 0
 
-    def toString(self):
+    def __str__(self):
         return f"Timer : {self.name}, {self.time}"
 
 class buffController:
@@ -73,31 +73,37 @@ class buffController:
             c.cooldownTimers.pop(i)
     
     def checkToApplyBuffs(self, c):
-        for i in self.buffs:
-            if i.name in self.buffsToApply:
-                isAlreadyThereAndShout = False
-                if i.buffType == "shout":
-                    for x in c.buffTimers:
-                        if x.name == i.name:
-                            isAlreadyThereAndShout = True
-                if not isAlreadyThereAndShout and self.applyBuff(c, i):
-                    return True
+        if c.usesBuffs:
+            for i in self.buffs:
+                if i.name in self.buffsToApply:
+                    isAlreadyThereAndShout = False
+                    if i.buffType == "shout":
+                        for x in c.buffTimers:
+                            if x.name == i.name:
+                                isAlreadyThereAndShout = True
+                    if not isAlreadyThereAndShout and self.applyBuff(c, i):
+                        return True
         return False
 
     def applyStartingBuffs(self, c):
-        c.buffTimers = []
-        c.cooldownTimers = []
-        for i in c.startingBuffs:
-            buffToApply = self.getBuff(i)
-            cooldownModifier = self.getTalentCooldownModifier(c, buffToApply)
-            c.buffTimers.append(buffToApply.getActiveTimer())
-            c.cooldownTimers.append(buffToApply.getCooldownTimer(cooldownModifier))
+        if c.usesBuffs:
+            c.buffTimers = []
+            c.cooldownTimers = []
+            for i in c.startingBuffs:
+                buffToApply = self.getBuff(i)
+                cooldownModifier = self.getTalentCooldownModifier(c, buffToApply)
+                c.buffTimers.append(buffToApply.getActiveTimer())
+                c.cooldownTimers.append(buffToApply.getCooldownTimer(cooldownModifier))
     
     def applyStartingBuff(self, c, buffToApply):
         if buffToApply not in c.startingBuffs:
             c.startingBuffs.append(buffToApply)
             return True
         return False
+
+    def applyBuffName(self, c, buffName):
+        buffToApply = self.getBuff(buffName)
+        return self.applyBuff(c, buffToApply)
 
     def applyBuff(self, c, buffToApply):
         if self.checkToApplyBuff(c, buffToApply):
@@ -110,16 +116,10 @@ class buffController:
     def getTalentCooldownModifier(self, c, b):
         modifier = 1
         if b.buffType == "shout":
-            if c.characterClass == "Warrior":
+            if c.characterClass == "warrior":
                 if c.talents[3] == 0:
                     modifier = 0.75
         return modifier
-        
-
-    def applyBuffName(self, c, buffName):
-        buffToApply = self.getBuff(buffName)
-        return self.applyBuff(c, buffToApply)
-
 
     def checkToApplyBuff(self, c, b):
         if b.sharedCooldownName == "":

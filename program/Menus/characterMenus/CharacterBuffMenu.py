@@ -24,10 +24,11 @@ class characterBuffMenu(characterMenuTemplate):
 
     def displayCharacterBuffs(self):
         self.icons["selectedBuffListBox"].clear()
-        for i in self.loadedCharacter.buffTimers:
-            self.icons["selectedBuffListBox"].append(i.name)
+        for i in self.loadedCharacter.startingBuffs:
+            self.icons["selectedBuffListBox"].append(i)
 
     def addBuff(self):
+        self.displayCharacterBuffs()
         index = self.icons["buffListBox"].getIndex()
         if len(index) == 0:
             return None

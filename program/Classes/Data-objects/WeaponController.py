@@ -20,7 +20,7 @@ class weaponController:
             "slingshot" : [4/3, 2/5],
             "dagger" : [9/10, 1/4],
             "gun" : [5/6, 7/10],
-            "knife" : [4/3, 3/10],
+            "throwing knife" : [4/3, 3/10],
             "weapon" : [1, 2/5]
         },
         "none" : {
@@ -35,7 +35,7 @@ class weaponController:
     def __init__(self):
         self.weapons = []
 
-    def fist(self):
+    def fist():
         fist = weapon()
         fist.name = "Fist"
         fist.classRestriction = "none"
@@ -43,7 +43,7 @@ class weaponController:
         fist.wpnType = "weapon"
         fist.damageType = "melee damage"
         fist.damageStat = "physical"
-        self.getWeaponDmgMultAndHitRate(fist)
+        weaponController.getWeaponDmgMultAndHitRate(fist)
         return fist
 
     def loadWeapons(self, c):
@@ -81,21 +81,21 @@ class weaponController:
             step += 1
             w.multipliers = self.getMultipliers(line[7:-1])
             step += 1
-            self.getWeaponDmgMultAndHitRate(w)
+            weaponController.getWeaponDmgMultAndHitRate(w)
             step += 1
             return w
         except:
             print("Failed at line\n" + str(line) + "\nAt step:" + str(step))
-            return self.fist()
+            return weaponController.fist()
 
     def getWeapon(self, name):
         for i in self.weapons:
             if i.name.lower() == name.lower():
                 return i
 
-    def getWeaponDmgMultAndHitRate(self, w):
-        w.dmgMult = self.weaponTypeDictionary[w.classRestriction][w.wpnType][0]
-        w.hitInterval = self.weaponTypeDictionary[w.classRestriction][w.wpnType][1]
+    def getWeaponDmgMultAndHitRate(w):
+        w.dmgMult = weaponController.weaponTypeDictionary[w.classRestriction][w.wpnType][0]
+        w.hitInterval = weaponController.weaponTypeDictionary[w.classRestriction][w.wpnType][1]
 
     def getMultipliers(self, listOfMults):
         multipliers = {}

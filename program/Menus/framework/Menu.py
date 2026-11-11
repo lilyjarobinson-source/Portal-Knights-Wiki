@@ -1,5 +1,5 @@
 import random, time
-from tkinter import *
+from tkinter import Button, Label, Entry, OptionMenu, Listbox, Canvas, StringVar
 hexDigits = "0123456789abcdef"
 
 
@@ -284,7 +284,7 @@ class optionBox(obj):
     def setOptions(self, root, theme, options):
         self.options = options
         self.deactivate()
-        self.activate(root, theme, self.checkToRunFunction)
+        self.activate(root, theme)
 
     def bindFunctionToChange(self, fun):
         self.fun = fun
@@ -344,8 +344,8 @@ class listBox(obj):
         self.obj.delete(index)
 
     def clear(self):
+        self.obj.delete(0, len(self.items))
         self.items = []
-        self.obj.delete(0, END)
 
     def getItemAtIndex(self, index):
         return self.items[index]

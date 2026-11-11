@@ -16,10 +16,11 @@ class canvasTextBox:
     
 
 class dataValue(canvasTextBox):
-    def __init__(self, name, position):
+    def __init__(self, name, position, character=" : "):
         super().__init__(name, position)
         self.value = ""
         self.type = ""
+        self.character = character
 
     def formatText(self):
         match (self.type):
@@ -33,7 +34,7 @@ class dataValue(canvasTextBox):
     def display(self, canvas):
         canvas.write(
             self.drawPoint[0], self.drawPoint[1],
-            f"{self.name} : {self.value}",
+            f"{self.name}{self.character}{self.value}",
             "nw",
             "TkFixedFont"
         )
@@ -62,8 +63,6 @@ class characterOverviewMenu(characterMenuTemplate):
         self.loadMultiplierTypes()
         
     def assignIconFunctions(self):
-        self.icons["backButton"].bindFunction(lambda : self.main.changeMenu("mainMenu"))
-        
         self.icons["canvas"].obj.bind('<ButtonPress-2>', lambda event : self.resetCamera())
         self.icons["canvas"].obj.bind('<ButtonPress-3>', self.dragCanvasStart)
         self.icons["canvas"].obj.bind('<B3-Motion>', self.drag)
@@ -79,7 +78,7 @@ class characterOverviewMenu(characterMenuTemplate):
 
             "stats" : canvasTextBox("Stats", [0, 60]),
 
-            "armour" : canvasTextBox("Armour", [-200, 60]),
+            "armour" : dataValue("Armour", [-200, 45], ""),
 
             "offensiveMultipliers" : canvasTextBox("Offensive multipliers", [0, 180]),
             "defensiveMultipliers" : canvasTextBox("", [-250, 180]),
@@ -203,10 +202,12 @@ class characterOverviewMenu(characterMenuTemplate):
         self.drawDictionaryFrom("stats", self.loadedCharacter.statPoints)
 
     def setUpArmour(self):
-        armour = {}
+        armour = {"Armour" : f"Defence : {self.loadedCharacter.defence}"}
         for i in self.loadedCharacter.armour:
             armour.update({i : self.loadedCharacter.armour[i].name})
         self.drawDictionaryFrom("armour", armour)
+        self.dataValues["armour"].name = ""
+        self.dataValues["armourArmour"].character = "   "
 
     def setUpMultipliers(self):
         self.resetMultipliers()

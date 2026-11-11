@@ -44,7 +44,7 @@ Titanium masterwork cleaver,warrior,melee damage,physical,26,172,axe,crit rate=2
 Fangs of Arden,warrior,melee damage,physical,29,190,saber,defence=120,mana=100,
 Hollow assasin,warrior,melee damage,electro,29,190,hammers,health=100,dodge rate=12,melee res=5,
 Meera's argument ender,warrior,melee damage,physical,29,190,mace,health=100,dodge rate=10,mana regen=20,
-Titanium masterwork fists of war,warrior,melee damage,light,29,190,gauntlet,multistrike rate=20,multistrike amount=1,Health regen=100,
+Titanium masterwork fists of war,warrior,melee damage,light,29,190,gauntlet,multistrike rate=20,multistrike amount=1,health regen=100,
 Titanium throwing axe,warrior,melee damage,physical,29,190,knife,
 Crystal executioner,warrior,melee damage,dark,30,202,sword,health=106,mana regen=21,
 Skybolt,warrior,melee damage,electro,30,208,sword,health=109,mana regen=22,
