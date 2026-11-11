@@ -42,12 +42,14 @@ class scrollingGraph(graph):
                     self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
                     x.colour
                 )
+                '''
                 self.canvas.write(
                     self.originX+self.width-((self.width/self.drawLimit) * (self.timer - x.pointXList[x.drawList[i]])),
                     self.originY-(self.height * x.pointYList[x.drawList[i]]/self.yAxisScale),
                     x.pointYList[x.drawList[i]],
                     "sw",
                 )
+                #'''
     
     def drawPointsCumulative(self):
         self.getPointsToDraw()

@@ -23,7 +23,7 @@ from CharacterWeaponMenu import characterWeaponMenu
 from CharacterOverviewMenu import characterOverviewMenu
 from CharacterBuffMenu import characterBuffMenu
 #'''
-main = main("wiki", "800x500")
+main = main("wiki", "809x501")
 
 mainMenu = mainMenu()
 dmgCalcMenu = dmgCalcMenu()
@@ -48,7 +48,7 @@ dmgCalcMenu.assignIcons({
     "backButton" : button([699, 1], [100, 19], "Back"),
     "displayCanvas" : canvas([201, 60], [598, 400]),
 
-    "charcterMenuButton" : button([1, 60], [199, 19], "Characters menu"),
+    "characterMenuButton" : button([1, 60], [199, 19], "Characters menu"),
     
     "startGraphingButton" : button([1, 80], [99, 19], "Start graphing"),
     "stopGraphingButton" : button([101, 80], [99, 19], "Stop graphing"),
@@ -72,19 +72,19 @@ dmgCalcMenu.assignIcons({
     "graphTypeOptionBox" : optionBox([700, 40], [99, 19], graphTypes[0], graphTypes),
 })
 charMenuNavigationButtons = {
-    "OverviewButton" : button([1, 1], [65, 30], "Overview"),
-    "levelButton" : button([67, 1], [66, 30], "Level"),
-    "weaponButton" : button([134, 1], [66, 30], "Weapon"),
-    "armourButton" : button([201, 1], [66, 30], "Armour"),
-    "buffButton" : button([268, 1], [66, 30], "Buffs"),
-    "optionsButton" : button([335, 1], [65, 30], "Options"),
+    "OverviewButton" : button([1, 1], [65, 19], "Overview"),
+    "levelButton" : button([67, 1], [66, 19], "Level"),
+    "weaponButton" : button([134, 1], [66, 19], "Weapon"),
+    "armourButton" : button([201, 1], [66, 19], "Armour"),
+    "buffButton" : button([268, 1], [66, 19], "Buffs"),
+    #"optionsButton" : button([335, 1], [65, 19], "Options"),
 }
 charMenuNavigationButtons["OverviewButton"].bindFunction(lambda : main.changeMenu("characterOverviewMenu"))
 charMenuNavigationButtons["levelButton"].bindFunction(lambda : main.changeMenu("characterAttributeMenu"))
 charMenuNavigationButtons["weaponButton"].bindFunction(lambda : main.changeMenu("characterWeaponMenu"))
 charMenuNavigationButtons["armourButton"].bindFunction(lambda : main.changeMenu("characterArmourMenu"))
 charMenuNavigationButtons["buffButton"].bindFunction(lambda : main.changeMenu("characterBuffMenu"))
-charMenuNavigationButtons["optionsButton"].bindFunction(lambda : main.changeMenu("characterOptionsMenu"))
+#charMenuNavigationButtons["optionsButton"].bindFunction(lambda : main.changeMenu("characterOptionsMenu"))
 
 characterOptionsMenu.assignIcons({
     "selectCharButton" : button([1, 60], [100, 19], "Select character"),
@@ -122,24 +122,33 @@ characterTalentMenu.assignIcons({
     "classLabel" : label([338, 60], [40, 19], "Class"),
     "classOptionBox" : optionBox([318, 80], [80, 19], "", classes),
 })
+#'''
+for i in range(8):
+    for x in range(25):
+        characterArmourMenu.addIcons({f"measureY{i}{x}" : label([1 + 101 * i, 1 + 20 * x], [100, 19], "")})#, f"{i} {x}")})
+#'''
+characterArmourMenu.addIcons({
+    "armourLabel" : label([1, 41], [201, 19], "Equipt armour"),
+    "defenceLabel" : label([203, 41], [60, 19], "Defence"),
+    "defenceDisplayLabel" : label([264, 41], [39, 19], ""),
 
-characterArmourMenu.assignIcons({
-    "armourLabel" : label([1, 40], [99, 19], "Armour"),
-    "defenceLabel" : label([101, 40], [60, 19], "Defence"),
-    "defenceDisplayLabel" : label([162, 40], [38, 19], ""),
+    "classLabel" : label([304, 41], [100, 19], "Class"),
+    "classOptionBox" : optionBox([304, 61], [100, 19], "", classes),
+
+    "armourListLabel" : label([506, 41], [270, 19], "Armour available"),
+    "armourListCount" : label([777, 41], [31, 19], ""),
+    "armourListBox" : listBox([506, 61], [302, 199]),
     
-    "armourListBox" : listBox([201, 60], [199, 189]),
-    
-    "nameLabel" : label([1, 180], [199, 19], ""),
-    "buffLabel" : label([1, 200], [199, 19], ""),
-    "multiplierListBox" : listBox([1, 220], [199, 29]),
+    "nameLabel" : label([1, 181], [201, 19], ""),
+    "buffLabel" : label([1, 201], [201, 19], ""),
+    "multiplierListBox" : listBox([1, 201], [201, 59]),
 })
 
 armourSlots = ["Head", "Torso", "Arms", "Legs", "Cape", "Ring"]
 for i in range(6):
     characterArmourMenu.addIcons({
-        f"{armourSlots[i].lower()}Label" : label([1, 60 + i * 20], [40, 19], armourSlots[i]),
-        f"{armourSlots[i].lower()}Entry" : entry([42, 60 + i * 20], [158, 19]),
+        f"{armourSlots[i].lower()}Label" : label([1, 61 + i * 20], [40, 19], armourSlots[i]),
+        f"{armourSlots[i].lower()}Entry" : entry([42, 61 + i * 20], [261, 19]),
     })
 unlockLevels = [2, 5, 10, 15, 20, 25, 30]
 for i in range(7):
@@ -185,8 +194,6 @@ characterNewMenu.assignIcons({
     "classOptionBox" : optionBox([62, 80], [200, 19], "warrior", classes),
 
     "createCharacterButton" : button([1, 120], [124, 39], "Create"),
-
-    "backButton" : button([300, 1], [100, 19], "Back")
 })
 
 filters = ["Name", "Damage", "Stat", "Buff"]
@@ -205,9 +212,9 @@ characterWeaponMenu.assignIcons({
 
     "filterResetButton" : button([1, 200], [99, 19], "Reset filters"),
     "filterApplyButton" : button([101, 200], [99, 19], "Apply filter"),
-    "filterOptionMenu" : optionBox([1, 160], [99, 19], filters, "Name"),
+    "filterOptionMenu" : optionBox([1, 160], [99, 19], "Name", filters),
     "filterEntryBox" : entry([1, 180], [199, 19]),
-    "filterTypeOptionMenu" : optionBox([101, 160], [99, 19], ["itemAssetName"], "Includes"),
+    "filterTypeOptionMenu" : optionBox([101, 160], [99, 19], "Includes", ["itemAssetName"]),
     "filtersDisplayListbox" : listBox([1, 220], [199, 29]),
 
     #"filterDamageFromEntry" : entry([1, 180], [81, 19]),
@@ -216,7 +223,6 @@ characterWeaponMenu.assignIcons({
 })
 
 characterOverviewMenu.assignIcons({
-    "backButton" : button([699, 1], [100, 19], "Back"),
     "canvas" : canvas([1, 21], [798, 478]),
 })
 
@@ -225,19 +231,27 @@ characterBuffMenu.assignIcons({
     "selectedBuffListBox" : listBox([201, 60], [199, 189]),
 })
 
-for i in [characterArmourMenu, characterWeaponMenu]:
+for i in [characterWeaponMenu]:
     i.addIcons({
         "classLabel" : label([201, 40], [99, 19], "Class"),
         "classOptionBox" : optionBox([301, 40], [99, 19], "", classes),
     })
 
-for i in [characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu, characterBuffMenu]:
+for i in [characterOptionsMenu, characterAttributeMenu, characterTalentMenu, characterArmourMenu, characterWeaponMenu, characterOverviewMenu, characterBuffMenu]:
     i.addIcons(charMenuNavigationButtons)
+    i.addIcons({"dmgButton" : button([506, 1], [100, 19], "Damage menu")})
+    i.icons["dmgButton"].bindFunction(lambda : main.changeMenu("dmgCalcMenu"))
+    i.addIcons({"characterOptionMenuButton" : button([607, 1], [100, 19], "Character Select")})
+    i.icons["characterOptionMenuButton"].bindFunction(lambda : main.changeMenu("characterOptionsMenu"))
+    i.addIcons({"mainMenuButton" : button([708, 1], [100, 19], "Main menu")})
+    i.icons["mainMenuButton"].bindFunction(lambda : main.changeMenu("mainMenu"))
+    
+#characterArmourMenu.assignIcons({})
 
 dmgCalcMenu.setRunable()
 
 main.addMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
 main.ignoreIconFile()
-main.activate("dmgCalcMenu")
+main.activate("characterArmourMenu")
 #main.root.mainloop()
 #'''

@@ -3,8 +3,7 @@ from CharacterMenuTemplate import characterMenuTemplate
 class characterNewMenu(characterMenuTemplate):
     def assignIconFunctions(self):
         self.icons["createCharacterButton"].bindFunction(self.createCharacter)
-        self.icons["backButton"].bindFunction(lambda : self.main.changeMenu("characterOptionsMenu"))
-        
+
     def initialise(self):
         self.generateNewCharacter()
         

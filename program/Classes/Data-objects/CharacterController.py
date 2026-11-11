@@ -1,4 +1,4 @@
-import sys, random
+import random
 from WeaponController import weaponController
 from ArmourController import armourController
 from BuffController import buffController
@@ -15,8 +15,7 @@ class characterController:
     def new(self):
         c = character()
         self.generateCharacterId(c)
-        w = weaponController()
-        c.weapon = w.fist()
+        c.weapon = weaponController.fist()
         return c
 
     def generateCharacterId(self, c):
@@ -239,6 +238,14 @@ class characterController:
             else:
                 c.extraMultipliers.update({x : c.weapon.multipliers[x]})
 
+    def getTalentMultiplierBonuses(self, c):
+        match c.characterClass:
+            case "warrior":
+                if c.talents[5] == 0:
+                    c.extraMultipliers.update({"finishing blow" : 80})
+                elif c.talents[5] == 1:
+                    c.extraMultipliers.update({"incoming heal multiplier" : 30})
+
     def generateStatPoints(self, c):
         self.generateattributePoints(c)
         for i in c.bonusAttributePoints:
@@ -258,6 +265,7 @@ class characterController:
             c.extraMultipliers[x] = 0
         self.getArmourMultiplierBonuses(c)
         self.getWeaponMultiplierBonuses(c)
+        self.getTalentMultiplierBonuses(c)
         self.getDefence(c)
 
     def generatePotionBonuses(self, c):
@@ -300,25 +308,43 @@ class characterController:
                 c.statPoints["melee damage"] += c.weapon.baseDmg
 
     def getDefence(self, c):
-        a = armourController()
-        c.defence = a.getDefence(c)
+        c.defence = armourController.getDefence(c)
         for x in c.weapon.multipliers:
             if x == "defence":
                 c.defence += c.weapon.multipliers[x]
+        if c.characterClass == "warrior":
+            if c.talents[6] == 1:
+                c.defence *= 1.25
+        c.defence = int(c.defence)
+
+    def changeLevel(self, c, level):
+        if level != c.level:
+            print(f"changed level to {level}")
+            if level < c.level:
+                for i in c.attributePointDistribution:
+                    c.attributePointDistribution.update({i : 0})
+                self.generateStatPoints(c)
+                for i in c.armour:
+                    if c.armour[i].requiredLevel > level:
+                        print(f"Armour {c.armour[i].name} removed as required level above character level")
+                        c.armour[i] = armourController.none()
+                if c.weapon.requiredLevel > level:
+                    print(f"Armour {c.armour[i].name} removed as required level above character level")
+                    c.weapon = weaponController.fist()
+            c.level = level
+            
 
     def changeClass(self, c, characterClass):
         if characterClass != c.characterClass:
             print(f"changed class to {characterClass}")
             c.characterClass = characterClass
-            a = armourController()
             for i in c.armour:
                 if c.armour[i].classRestriction not in ["none", c.characterClass]:
-                    print(f"Armour {c.armour[i]} removed as {c.armour[i].classRestriction}")
-                    c.armour[i] = a.none()
+                    print(f"Armour {c.armour[i].name} removed as {c.armour[i].classRestriction} restricted")
+                    c.armour[i] = armourController.none()
             if c.weapon.classRestriction not in ["none", c.characterClass]:
-                print(f"Armour {c.weapon} removed as {c.weapon.classRestriction}")
-                w = weaponController()
-                c.weapon = w.fist()
+                print(f"Weapon {c.weapon.name} removed as {c.weapon.classRestriction} restricted")
+                c.weapon = weaponController.fist()
         
 
 

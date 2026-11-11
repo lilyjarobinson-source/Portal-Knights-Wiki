@@ -37,7 +37,7 @@ class dmgCalcMenu(characterMenuTemplate):
 
     def assignIconFunctions(self):
         self.icons["backButton"].bindFunction(lambda : self.main.changeMenu("mainMenu"))
-        self.icons["charcterMenuButton"].bindFunction(lambda : self.main.changeMenu("characterOptionsMenu"))
+        self.icons["characterMenuButton"].bindFunction(lambda : self.main.changeMenu("characterOptionsMenu"))
         self.icons["startGraphingButton"].bindFunction(self.startGraphing)
         self.icons["stopGraphingButton"].bindFunction(self.stopGraphing)
         self.icons["characterEditButton"].bindFunction(self.setLoadedCharacterAndChangeMenu)
@@ -48,17 +48,26 @@ class dmgCalcMenu(characterMenuTemplate):
         self.icons["graphTypeOptionBox"].bindFunctionToChange(self.setGraphType)
         
     def initialise(self):
+        self.loadCharacters()
+        self.displayLoadedCharacters()
         self.refreshList()
-        self.graph.graphType = "Standard"
+        self.refreshGraphingCharactersList()
+        self.refreshLoadedCharacter()
+        self.graph.graphType = self.graphType
         self.initialiseGraph()
         self.graph.drawAxis()
 
-    def refreshList(self):
-        self.loadCharacters()
-        self.displayCharacterChoices()
+    def unitialise(self):
+        self.attacking = False
 
-    def reload(self):
-        self.refreshList()
+    def refreshLoadedCharacter(self):
+        if self.loadedCharacterIndex != -1:
+            self.loadedCharacter = self.graphingCharacters[self.loadedCharacterIndex]
+            self.displayCharacterName()
+            self.displayCharacterWeapon()
+            self.displayCharacterClass()
+
+    def refreshGraphingCharactersList(self):
         for i in range(len(self.graphingCharacters)):
             for x in self.characters:
                 if self.graphingCharacters[i].characterId == x.characterId:
@@ -66,12 +75,16 @@ class dmgCalcMenu(characterMenuTemplate):
                     self.graphingCharacters[i] = x
                     self.characterController.generateStatPoints(x)
                     break
+
+    def refreshList(self):
+        self.displayCharacterChoices()
+
+    def reload(self):
+        self.loadCharacters()
+        self.refreshList()
+        self.refreshGraphingCharactersList()
         self.displayLoadedCharacters()
-        if self.loadedCharacterIndex != -1:
-            self.loadedCharacter = self.graphingCharacters[self.loadedCharacterIndex]
-            self.displayCharacterName()
-            self.displayCharacterWeapon()
-            self.displayCharacterClass()
+        self.refreshLoadedCharacter()
 
     def setLoadedCharacterAndChangeMenu(self):
         if self.loadedCharacterIndex != -1:
@@ -202,10 +215,12 @@ class dmgCalcMenu(characterMenuTemplate):
                         self.icons["displayCanvas"].write(500, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalAverageDamage(), "n")
                         self.icons["displayCanvas"].write(455, 38 + 12 * i, self.graphingCharacters[i].damageStats.getAverageDamage(self.timer, self.drawLimit), "n")
                         self.icons["displayCanvas"].write(420, 38 + 12 * i, self.graphingCharacters[i].damageStats.getTotalDmg(), "n")
+                        #'''
                         #buffs
                         self.icons["displayCanvas"].write(100, 38 + 12 * i, self.graphingCharacters[i].name, "n")
                         for x in range(len(self.graphingCharacters[i].buffTimers)):
                             self.icons["displayCanvas"].write(140, 38 + 12 * i + 12 * x, self.graphingCharacters[i].buffTimers[x].name, "n")
+                        #'''
                 else:
                     self.graph.setDrawLimit(self.timer)
                 self.graph.updateCanvas()
@@ -218,7 +233,7 @@ class dmgCalcMenu(characterMenuTemplate):
                 self.buffController.updateBuffs(self.graphingCharacters[x], self.deltaTime)
                 if self.timer - self.graph.pointCollectionList[x].lastPointTime > self.graphingCharacters[x].weapon.hitInterval:
                     if self.buffController.checkToApplyBuffs(self.graphingCharacters[x]):
-                        print("buff applied")
+                        #print("buff applied")
                         self.graph.pointCollectionList[x].lastPointTime = self.timer + 0.5 - self.graphingCharacters[x].weapon.hitInterval
                     else:
                         hitList = self.damageCalculator.getDamageFromHit(self.characterController, self.buffController, self.graphingCharacters[x])

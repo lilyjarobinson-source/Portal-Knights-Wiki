@@ -80,15 +80,13 @@ class characterAttributeMenu(characterMenuTemplate):
                 self.loadedCharacter.level = 1
             else:
                 return None
-        if amount < self.loadedCharacter.level:
-            self.resetAttributePoints()
         if amount < 1:
-            self.loadedCharacter.level = 1
+            amount = 1
         else:
-            self.loadedCharacter.level = amount
             remainingPoints = 30 - amount
             if remainingPoints < 0:
-                self.loadedCharacter.level = amount + remainingPoints
+                amount += remainingPoints
+        self.characterController.changeLevel(self.loadedCharacter, amount)
         self.icons["levelEntry"].set(self.loadedCharacter.level)
         self.displayLevel()
         self.displayAvailibleAttributePoints()
@@ -115,13 +113,6 @@ class characterAttributeMenu(characterMenuTemplate):
         for i in ["health", "melee damage", "movement speed", "ranged damage", "magic damage", "mana"]:
             self.icons[f"{i}BaseLabel"].set(self.loadedCharacter.baseStatPoints[i])
             self.icons[f"{i}TotalLabel"].set(self.loadedCharacter.statPoints[i])
-    
-    def resetAttributePoints(self):
-        #print("reseting attribute points")
-        for i in ["constitution", "strength", "agility", "dexterity", "wisdom", "intelligence"]:
-            self.loadedCharacter.attributePointDistribution.update({i : 0})
-        self.generatePoints()
-        self.displayAvailibleAttributePoints()
 
     def displayClass(self):
         #print("displaying class")

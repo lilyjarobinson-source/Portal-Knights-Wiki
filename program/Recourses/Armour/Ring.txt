@@ -1,7 +1,7 @@
 Rift ring of restoration i,4,20,none,ring,emergency healing,
 Bitter root ring,4,22,none,ring,emergency illusion,
 Ring of elysia's bounty,4,40,none,ring,,earth res=10,
-Ring of storms,9,40,none,ring,electro res=10,mana=35,
+Ring of storms,9,40,none,ring,,electro res=10,mana=35,
 Ring of fire,14,60,none,ring,,fire res=10,crit damage=0.04,crit rate=5,
 Ring of ice,14,60,none,ring,,water res=12,health=100,incoming heal multiplier=10,
 Rift ring of restoration ii,14,30,none,ring,emergency illusion,

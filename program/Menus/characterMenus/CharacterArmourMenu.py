@@ -17,6 +17,7 @@ class characterArmourMenu(characterMenuTemplate):
         self.icons["legsEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("legs"))
         self.icons["capeEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("cape"))
         self.icons["ringEntry"].bindFunctionToKeypress(lambda : self.searchAndAssign("ring"))
+        self.icons["classOptionBox"].bindFunctionToChange(self.setClass)
         
     def initialise(self):
         self.loadCharacter()
@@ -42,6 +43,7 @@ class characterArmourMenu(characterMenuTemplate):
         self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayArmour()
+        self.displayArmourOptions()
 
     def assignArmourToSlot(self):
         if self.searchingSlot == None:
@@ -81,16 +83,17 @@ class characterArmourMenu(characterMenuTemplate):
         self.icons[f"armourListBox"].clear()
         for i in self.displayArmourPieces:
             self.icons[f"armourListBox"].append(i.name)
+        self.icons["armourListCount"].set(len(self.displayArmourPieces))
 
     def displayArmourStats(self, a):
         self.icons["nameLabel"].set(a.name)
         if a.buff == "":
             self.icons["buffLabel"].deactivate()
-            self.icons["multiplierListBox"].place([1, 200], [199, 49])
+            self.icons["multiplierListBox"].place([1, 201], [201, 59])
         else:
             self.icons["buffLabel"].activate(self.root, self.theme)
             self.icons["buffLabel"].set(a.buff)
-            self.icons["multiplierListBox"].place([1, 220], [199, 29])
+            self.icons["multiplierListBox"].place([1, 221], [201, 39])
         self.icons["multiplierListBox"].clear()
         for i in a.multipliers:
             self.icons["multiplierListBox"].append(f"{i} : {a.multipliers[i]}")
