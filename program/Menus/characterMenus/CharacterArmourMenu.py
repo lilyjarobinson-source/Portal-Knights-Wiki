@@ -19,7 +19,6 @@ class characterArmourMenu(characterMenuTemplate):
         
     def initialise(self):
         self.loadCharacter()
-        self.main.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
         self.displayClass()
         self.searchForArmour("head")

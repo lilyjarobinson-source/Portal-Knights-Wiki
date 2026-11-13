@@ -14,7 +14,6 @@ class characterWeaponMenu(characterMenuTemplate):
 
     def initialise(self):
         self.loadCharacter()
-        self.main.weaponController.loadWeapons(self.loadedCharacter)
 
         self.displayWeapons()
         self.loadCharacterWeapon()
@@ -45,7 +44,6 @@ class characterWeaponMenu(characterMenuTemplate):
     def setClass(self):
         self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
-        self.main.weaponController.loadWeapons(self.loadedCharacter)
         self.displayWeapons()
 
     def displayWeapon(self):
