@@ -1,13 +1,13 @@
-import sys
+from sys import path
 classPath = __file__.split(__file__.split("\\")[-1])[0]
-sys.path.append(classPath + "Menus\\")
-sys.path.append(classPath + "Menus\\dmgCalculationMenus")
-sys.path.append(classPath + "Menus\\characterMenus")
-sys.path.append(classPath + "Menus\\framework")
-sys.path.append(classPath + "Menus\\main-menus")
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Classes\\Simulation")
-sys.path.append(classPath + "Classes\\Graphing")
+path.append(classPath + "Menus\\")
+path.append(classPath + "Menus\\dmgCalculationMenus")
+path.append(classPath + "Menus\\characterMenus")
+path.append(classPath + "Menus\\framework")
+path.append(classPath + "Menus\\main-menus")
+path.append(classPath + "Classes\\Data-objects")
+path.append(classPath + "Classes\\Simulation")
+path.append(classPath + "Classes\\Graphing")
 from Main import main
 
 from Menu import menu, button, label, entry, optionBox, listBox, canvas, image
@@ -22,7 +22,7 @@ from CharacterArmourMenu import characterArmourMenu
 from CharacterWeaponMenu import characterWeaponMenu
 from CharacterOverviewMenu import characterOverviewMenu
 from CharacterBuffMenu import characterBuffMenu
-#'''
+
 main = main("wiki", "809x501")
 
 mainMenu = mainMenu()
@@ -96,9 +96,8 @@ characterOptionsMenu.assignIcons({
     "charactersListBox" : listBox([199, 60], [201, 189]),
 })
 
-characterAttributeMenu.assignIcons({
-    "frameLabel" : label([1, 55], [399, 194], ""),
-    
+characterAttributeMenu.assignIcons({   
+    "frameLabel" : label([1, 55], [399, 194], ""), 
     "attributeLabel" : label([3, 100], [89, 19], "Attribute"),
     "attributeBaseLabel" : label([93, 100], [40, 19], "Base"),
     "attributeExtraLabel" : label([134, 100], [40, 19], "Extra"),
@@ -116,7 +115,6 @@ characterAttributeMenu.assignIcons({
 
 characterTalentMenu.assignIcons({
     "frameLabel" : label([1, 55], [399, 194], ""),
-    
     "talentLabel" : label([3, 60], [50, 19], "Talents"),
     
     "classLabel" : label([338, 60], [40, 19], "Class"),
