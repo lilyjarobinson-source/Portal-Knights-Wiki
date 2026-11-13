@@ -1,14 +1,14 @@
 import sys
 classPath = __file__.split(__file__.split("\\")[-1])[0]
-sys.path.append(classPath + "Menus\\")
-sys.path.append(classPath + "Menus\\dmgCalculationMenus")
-sys.path.append(classPath + "Menus\\characterMenus")
-sys.path.append(classPath + "Menus\\framework")
-sys.path.append(classPath + "Menus\\main-menus")
-sys.path.append(classPath + "Classes\\Data-objects")
-sys.path.append(classPath + "Classes\\Simulation")
-sys.path.append(classPath + "Classes\\Graphing")
-from Main import main
+path.append(classPath + "Menus\\")
+path.append(classPath + "Menus\\dmgCalculationMenus")
+path.append(classPath + "Menus\\characterMenus")
+path.append(classPath + "Menus\\framework")
+path.append(classPath + "Menus\\main-menus")
+path.append(classPath + "Classes\\Data-objects")
+path.append(classPath + "Classes\\Simulation")
+path.append(classPath + "Classes\\Graphing")
+from WikiMain import main
 
 from Menu import menu, button, label, entry, optionBox, listBox, canvas, image
 

@@ -86,7 +86,7 @@ class characterAttributeMenu(characterMenuTemplate):
             remainingPoints = 30 - amount
             if remainingPoints < 0:
                 amount += remainingPoints
-        self.characterController.changeLevel(self.loadedCharacter, amount)
+        self.main.characterController.changeLevel(self.loadedCharacter, amount)
         self.icons["levelEntry"].set(self.loadedCharacter.level)
         self.displayLevel()
         self.displayAvailibleAttributePoints()
@@ -95,10 +95,10 @@ class characterAttributeMenu(characterMenuTemplate):
         self.saveCharacter()
 
     def displayAvailibleAttributePoints(self):
-        self.icons["remainingAttributePointsDisplayLabel"].set(self.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints())
+        self.icons["remainingAttributePointsDisplayLabel"].set(self.main.characterController.getMaximumAttributePoints(self.loadedCharacter) - self.getTotalAssignedPoints())
 
     def generatePoints(self):
-        self.characterController.generateStatPoints(self.loadedCharacter)
+        self.main.characterController.generateStatPoints(self.loadedCharacter)
 
     def displayAttributePoints(self):
         self.generatePoints()
@@ -119,7 +119,7 @@ class characterAttributeMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
+        self.main.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayAttributePoints()
         self.displayStatPoints()

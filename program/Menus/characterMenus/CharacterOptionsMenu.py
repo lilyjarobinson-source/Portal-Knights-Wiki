@@ -17,7 +17,7 @@ class characterOptionsMenu(characterMenuTemplate):
             return None
         index = index[0]
         file = open(self.classPath + "Recourses\\loadedCharacter.txt", "w")
-        file.write(self.characterController.convertCharacterToSaveFormat(self.characters[index]))
+        file.write(self.main.characterController.convertCharacterToSaveFormat(self.characters[index]))
         file.close()
         self.main.changeMenu("characterOverviewMenu")
 

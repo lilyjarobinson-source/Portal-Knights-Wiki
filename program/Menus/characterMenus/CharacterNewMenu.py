@@ -8,7 +8,7 @@ class characterNewMenu(characterMenuTemplate):
         self.generateNewCharacter()
         
     def generateNewCharacter(self):
-        self.loadedCharacter = self.characterController.new()
+        self.loadedCharacter = self.main.characterController.new()
 
     def createCharacter(self):
         self.loadedCharacter.name = self.icons["nameEntry"].get()

@@ -88,7 +88,7 @@ class characterOverviewMenu(characterMenuTemplate):
             self.camera = camera()
         self.resetCamera()
         self.loadCharacter()
-        self.characterController.generateStatPoints(self.loadedCharacter)
+        self.main.characterController.generateStatPoints(self.loadedCharacter)
         self.setupValues()
         self.updateCanvas()
 
