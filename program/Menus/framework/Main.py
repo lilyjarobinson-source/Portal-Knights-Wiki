@@ -1,8 +1,8 @@
 from tkinter import Tk
 from IconFileParser import iconFileParser
 from Keylogger import keylogger
-import threading
-from time import time
+from Stack import stack
+from threading import Thread
 class main:
     hexDigits = "0123456789abcdef"
     
@@ -15,15 +15,15 @@ class main:
         self.menuWasRunning = False
         self.root = None
         self.theme = {}
-        self.lookForIconFile = True
         self.iconFileParser = iconFileParser()
         self.keylogger = keylogger()
         self.runableMenuThread = None
         self.isFullscreen = False
 
+        self.historyStack = None
+        self.futureStack = None
+
     def initialise(self):
-        if self.lookForIconFile:
-            self.iconFileParser.assignIconsToMenus(self.menus)
         self.root = Tk()
         self.root.title(self.title)
         self.root.geometry(self.geometry)
@@ -39,12 +39,13 @@ class main:
 
         self.root.bind("<KeyPress>", self.keylogger.onKeyEvent)
         self.root.bind("<KeyRelease>", self.keylogger.onKeyEvent)
+        
+        self.historyStack = stack()
+        self.futureStack = stack()
 
-    def ignoreIconFile(self, look=False):
-        self.lookForIconFile = look
-
-    def assignIconFileLocation(self, location):
+    def assignMenuIcons(self, location):
         self.iconFileParser.assignIconFileLocaion(location)
+        self.iconFileParser.assignIconsToMenus(self.menus)
 
     def addMenus(self, menus):
         if isinstance(menus, dict):
@@ -59,6 +60,8 @@ class main:
     def activate(self, startingMenuKey):
         self.initialise()
         self.loadTheme()
+        #for i in self.menus.values():
+        #    i.assignIconFunctions()
         self.currentMenuKey = startingMenuKey
         self.currentMenu = self.menus[self.currentMenuKey]
         self.currentMenu.activate(self, self.theme)
@@ -67,7 +70,7 @@ class main:
 
     def startMenuRunning(self):
         if self.currentMenu.running and self.currentMenu.runable:
-            self.runableMenuThread = threading.Thread(target=self.currentMenu.startRunning)
+            self.runableMenuThread = Thread(target=self.currentMenu.startRunning)
             self.runableMenuThread.start()
 
     def stopMenuRunning(self):
@@ -81,14 +84,32 @@ class main:
         self.currentMenu.activate(self, self.theme)
         self.startMenuRunning()
 
-    def changeMenu(self, targetMenu):
+    def changeMenu(self, targetMenu, ignoreHistory=True):
         self.loadTheme()
         self.stopMenuRunning()
         self.currentMenu.deactivate()
+        if ignoreHistory:
+            if not self.futureStack.isEmpty():
+                self.futureStack.clear()
+            self.historyStack.push(self.currentMenu)
         self.currentMenuKey = targetMenu
         self.currentMenu = self.menus[targetMenu]
         self.currentMenu.activate(self, self.theme)
         self.startMenuRunning()
+
+    def back(self):
+        nextMenuRef = self.historyStack.pop()
+        if nextMenuRef == None:
+            return None
+        self.futureStack.push(nextMenuRef)
+        self.changeMenu(nextMenuRef.name, False)
+        
+    def forward(self):
+        nextMenuRef = self.futureStack.pop()
+        if nextMenuRef == None:
+            return None
+        self.historyStack.push(nextMenuRef)
+        self.changeMenu(nextMenuRef.name, False)
 
     def loadTheme(self):
         try:
