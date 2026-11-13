@@ -1,4 +1,4 @@
-import random
+from random import randint
 from WeaponController import weaponController
 from ArmourController import armourController
 from BuffController import buffController
@@ -36,7 +36,7 @@ class characterController:
     def generateNewId(self):
         newId = ""
         for i in range(6):
-            newId += str(random.randint(0, 9))
+            newId += str(randint(0, 9))
         return newId
 
     def getAllCharacters(self):
