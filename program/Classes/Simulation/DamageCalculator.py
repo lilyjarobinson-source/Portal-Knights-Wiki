@@ -1,4 +1,4 @@
-from random import randint
+import random
 from Hit import hit
 class damageCalculator:
     def __init__(self):
@@ -35,7 +35,7 @@ class damageCalculator:
             if i in multipliers.keys():
                 multipliers[i] += hitToCalculate.character.extraMultipliers[i]
         
-        if randint(1, 100) <= multipliers["weaken enemy chance"]:
+        if random.randint(1, 100) <= multipliers["weaken enemy chance"]:
             buffController.applyBuffName(hitToCalculate.character, "weaken enemy")
 
 
@@ -43,11 +43,11 @@ class damageCalculator:
             if buffController.characterHasBuffName(hitToCalculate.character, "weaken enemy"):
                 hitToCalculate.dmg *= 1.3
             
-            if randint(1, 100) <= multipliers["crit rate"]:
+            if random.randint(1, 100) <= multipliers["crit rate"]:
                 hitToCalculate.dmg *= 1.25 * multipliers["crit damage"]
                 hitToCalculate.isCriticalStrike = True
             
-            if randint(1, 100) <= multipliers["multistrike rate"]:
+            if random.randint(1, 100) <= multipliers["multistrike rate"]:
                 for i in range(int(multipliers["multistrike amount"])):
                     newHit = hitToCalculate.copy()
                     newHit.isAdditionalStrike = True
@@ -88,7 +88,7 @@ class damageCalculator:
             case "warrior":
                 if hitToCalculate.character.talents[6] == 0:
                     if not hitToCalculate.isAdditionalStrike:
-                        if randint(1, 100) <= 10:
+                        if random.randint(1, 100) <= 10:
                             newHit = hitToCalculate.copy()
                             newHit.isAdditionalStrike = True
                             self.hitList.append(newHit)

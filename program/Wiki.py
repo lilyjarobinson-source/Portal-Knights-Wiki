@@ -1,4 +1,4 @@
-from sys import path
+import sys
 classPath = __file__.split(__file__.split("\\")[-1])[0]
 path.append(classPath + "Menus\\")
 path.append(classPath + "Menus\\dmgCalculationMenus")
@@ -22,7 +22,7 @@ from CharacterArmourMenu import characterArmourMenu
 from CharacterWeaponMenu import characterWeaponMenu
 from CharacterOverviewMenu import characterOverviewMenu
 from CharacterBuffMenu import characterBuffMenu
-
+#'''
 main = main("wiki", "809x501")
 
 mainMenu = mainMenu()
@@ -96,8 +96,9 @@ characterOptionsMenu.assignIcons({
     "charactersListBox" : listBox([199, 60], [201, 189]),
 })
 
-characterAttributeMenu.assignIcons({   
-    "frameLabel" : label([1, 55], [399, 194], ""), 
+characterAttributeMenu.assignIcons({
+    "frameLabel" : label([1, 55], [399, 194], ""),
+    
     "attributeLabel" : label([3, 100], [89, 19], "Attribute"),
     "attributeBaseLabel" : label([93, 100], [40, 19], "Base"),
     "attributeExtraLabel" : label([134, 100], [40, 19], "Extra"),
@@ -115,6 +116,7 @@ characterAttributeMenu.assignIcons({
 
 characterTalentMenu.assignIcons({
     "frameLabel" : label([1, 55], [399, 194], ""),
+    
     "talentLabel" : label([3, 60], [50, 19], "Talents"),
     
     "classLabel" : label([338, 60], [40, 19], "Class"),
@@ -249,6 +251,7 @@ for i in [characterOptionsMenu, characterAttributeMenu, characterTalentMenu, cha
 dmgCalcMenu.setRunable()
 
 main.addMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
+main.ignoreIconFile()
 main.activate("characterArmourMenu")
 #main.root.mainloop()
 #'''
