@@ -1,7 +1,6 @@
 from time import time
 from DamageCalculator import damageCalculator
 from DamageStats import damageStats
-from WeaponController import weaponController
 from BuffController import buffController
 from PointCollection import pointCollection
 from ScrollingGraph import scrollingGraph
@@ -10,7 +9,6 @@ from CharacterMenuTemplate import characterMenuTemplate
 class dmgCalcMenu(characterMenuTemplate):
     def __init__(self):
         super().__init__()
-        self.weaponController = weaponController()
         self.buffController = buffController()
         self.damageCalculator = damageCalculator()
         self.buffController.loadBuffs()
@@ -73,7 +71,7 @@ class dmgCalcMenu(characterMenuTemplate):
                 if self.graphingCharacters[i].characterId == x.characterId:
                     x.damageStats = self.graphingCharacters[i].damageStats
                     self.graphingCharacters[i] = x
-                    self.characterController.generateStatPoints(x)
+                    self.main.characterController.generateStatPoints(x)
                     break
 
     def refreshList(self):
@@ -236,7 +234,7 @@ class dmgCalcMenu(characterMenuTemplate):
                         #print("buff applied")
                         self.graph.pointCollectionList[x].lastPointTime = self.timer + 0.5 - self.graphingCharacters[x].weapon.hitInterval
                     else:
-                        hitList = self.damageCalculator.getDamageFromHit(self.characterController, self.buffController, self.graphingCharacters[x])
+                        hitList = self.damageCalculator.getDamageFromHit(self.main.characterController, self.buffController, self.graphingCharacters[x])
                         dmg = 0
                         for i in hitList:
                             dmg += i.getDmg()
