@@ -1,10 +1,8 @@
-from ArmourController import armourController
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterArmourMenu(characterMenuTemplate):
     def __init__(self):
         super().__init__()
-        self.armourController = armourController()
         self.displayArmourPieces = []
         self.searchingSlot = None
 
@@ -21,7 +19,7 @@ class characterArmourMenu(characterMenuTemplate):
         
     def initialise(self):
         self.loadCharacter()
-        self.armourController.loadArmourPieces(self.loadedCharacter)
+        self.main.armourController.loadArmourPieces(self.loadedCharacter)
         self.displayArmour()
         self.displayClass()
         self.searchForArmour("head")
@@ -29,34 +27,34 @@ class characterArmourMenu(characterMenuTemplate):
         self.displayDefence()
 
     def displayArmour(self):
-        for i in self.armourController.armourSlots:
+        for i in self.main.armourController.armourSlots:
             self.icons[f"{i.lower()}Entry"].set(self.loadedCharacter.armour[i].name)
 
     def displayClass(self):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def displayDefence(self):
-        self.characterController.getDefence(self.loadedCharacter)
+        self.main.characterController.getDefence(self.loadedCharacter)
         self.icons["defenceDisplayLabel"].set(self.loadedCharacter.defence)
 
     def setClass(self):
-        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
+        self.main.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
         self.displayArmour()
         self.displayArmourOptions()
 
     def assignArmourToSlot(self):
         if self.searchingSlot == None:
-            return self.armourController.none()
+            return ArmourController.none()
         value = self.icons["armourListBox"].getValue()
-        armourPiece = self.armourController.getArmourPiece(value)
+        armourPiece = self.main.armourController.getArmourPiece(value)
         if value == "None":
             self.icons[f"{self.searchingSlot.lower()}Entry"].set(armourPiece)
         elif value != None:
             self.icons[f"{self.searchingSlot.lower()}Entry"].set(armourPiece.name)
         else:
             value = self.icons[f"{self.searchingSlot.lower()}Entry"].get()
-            armourPiece = self.armourController.getArmourPiece(value)
+            armourPiece = self.main.armourController.getArmourPiece(value)
             
         self.loadedCharacter.armour[self.searchingSlot] = armourPiece
         self.displayArmourStats(armourPiece)
@@ -71,7 +69,7 @@ class characterArmourMenu(characterMenuTemplate):
         self.searchingSlot = slot
         self.displayArmourPieces = []
         containsString = self.icons[f"{slot.lower()}Entry"].get().lower()
-        for i in self.armourController.armourPieces:
+        for i in self.main.armourController.armourPieces:
             if i.slot == slot:
                 if containsString in [None, "none", ""]:
                     self.displayArmourPieces.append(i)

@@ -95,7 +95,7 @@ class characterTalentMenu(characterMenuTemplate):
         self.icons["classOptionBox"].setSelectedOption(self.loadedCharacter.characterClass)
 
     def setClass(self):
-        self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
+        self.main.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
 
     def setTalentOptions(self):

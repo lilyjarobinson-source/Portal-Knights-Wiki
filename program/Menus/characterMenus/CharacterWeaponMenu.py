@@ -1,10 +1,8 @@
-from WeaponController import weaponController
 from CharacterMenuTemplate import characterMenuTemplate
 
 class characterWeaponMenu(characterMenuTemplate):
     def __init__(self):
         super().__init__()
-        self.weaponController = weaponController()
         self.loadedWeapon = None
         
     def assignIconFunctions(self):
@@ -16,7 +14,7 @@ class characterWeaponMenu(characterMenuTemplate):
 
     def initialise(self):
         self.loadCharacter()
-        self.weaponController.loadWeapons(self.loadedCharacter)
+        self.main.weaponController.loadWeapons(self.loadedCharacter)
 
         self.displayWeapons()
         self.loadCharacterWeapon()
@@ -26,7 +24,7 @@ class characterWeaponMenu(characterMenuTemplate):
 
     def displayWeapons(self):
         self.icons["weaponListBox"].clear()
-        for i in self.weaponController.weapons:
+        for i in self.main.weaponController.weapons:
             self.icons["weaponListBox"].append(i.name)
 
     def loadCharacterWeapon(self):
@@ -36,7 +34,7 @@ class characterWeaponMenu(characterMenuTemplate):
         value = self.icons["weaponListBox"].getValue()
         if None == 0:
             return None
-        self.loadedWeapon = self.weaponController.getWeapon(value)
+        self.loadedWeapon = self.main.weaponController.getWeapon(value)
         self.loadedCharacter.weapon = self.loadedWeapon
         self.displayWeapon()
         self.saveCharacter()
@@ -47,7 +45,7 @@ class characterWeaponMenu(characterMenuTemplate):
     def setClass(self):
         self.characterController.changeClass(self.loadedCharacter, self.icons["classOptionBox"].get())
         self.saveCharacter()
-        self.weaponController.loadWeapons(self.loadedCharacter)
+        self.main.weaponController.loadWeapons(self.loadedCharacter)
         self.displayWeapons()
 
     def displayWeapon(self):

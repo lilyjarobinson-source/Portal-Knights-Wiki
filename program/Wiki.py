@@ -8,7 +8,7 @@ path.append(classPath + "Menus\\main-menus")
 path.append(classPath + "Classes\\Data-objects")
 path.append(classPath + "Classes\\Simulation")
 path.append(classPath + "Classes\\Graphing")
-from Main import main
+from WikiMain import main
 
 from Menu import menu, button, label, entry, optionBox, listBox, canvas, image
 
