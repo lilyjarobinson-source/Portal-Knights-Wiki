@@ -1,21 +1,23 @@
 from random import randint
-from WeaponController import weaponController
-from ArmourController import armourController
 from BuffController import buffController
 from Character import character
 class characterController:
-    multipliers = [
-        "crit rate",
-        "crit damage",
-        "multistrike rate",
-        "multistrike amount",
-        "weaken enemy chance",
-        "backstab damage"
-    ]
+    def __init__(self, weaponController, armourController):
+        self.multipliers = [
+            "crit rate",
+            "crit damage",
+            "multistrike rate",
+            "multistrike amount",
+            "weaken enemy chance",
+            "backstab damage"
+        ]
+        self.weaponController = weaponController
+        self.armourController = armourController
+
     def new(self):
         c = character()
         self.generateCharacterId(c)
-        c.weapon = weaponController.fist()
+        c.weapon = self.weaponController.fist()
         return c
 
     def generateCharacterId(self, c):
@@ -64,8 +66,6 @@ class characterController:
 
     def getCharacterDataFromSaveLine(self, line):
         
-        w = weaponController()
-        a = armourController()
         
         #print("getting character data from line")
         line = line.split(",")[:-1]
@@ -76,13 +76,11 @@ class characterController:
         
         c.level = int(line[3])
         c.characterClass = line[4]
-        w.loadWeapons(c)
-        c.weapon = w.getWeapon(line[2])
-        a.loadArmourPieces(c)
+        c.weapon = self.weaponController.getWeapon(line[2])
         c.colour = line[5]
         keyList = list(c.armour.keys())
         for i in range(len(keyList)):
-            c.armour[keyList[i]] = a.getArmourPiece(line[6 + i])
+            c.armour[keyList[i]] = self.armourController.getArmourPiece(line[6 + i])
         attrKeyList = list(c.attributePoints.keys())
         for i in range(6):
             c.attributePointDistribution[attrKeyList[i]] = int(line[12 + i])
@@ -308,7 +306,7 @@ class characterController:
                 c.statPoints["melee damage"] += c.weapon.baseDmg
 
     def getDefence(self, c):
-        c.defence = armourController.getDefence(c)
+        c.defence = self.armourController.getDefence(c)
         for x in c.weapon.multipliers:
             if x == "defence":
                 c.defence += c.weapon.multipliers[x]
@@ -327,10 +325,10 @@ class characterController:
                 for i in c.armour:
                     if c.armour[i].requiredLevel > level:
                         print(f"Armour {c.armour[i].name} removed as required level above character level")
-                        c.armour[i] = armourController.none()
+                        c.armour[i] = self.armourController.none()
                 if c.weapon.requiredLevel > level:
                     print(f"Armour {c.armour[i].name} removed as required level above character level")
-                    c.weapon = weaponController.fist()
+                    c.weapon = self.weaponController.fist()
             c.level = level
             
 
@@ -341,10 +339,10 @@ class characterController:
             for i in c.armour:
                 if c.armour[i].classRestriction not in ["none", c.characterClass]:
                     print(f"Armour {c.armour[i].name} removed as {c.armour[i].classRestriction} restricted")
-                    c.armour[i] = armourController.none()
+                    c.armour[i] = self.armourController.none()
             if c.weapon.classRestriction not in ["none", c.characterClass]:
                 print(f"Weapon {c.weapon.name} removed as {c.weapon.classRestriction} restricted")
-                c.weapon = weaponController.fist()
+                c.weapon = self.weaponController.fist()
         
 
 

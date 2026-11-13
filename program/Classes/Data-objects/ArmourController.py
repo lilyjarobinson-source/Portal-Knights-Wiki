@@ -1,20 +1,20 @@
 from Armour import armour
 
 class armourController:
-    armourSlots = ["head", "torso", "arms", "legs", "cape", "ring"]
     def __init__(self):
-        self.armourPieces = []
+        self.armourSlots = ["head", "torso", "arms", "legs", "cape", "ring"]
+        self.loadArmourPieces()
     
-    def loadArmourPieces(self, c):
+    def loadArmourPieces(self):
         self.armourPieces = []
         for i in self.armourSlots:
             contents = self.loadArmourFileContent(i)
             for line in contents:
                 self.armourPieces.append(self.getArmourDataFromLine(line))
 
-        for i in range(len(self.armourPieces)-1, 0, -1):
-            if self.armourPieces[i].classRestriction != "none" and self.armourPieces[i].classRestriction != c.characterClass:
-                self.armourPieces.pop(i)
+        #for i in range(len(self.armourPieces)-1, 0, -1):
+        #    if self.armourPieces[i].classRestriction != "none" and self.armourPieces[i].classRestriction != c.characterClass:
+        #        self.armourPieces.pop(i)
 
     def loadArmourFileContent(self, slot):
         classPath = __file__.split("program")[0]
@@ -33,13 +33,13 @@ class armourController:
             a.classRestriction = line[3]
             a.slot = line[4]
             a.buff = line[5]
-            a.multipliers = armourController.getMultipliers(line[6:-1])
+            a.multipliers = self.getMultipliers(line[6:-1])
             return a
         except:
             print(f"failed getting armour data from line:\n{line}")
-            return armourController.none()
+            return self.none()
 
-    def getMultipliers(listOfMults):
+    def getMultipliers(self, listOfMults):
         multipliers = {}
         for i in listOfMults:
             i = i.split("=")
@@ -48,19 +48,19 @@ class armourController:
 
     def getArmourPiece(self, name):
         if str(name) == "None":
-            return armourController.none()
+            return self.none()
         for i in self.armourPieces:
             if i.name.lower() == name.lower():
                 return i
-        return armourController.none()
+        return self.none()
 
-    def getDefence(c):
+    def getDefence(self, c):
         total = 0
         for i in c.armour.values():
             total += i.baseDefence
         return total
 
-    def none():
+    def none(self):
         a = armour()
         a.name = "None"
         a.classRestriction = "none"

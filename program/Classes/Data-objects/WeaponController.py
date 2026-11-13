@@ -1,54 +1,41 @@
 from Weapon import weapon
 class weaponController:
-    weaponTypeDictionary = {
-        "warrior" : {
-            "sword" : [1, 3/10],
-            "hammerl" : [7/3, 7/10],
-            "hammers" : [4/3, 2/5],
-            "axe" : [7/3, 7/10],
-            "axes" : [1, 3/10],
-            "saber" : [1, 3/10],
-            "club" : [4/3, 2/5],
-            "mace" : [4/3, 2/5],
-            "knife" : [11/10, 8/25],
-            "gauntlet" : [9/10, 1/4],
-            "weapon" : [1, 2/5]
-        },
-        "ranger" : {
-            "bow" : [1, 5/3],
-            "crossbow" : [11/6, 3/10],
-            "slingshot" : [4/3, 2/5],
-            "dagger" : [9/10, 1/4],
-            "gun" : [5/6, 7/10],
-            "throwing knife" : [4/3, 3/10],
-            "weapon" : [1, 2/5]
-        },
-        "none" : {
-            "saber" : [1, 3/10],
-            "weapon" : [1, 2/5],
-            "crossbow" : [11/6, 3/10],
-            "bow" : [1, 5/3],
-        },
-        
-    }
-
     def __init__(self):
-        self.weapons = []
+        self.weaponTypeDictionary = {
+            "warrior" : {
+                "sword" : [1, 3/10],
+                "hammerl" : [7/3, 7/10],
+                "hammers" : [4/3, 2/5],
+                "axe" : [7/3, 7/10],
+                "axes" : [1, 3/10],
+                "saber" : [1, 3/10],
+                "club" : [4/3, 2/5],
+                "mace" : [4/3, 2/5],
+                "knife" : [11/10, 8/25],
+                "gauntlet" : [9/10, 1/4],
+                "weapon" : [1, 2/5]
+            },
+            "ranger" : {
+                "bow" : [1, 5/3],
+                "crossbow" : [11/6, 3/10],
+                "slingshot" : [4/3, 2/5],
+                "dagger" : [9/10, 1/4],
+                "gun" : [5/6, 7/10],
+                "throwing knife" : [4/3, 3/10],
+                "weapon" : [1, 2/5]
+            },
+            "none" : {
+                "saber" : [1, 3/10],
+                "weapon" : [1, 2/5],
+                "crossbow" : [11/6, 3/10],
+                "bow" : [1, 5/3],
+            }
+        }
+        self.loadWeapons()
 
-    def fist():
-        fist = weapon()
-        fist.name = "Fist"
-        fist.classRestriction = "none"
-        fist.requiredLevel = 0
-        fist.wpnType = "weapon"
-        fist.damageType = "melee damage"
-        fist.damageStat = "physical"
-        weaponController.getWeaponDmgMultAndHitRate(fist)
-        return fist
-
-    def loadWeapons(self, c):
+    def loadWeapons(self):
         self.weapons = []
-        for i in ["Common", c.characterClass]:
+        for i in self.weaponTypeDictionary:
             contents = self.loadWeaponsFileContent(i)
             for line in contents:
                 self.weapons.append(self.getWeaponDataFromLine(line))
@@ -81,21 +68,16 @@ class weaponController:
             step += 1
             w.multipliers = self.getMultipliers(line[7:-1])
             step += 1
-            weaponController.getWeaponDmgMultAndHitRate(w)
+            self.getWeaponDmgMultAndHitRate(w)
             step += 1
             return w
         except:
             print("Failed at line\n" + str(line) + "\nAt step:" + str(step))
             return weaponController.fist()
 
-    def getWeapon(self, name):
-        for i in self.weapons:
-            if i.name.lower() == name.lower():
-                return i
-
-    def getWeaponDmgMultAndHitRate(w):
-        w.dmgMult = weaponController.weaponTypeDictionary[w.classRestriction][w.wpnType][0]
-        w.hitInterval = weaponController.weaponTypeDictionary[w.classRestriction][w.wpnType][1]
+    def getWeaponDmgMultAndHitRate(self, w):
+        w.dmgMult = self.weaponTypeDictionary[w.classRestriction][w.wpnType][0]
+        w.hitInterval = self.weaponTypeDictionary[w.classRestriction][w.wpnType][1]
 
     def getMultipliers(self, listOfMults):
         multipliers = {}
@@ -103,6 +85,22 @@ class weaponController:
             i = i.split("=")
             multipliers.update({i[0]:float(i[1])})
         return multipliers
+
+    def fist(self):
+        fist = weapon()
+        fist.name = "Fist"
+        fist.classRestriction = "none"
+        fist.requiredLevel = 0
+        fist.wpnType = "weapon"
+        fist.damageType = "melee damage"
+        fist.damageStat = "physical"
+        self.getWeaponDmgMultAndHitRate(fist)
+        return fist
+
+    def getWeapon(self, name):
+        for i in self.weapons:
+            if i.name.lower() == name.lower():
+                return i
 
             
 

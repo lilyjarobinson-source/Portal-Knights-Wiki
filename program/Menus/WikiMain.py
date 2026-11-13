@@ -14,4 +14,4 @@ class main(main):
         super().initialise()
         self.weaponController = weaponController()
         self.armourController = armourController()
-        self.characterController = characterController()
+        self.characterController = characterController(self.weaponController, self.armourController)
