@@ -249,7 +249,6 @@ for i in [characterOptionsMenu, characterAttributeMenu, characterTalentMenu, cha
 dmgCalcMenu.setRunable()
 
 main.addMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
-main.ignoreIconFile()
 main.activate("characterArmourMenu")
 #main.root.mainloop()
 #'''
