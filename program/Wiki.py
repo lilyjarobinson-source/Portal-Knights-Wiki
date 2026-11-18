@@ -1,4 +1,4 @@
-import sys
+from sys import path
 classPath = __file__.split(__file__.split("\\")[-1])[0]
 path.append(classPath + "Menus\\")
 path.append(classPath + "Menus\\dmgCalculationMenus")
