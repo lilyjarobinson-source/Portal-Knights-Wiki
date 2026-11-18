@@ -1,9 +1,9 @@
 from sys import path
 classPath = __file__.split(__file__.split("\\")[-1])[0]
+path.append(classPath + "framework")
 path.append(classPath + "Menus\\")
 path.append(classPath + "Menus\\dmgCalculationMenus")
 path.append(classPath + "Menus\\characterMenus")
-path.append(classPath + "Menus\\framework")
 path.append(classPath + "Menus\\main-menus")
 path.append(classPath + "Classes\\Data-objects")
 path.append(classPath + "Classes\\Simulation")
@@ -251,7 +251,6 @@ for i in [characterOptionsMenu, characterAttributeMenu, characterTalentMenu, cha
 dmgCalcMenu.setRunable()
 
 main.addMenus([mainMenu, dmgCalcMenu, characterOptionsMenu, characterOverviewMenu, characterNewMenu, characterAttributeMenu, characterTalentMenu, characterWeaponMenu, characterArmourMenu, characterBuffMenu])
-main.ignoreIconFile()
 main.activate("characterArmourMenu")
 #main.root.mainloop()
 #'''
